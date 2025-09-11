@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Intro Animation -->
+<div class="intro-animation">
+    <div class="logo-container">
+        <span class="logo-letter logo-letter-s1 converge-letters" style="margin-right: 5px;">S</span>
+        <span class="logo-letter logo-letter-p converge-letters" style="margin-right: 5px;">P</span>
+        <span class="logo-letter logo-letter-s2 converge-letters" style="margin-right: 5px;">S</span>
+        <span class="logo-letter logo-letter-u converge-letters" style="margin-right: 5px;">U</span>
+        <span class="logo-letter logo-letter-l converge-letters">L</span>
+        
+        <div class="logo-collision">
+            <div class="logo-final">SPSUL</div>
+        </div>
+    </div>
+    
+    <!-- Main Content (visible after animation) -->
+    <div class="spsul-hero container" style="height:300px; padding: 2rem;">
+        <div class="text-center">
+            <h1>Vítejte na stránce SPSUL TEST</h1>
+            <p class="construction-message">Stránka se ještě buduje. Děkujeme za pochopení.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Make sure the animation plays correctly even if page is refreshed
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const letters = document.querySelectorAll('.logo-letter');
+            letters.forEach(letter => {
+                letter.classList.add('converge-letters');
+            });
+        }, 1500);
+    });
+</script>
