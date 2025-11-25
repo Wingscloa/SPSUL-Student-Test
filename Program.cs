@@ -1,3 +1,5 @@
+using SPSUL.Models;
+using Microsoft.EntityFrameworkCore;
 namespace SPSUL
 {
     public class Program
@@ -7,7 +9,9 @@ namespace SPSUL
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<SpsulContext>(e => e.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
             builder.Services.AddControllersWithViews();
+
 
             var app = builder.Build();
 
@@ -24,11 +28,13 @@ namespace SPSUL
 
             app.UseRouting();
 
+            //app.UseSession();
+
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=index}");
 
             app.Run();
         }

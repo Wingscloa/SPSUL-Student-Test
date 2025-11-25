@@ -1,9 +1,10 @@
 :root {
+    --spsul-primary: #ff9000;
     --spsul-red: #de401a;
     --spsul-white: #ffffff;
 }
 
-html {
+/*html {
   font-size: 14px;
   position: relative;
   min-height: 100%;
@@ -26,10 +27,10 @@ body {
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
+}*/
 
 /* SPSUL Animation Styles */
-.intro-animation {
+/*.intro-animation {
     background-color: var(--spsul-red);
     width: 100%;
     display: flex;
@@ -165,10 +166,10 @@ body {
     font-size: 1.2rem;
     margin-top: 1.5rem;
     font-weight: 500;
-}
+}*/
 
 /* Animation trigger for letters converging */
-.converge-letters {
+/*.converge-letters {
     animation: convergeToCenter 0.5s ease forwards;
     animation-delay: 1.5s;
 }
@@ -189,5 +190,14 @@ body {
     }
     100% {
         opacity: 1;
-    }
+    }XX
+}*/
+
+
+
+/* Navbar */
+
+.PrimaryButton{
+    color:white;
+    background-color:
 }

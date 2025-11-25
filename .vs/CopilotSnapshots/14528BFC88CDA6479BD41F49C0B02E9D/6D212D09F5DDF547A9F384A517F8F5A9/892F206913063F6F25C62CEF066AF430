@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Login učitele";
+}
+
+<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+
+<div class="auth-split">
+    <section class="auth-visual" aria-hidden="true" style="background: url('/Image/Hero-Resslova.jpg') center/cover no-repeat fixed;"></section>
+
+    <aside class="auth-panel">
+        <div class="d-flex flex-column justify-content-center h-100">
+            <h1 class="h4 auth-title mb-4">Přihlášení učitele<span class="brand-dot">.</span></h1>
+            <form method="post" autocomplete="on">
+                <div class="form-floating mb-3">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Jméno" autocomplete="username" required />
+                    <label for="username">Jméno</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Heslo" autocomplete="current-password" required />
+                    <label for="password">Heslo</label>
+                </div>
+
+                <button type="submit" class="btn btn-accent w-100">Přihlásit</button>
+            </form>
+        </div>
+    </aside>
+</div>

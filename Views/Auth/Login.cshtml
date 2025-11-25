@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Login učitele";
+}
+
+<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+<link href="~/font-awesome/css/all.css" rel="stylesheet" />
+<link href="~/font-awesome/css/all.min.css" rel="stylesheet" />
+
+<div class="auth-split">
+    <section class="auth-visual" aria-hidden="true" style="background: url('/Image/Hero-Resslova.jpg') center/cover no-repeat fixed;"></section>
+
+    <aside class="auth-panel">
+        <div class="d-flex flex-column justify-content-center h-100">
+            <h1 class="h4 auth-title mb-4">Přihlášení učitele<span class="brand-dot">.</span></h1>
+            <form method="get" autocomplete="on" asp-controller="Teacher" asp-action="Login">
+                <div class="input-wrapper mb-3">
+                    <div class="input-icon"><i class="fa-solid fa-user"></i></div>
+                    <div class="form-floating">
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Jméno" autocomplete="username" required />
+                        <label for="username">Jméno</label>
+                    </div>
+                </div>
+                <div class="input-wrapper mb-3 mt-3">
+                    <div class="input-icon"><i class="fa-solid fa-lock"></i></div>
+                    <div class="form-floating">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Heslo" autocomplete="current-password" required />
+                        <label for="password">Heslo</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-accent w-100">Přihlásit se</button>
+            </form>
+        </div>
+    </aside>
+</div>
+
+
+<script src="~/js/auth.js" asp-append-version="true"></script>
