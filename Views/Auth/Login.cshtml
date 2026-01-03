@@ -1,38 +1,46 @@
 ﻿@{
     ViewData["Title"] = "Login učitele";
+    Layout = "~/Views/Shared/Layouts/_Auth.cshtml"; ;
 }
 
+
 <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
-<link href="~/font-awesome/css/all.css" rel="stylesheet" />
-<link href="~/font-awesome/css/all.min.css" rel="stylesheet" />
+<link href="~/css/global.css" rel="stylesheet" asp-append-version="true"/>
 
-<div class="auth-split">
-    <section class="auth-visual" aria-hidden="true" style="background: url('/Image/Hero-Resslova.jpg') center/cover no-repeat fixed;"></section>
 
-    <aside class="auth-panel">
-        <div class="d-flex flex-column justify-content-center h-100">
-            <h1 class="h4 auth-title mb-4">Přihlášení učitele<span class="brand-dot">.</span></h1>
-            <form method="get" autocomplete="on" asp-controller="Teacher" asp-action="Login">
-                <div class="input-wrapper mb-3">
-                    <div class="input-icon"><i class="fa-solid fa-user"></i></div>
-                    <div class="form-floating">
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Jméno" autocomplete="username" required />
-                        <label for="username">Jméno</label>
-                    </div>
-                </div>
-                <div class="input-wrapper mb-3 mt-3">
-                    <div class="input-icon"><i class="fa-solid fa-lock"></i></div>
-                    <div class="form-floating">
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Heslo" autocomplete="current-password" required />
-                        <label for="password">Heslo</label>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-accent w-100">Přihlásit se</button>
-            </form>
+<form asp-controller="Auth" asp-action="Login" onkeydown="return event.key != 'Enter';">
+    <div class="container" style="min-width: 320px;">
+        <div class="row headContainer justify-content-center">
+            <img class="logo" src=".\image\logo\spsul.webp" />
+            <h1 class="Header">SPSUL</h1>
         </div>
-    </aside>
-</div>
-
-
-<script src="~/js/auth.js" asp-append-version="true"></script>
+        <div class="row">
+            <div class="col">
+                <label for="name">Jméno</label>
+                <input type="text" id="NickName" name="NickName" class="form-control input" placeholder="Jméno" required autocomplete="off" />
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <label for="Password">Heslo</label>
+                <input type="password" id="Password" name="Password" class="form-control input" placeholder="Heslo" required autocomplete="off" />
+            </div>
+        </div>
+        <div class="row mt-1 text-end">
+            <div class=col>
+                <a class="link-primary" asp-controller="Auth" asp-action="Test">Jsem student</a>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+                <button class="btn btn-primary w-100"><span class="boldWhite">Přihlásit se</span></button>
+            </div>
+        </div>
+        <div class="row mt-2 text-end">
+            <div class=col>
+                <a class="link-primary">Nemáte účet?</a>
+            </div>
+        </div>
+        <hr class="mt-3" />
+    </div>
+</form>

@@ -8,10 +8,25 @@ namespace SPSUL
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDistributedSqlServerCache(options =>
+            {
+                options.ConnectionString = builder.Configuration.GetConnectionString("Default");
+                options.SchemaName = "dbo";
+                options.TableName = "Sessions";
+            });
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(7);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             // Add services to the container.
             builder.Services.AddDbContext<SpsulContext>(e => e.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-            builder.Services.AddControllersWithViews();
 
+            builder.Services.AddControllersWithViews()
+                .AddRazorRuntimeCompilation();
 
             var app = builder.Build();
 
@@ -28,13 +43,13 @@ namespace SPSUL
 
             app.UseRouting();
 
-            //app.UseSession();
+            app.UseSession();
 
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=index}");
+                pattern: "{controller=Auth}/{action=Login}");
 
             app.Run();
         }

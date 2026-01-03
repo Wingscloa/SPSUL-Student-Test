@@ -15,19 +15,27 @@ namespace SPSUL.Models
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
-
+        public DbSet<Classes> Classes { get; set; }
+        public DbSet<ClassesStudent> ClassesStudents { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<QuestionOption> QuestionOptions { get; set; }
+        public DbSet<QuestionType> QuestionTypes { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<StudentField> StudentFields { get; set; }
+        public DbSet<StudentTest> StudentTests { get; set; }
+        public DbSet<Test> Tests { get; set; }
+        public DbSet<TestName> TestNames { get; set; }
+        public DbSet<TeacherRole> TeacherRoles { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Teacher>(e =>
             {
                 e.HasKey(e => e.TeacherId);
 
-                e.Property(e => e.LastName).HasMaxLength(16);
-                e.Property(e => e.FirstName).HasMaxLength(16);
-                e.Property(e => e.NickName).HasMaxLength(32);
-                e.Property(e => e.Password).HasMaxLength(64);
-
-                e.HasOne(e => e.Role).WithMany(e => e.Teachers).HasForeignKey(e => e.RoleId);
+                e.Property(e => e.LastName).HasMaxLength(64);
+                e.Property(e => e.FirstName).HasMaxLength(64);
+                e.Property(e => e.NickName).HasMaxLength(64);
+                e.Property(e => e.PasswordHash).HasMaxLength(255);
             });
 
             modelBuilder.Entity<TeacherTitle>(e =>
@@ -42,9 +50,9 @@ namespace SPSUL.Models
             {
                 e.HasKey(e => e.TitleId);
 
-                e.Property(e => e.Shortcut).HasMaxLength(8);
+                e.Property(e => e.Shortcut).HasMaxLength(16);
 
-                e.Property(e => e.Name).HasMaxLength(48);
+                e.Property(e => e.Name).HasMaxLength(64);
             });
 
             modelBuilder.Entity<Role>(e =>
@@ -52,13 +60,17 @@ namespace SPSUL.Models
                 e.HasKey(e => e.RoleId);
 
                 e.Property(e => e.Name).HasMaxLength(32);
+
+                e.Property(e => e.IsActive).HasDefaultValue(true);
             });
 
             modelBuilder.Entity<Permission>(e =>
             {
                 e.HasKey(e => e.PermissionId);
 
-                e.Property(e => e.Name).HasMaxLength(16);
+                e.Property(e => e.Name).HasMaxLength(32);
+
+                e.Property(e => e.IsActive).HasDefaultValue(true);
             });
 
             modelBuilder.Entity<RolePermission>(e =>
@@ -70,11 +82,90 @@ namespace SPSUL.Models
                 e.HasOne(e => e.Roles).WithMany(e => e.RolePermissions).HasForeignKey(e => e.RoleId);
             });
 
-            modelBuilder.Entity<Session>(e =>
+            modelBuilder.Entity<Test>(e =>
             {
-                e.Property(e => e.SessionId).HasMaxLength(64);
+                e.HasKey(e => e.TestId);
+                e.Property(e => e.IsActive).HasDefaultValue(true);
+
+                e.HasOne(e => e.Name).WithMany(e => e.Tests).HasForeignKey(e => e.NameId);
             });
 
+            modelBuilder.Entity<TestName>(e =>
+            {
+                e.HasKey(e => e.TestNameId);
+                e.Property(e => e.Name).HasMaxLength(32);
+            });
+
+            modelBuilder.Entity<StudentTest>(e=>
+            {
+                e.HasKey(e => new { e.StudentId, e.TestId });
+
+                e.Property(e => e.LoginId).HasMaxLength(32).IsRequired();
+
+                e.HasOne(e => e.Student).WithMany(e => e.StudentTests).HasForeignKey(e => e.StudentId);
+                e.HasOne(e => e.Test).WithMany(e => e.StudentTests).HasForeignKey(e => e.TestId);
+            });
+
+            modelBuilder.Entity<Student>(e =>
+            {
+                e.HasKey(e => e.StudentId);
+                e.Property(e => e.FirstName).HasMaxLength(64);
+                e.Property(e => e.LastName).HasMaxLength(64);
+                e.Property(e => e.IsActive).HasDefaultValue(true);
+            });
+
+            modelBuilder.Entity<ClassesStudent>(e =>
+            {
+                e.HasKey(e => new { e.ClassesId, e.StudentId });
+                e.HasOne(e => e.Classes).WithMany(e => e.ClassesStudents).HasForeignKey(e => e.ClassesId);
+                e.HasOne(e => e.Student).WithMany(e => e.ClassesStudents).HasForeignKey(e => e.StudentId);
+            });
+
+            modelBuilder.Entity<Classes>(e =>
+            {
+                e.HasKey(e => e.ClassesId);
+                e.Property(e => e.Name).HasMaxLength(16);
+                e.Property(e => e.IsActive).HasDefaultValue(true);
+            });
+
+            modelBuilder.Entity<QuestionType>(e =>
+            {
+                e.HasKey(e => e.QuestionTypeId);
+                e.Property(e => e.Name).HasMaxLength(32);
+                e.Property(e => e.IsActive).HasDefaultValue(true);
+            });
+
+            modelBuilder.Entity<StudentField>(e =>
+            {
+                e.HasKey(e => e.StudentFieldId);
+                e.Property(e => e.Name).HasMaxLength(32);
+                e.Property(e => e.IsActive).HasDefaultValue(true);
+            });
+
+            modelBuilder.Entity<Question>(e =>
+            {
+                e.HasKey(e => e.QuestionId);
+                e.Property(e => e.Header).HasMaxLength(128);
+                e.Property(e => e.Description).HasMaxLength(512);
+                e.HasOne(e => e.QuestionType).WithMany(e => e.Questions).HasForeignKey(e => e.QuestionTypeId);
+
+                e.HasOne(e => e.StudentField).WithMany(e => e.Questions).HasForeignKey(e => e.StudentFieldId);
+            });
+
+            modelBuilder.Entity<QuestionOption>(e =>
+            {
+                e.HasKey(e => e.QuestionOptionId);
+                e.Property(e => e.Text).HasMaxLength(512);
+                e.Property(e => e.IsCorrect);
+                e.HasOne(e => e.Question).WithMany(e => e.QuestionOptions).HasForeignKey(e => e.QuestionId);
+            });
+
+            modelBuilder.Entity<TeacherRole>(e =>
+            {
+                e.HasKey(e => new { e.TeacherId, e.RoleId });
+                e.HasOne(e => e.Teacher).WithMany(e => e.TeacherRoles).HasForeignKey(e => e.TeacherId);
+                e.HasOne(e => e.Role).WithMany(e => e.TeacherRoles).HasForeignKey(e => e.RoleId);
+            });
 
             base.OnModelCreating(modelBuilder);
         }

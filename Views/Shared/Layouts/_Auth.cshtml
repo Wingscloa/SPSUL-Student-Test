@@ -1,0 +1,18 @@
+﻿@*
+    Authentication layout with background photo and a right side panel for forms
+*@
+@{
+    Layout = null;
+}
+<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+<link href="~/css/global.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" />
+<link rel="shortcut icon" href="~/Image/ico.ico" />
+
+<div class="background layout">
+    <div class="left ">
+    </div>
+    <div class="right">
+        @RenderBody()
+    </div>
+</div>

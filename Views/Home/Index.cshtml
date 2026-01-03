@@ -1,10 +1,89 @@
 ﻿@{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Tvoř Testy";
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+}
+<link rel="stylesheet" href="~/css/home.css" />
+
+@section Scripts {
+    <script src="~/lib/chart.js/chart.umd.js"></script>
+    <script src="~/js/home.js"></script>
 }
 
-<!-- Intro Animation -->
-<script src="~/lib/lottie/lottie.min.js" asp-append-version="true"></script>
-<script src="~/js/Loading.js" asp-append-version="true"></script>
+<div class="tests-grid">
+    <section class="hero">
+        <div class="d-flex justify-content-center flex-column">
+            <h1 class="hero-title">
+                <span class="hero-title-top">Tvoř</span>
+                <span class="hero-title-bottom">Testy</span>
+            </h1>
+            <a class="btn-primary" href="/Tests/Create">Vytvořit test</a>
+        </div>
+        <div class="donut-wrap">
+            <canvas id="successDonut" width="320" height="320" aria-label="Úspěšnost"></canvas>
+            <div class="donut-legend">
+                <span class="legend success">Úspěšnost</span>
+                <span class="legend fail">Neúspěšnost</span>
+            </div>
+        </div>
+    </section>
 
+    <section class="content">
+        <div class="search">
+            <input id="searchInput" class="search-input" type="search" placeholder="Hledej v historii testů" />
+        </div>
 
+        <div class="table-scroll">
+            <table id="testsTable" class="tests-table">
+                <thead>
+                    <tr>
+                        <th>ID Testu</th>
+                        <th>Počet studentů</th>
+                        <th>Procento úspěšnosti</th>
+                        <th>Počet otázek</th>
+                        <th>Datum vytvoření</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>5</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
+                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
+                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
+                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
+                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                    </tr>
+                    <tr>
+                        <td>1</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
+                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stats-item stats-item--xl bg-students">
+                    <p>Salmon</p>
+                </div>
+                <div class="stats-item stats-item--wide bg-broccoli">
+                    <p>Broccoli</p>
+                </div>
+                <div class="stats-item bg-tamago">
+                    <p>Tamago</p>
+                </div>
+                <div class="stats-item bg-pork">
+                    <p>Pork</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

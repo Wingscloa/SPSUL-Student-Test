@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>wwwroot\Image\ico.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="9.0.10" />
@@ -22,10 +24,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Display\" />
+    <Folder Include="Controllers\API\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Image\Hero-Stribrniky.jpg" />
   </ItemGroup>
 
 </Project>

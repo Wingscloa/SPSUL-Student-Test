@@ -1,0 +1,27 @@
+﻿@*
+    Authentication layout with background photo and a right side panel for forms
+*@
+@{
+    Layout = null;
+}
+<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+<link href="~/css/global.css" rel="stylesheet" />
+
+<div class="background layout">
+    <div class="left ">
+        <div class="glass-card">
+            <div class="Title">
+                <h1 class="Header">SPSUL</h1>
+                <h2 class="SubHeader">Střední průmyslová škola Ústí nad Labem</h2>
+            </div>
+            <div class="Description">
+                <p>Naše Střední průmyslová škola se nachází v Ústí nad Labem a je státní školou, která studentům nabízí vynikající vzdělání.</p>
+                <p>Tato aplikace slouží k testování naších studentu a ověření jejich odborného vzdělání.</p>
+            </div>
+            <button>Hlavní stránka</button>
+        </div>
+    </div>
+    <div class="right">
+        @RenderBody()
+    </div>
+</div>

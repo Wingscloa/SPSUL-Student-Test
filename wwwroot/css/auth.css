@@ -1,149 +1,86 @@
 ﻿:root {
-    --primary-bg-color: #ffffff;
-    --primary-color: #ff9000;
-    --second-color: #ffb24f;
-    --danger-color: #fc604c;
-    --success-color: #98c273;
-    --info-color: #4c92fc;
+    --spsul-primary: #DE401A;
+    --spsul-white: #ffffff;
 }
 
-html, body {
-    height: 100vh;
-    overflow: hidden; /* remove scrollbars/axes */
-}
-
-body {
+body{
     margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-/* Split layout: 75% visual (left), 25% form (right) */
-.auth-split {
-    display: flex;
-    width: 100%;
-    height: 100vh; /* full viewport */
+.background {
+    background-image: url('/Image/Hero-Stribrniky.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 3fr 1.5fr;
+    max-height: 100vh;
     min-height: 100vh;
 }
 
-.auth-visual {
-    position: relative;
-    flex: 0 0 75%;
-    overflow: hidden;
-    filter: blur(1.5px);
-    transform: scale(1.03); /* prevent edge clipping after blur */
-}
-
-/* Soften the blurred photo near the divider to make the transition pleasing */
-.auth-visual::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(to right, rgba(255,255,255,0) 70%, rgba(255,255,255,0.22) 100%);
-}
-
-/* Accent divider to hide the blur seam */
-.auth-visual::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(180deg, var(--primary-color), var(--second-color));
-    box-shadow: 8px 0 24px rgba(0,0,0,0.25), 0 0 12px rgba(0,0,0,0.2);
-    opacity: 0.95;
-}
-
-/* Right-side full-height form panel */
-.auth-panel {
-    flex: 0 0 25%;
-    background: var(--primary-bg-color, #ffffff);
+.left {
     display: flex;
-    flex-direction: column;
-    padding: 2rem 2rem;
-}
-
-.auth-panel .auth-title {
-    color: #1a1a1a;
-    text-shadow: none;
-}
-
-/* Optional inner card styling (if needed elsewhere) */
-.auth-card {
-    max-width: 440px;
-    width: 100%;
-    margin-right: auto; /* push to the left on wide screens */
-    background: var(--primary-bg-color, #ffffff);
-    border: 1px solid rgba(0,0,0,0.06);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    padding: 2rem;
-    backdrop-filter: blur(6px);
-}
-
-.auth-title {
-    color: var(--primary-bg-color, #ffffff);
-    text-shadow: 0 2px 8px rgba(0,0,0,0.35);
-}
-
-.brand-dot {
-    color: var(--primary-color, #ff9000);
-}
-
-.form-control:focus {
-    border-color: var(--primary-color, #ff9000);
-    box-shadow: 0 0 0 .25rem rgba(255,144,0, .25);
-}
-
-/* Submit button with opacity hover only */
-.btn-accent {
-    background: var(--primary-color, #ff9000);
-    border-color: var(--primary-color, #ff9000);
-    color: #fff;
-    transition: opacity .25s ease-in-out;
-}
-.btn-accent:hover,
-.btn-accent:focus {
-    opacity: 0.9; /* 10% opacity change */
-    color: #fff;
-}
-
-.form-floating > label {
-    color: #6c757d;
-}
-
-/* Icon styling above inputs */
-.input-wrapper {
-}
-.input-icon {
-    display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    font-size: 2rem;
-    line-height: 1;
-    color: var(--primary-color);
-    margin-bottom: .35rem;
-    transition: transform .25s ease;
-}
-.input-wrapper:hover .input-icon {
-    transform: translateY(-2px);
 }
 
-@media (max-width: 992px) {
-    .auth-split {
-        flex-direction: column;
-        height: auto;
-        min-height: 100vh;
-    }
-    .auth-visual {
-        flex: 0 0 50vh; /* give image space on mobile */
-        transform: none; /* avoid zoom on small screens */
-        filter: blur(1.85px);
-    }
-    .auth-panel {
-        flex: 1 1 auto;
-        border-top: 1px solid rgba(0,0,0,0.06);
-        padding: 1.25rem;
+.right {
+    -ms-align-content: center;
+    -webkit-align-content: center;
+    align-content: center;
+    justify-items: center;
+    background-color: white;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.6) 3px 0px 6px 2px;
+}
+
+
+.logo {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    width: 10rem;
+    height: 10rem;
+}
+
+.Header {
+    margin: 0;
+    padding: 0;
+    color: rgba(222,64,26,0.75);
+    text-align: center;
+    font-size: 2.5rem;
+}
+
+.boldWhite {
+    color: #fff;
+    font-weight: 600;
+}
+
+a {
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+hr {
+    background-color: #DE401A;
+    margin: 0 auto;
+    width: 16rem !important;
+    height: 5px !important;
+    border: none;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .right {
+        width: 100vw;
+        border-top-left-radius: 0;
     }
 }

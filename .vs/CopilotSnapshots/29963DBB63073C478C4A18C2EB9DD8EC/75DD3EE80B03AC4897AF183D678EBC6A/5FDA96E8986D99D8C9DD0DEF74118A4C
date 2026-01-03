@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Test";
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/css/test.css" />
+<link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" />
+<link rel="shortcut icon" href="~/Image/ico.ico" />
+
+<div id="testContainer" class="container d-flex justify-content-center align-items-center flex-column">
+    <div class="d-flex w-100 justify-content-between">
+        <h1 class="header">Příkladový test</h1>
+        <div class="RangeContainer">
+            <input id="testRange" type="range" min="0"
+                   max="100"
+                   value="0"
+                   step="10" />
+            <span id="RangeValue">1/50</span>
+        </div>
+    </div>
+    <div class="d-flex w-100 justify-content-between">
+        <div class="questContainer">
+            <h2 class="questionHeader scrollOverflow">Otázka - 1</h2>
+            <h3 class="questionName scrollOverflow">Tohle je demo otázka s vícero výběrem</h3>
+            <div id="answerContainer">
+                <div class="radio-note">Vyber 2 možnosti</div>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="A" />
+                        <span class="radio-label">A) Možnost 1</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="B" />
+                        <span class="radio-label">B) Možnost 2</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="C" />
+                        <span class="radio-label">C) Možnost 3</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,6 +18,7 @@ namespace SPSUL.Controllers
             return View();
         }
 
+        [LoginRequired]
         public IActionResult Privacy()
         {
             return View();

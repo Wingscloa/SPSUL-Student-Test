@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Test";
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/css/test.css" />
+<link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" />
+<link rel="shortcut icon" href="~/Image/ico.ico" />
+<link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+<link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+
+
+<div id="testContainer" class="container d-flex justify-content-center align-items-center flex-column">
+    <div class="w-100 menuGrid">
+        <h1 class="header">Příkladový test</h1>
+        <div class="RangeContainer">
+            <input id="testRange" type="range" min="0"
+                   max="100"
+                   value="0"
+                   step="10" />
+            <span id="RangeValue">1000/1000</span>
+        </div>
+    </div>
+    <div class="mt-4 questGrid w-100">
+        <div class="questContainer">
+            <h2 class="questionHeader scrollOverflow">Otázka - 1</h2>
+            <h3 class="questionName scrollOverflow">Tohle je demo otázka s jedním výběrem</h3>
+            <div id="answerContainer">
+                <div class="radio-note">Vyber možnost</div>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="A" />
+                        <span class="radio-label">A) Možnost 1</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="B" />
+                        <span class="radio-label">B) Možnost 2</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="q1" value="C" />
+                        <span class="radio-label">C) Možnost 3</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="questionPicker">
+            @foreach (var i in Enumerable.Range(1, 10)){
+            <div class="questionCard">
+                <p class="cardText">Otázka 1 - Lorem text of the printing and typesetting</p>
+                <div class="questStatus">
+                    <div class="active" style="display:none">
+                        <svg width="24" height="24" fill="#FF9000" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001" />
+                        </svg>
+                    </div>
+                    <div class="unseen" style="display:block">
+                        <svg width="24" height="24" fill="#FF9000" class="bi bi-eye" viewBox="0 0 16 16">
+                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                        </svg>
+                    </div>
+                    <div class="seen" style="display:none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF9000" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    <div id="footer" class="mt-5">
+        <button id="prevBtn" name="prevBtn" disabled class="testButton">Předchozí</button>
+        <span id="timestamp">45:00</span>
+        <button id="nextBtn" name="nextBtn" class="testButton">Další</button>
+    </div>
+</div>

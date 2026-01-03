@@ -1,0 +1,204 @@
+﻿:root {
+    --spsul-primary: #ff9000;
+    --spsul-primary-rgb: 255,144,0;
+    --spsul-primary-dark: #d67600;
+    --spsul-primary-light: #ffa733;
+    --spsul-red: #de401a;
+    --spsul-white: #ffffff;
+    --spsul-bg-glass: rgba(255,255,255,0.05);
+    --spsul-border-glass: rgba(255,255,255,0.3);
+    --spsul-shadow-glass: 0 8px 32px rgba(0,0,0,.12);
+    --spsul-font-stack: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--spsul-font-stack);
+}
+
+.background {
+    background-image: url('/Image//Hero-Resslova.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: 100;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    max-height: 100vh;
+    min-height: 100vh;
+}
+
+.left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right {
+    background-color: white;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.6) 3px 0px 6px 2px
+}
+
+.glass-card {
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 40rem;
+    height: 30rem;
+    background: var(--spsul-bg-glass);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 20px;
+    border: 1px solid var(--spsul-border-glass);
+    box-shadow: var(--spsul-shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(255, 255, 255, 0.1), inset 0 0 12px 6px rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
+    padding: 42px 54px 48px;
+    box-sizing: border-box;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient( 90deg, transparent, rgba(255, 255, 255, 0.8), transparent );
+}
+
+.glass-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient( 180deg, rgba(255, 255, 255, 0.8), transparent, rgba(255, 255, 255, 0.3) );
+}
+
+/* TYPOGRAPHY INSIDE GLASS */
+.glass-card .heading-main {
+    font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: .5px;
+    margin: 0 0 8px;
+    background: linear-gradient(90deg, var(--spsul-primary) 0%, var(--spsul-primary-light) 80%);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+.glass-card .heading-sub {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 28px;
+    color: #f5f5f5;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+.glass-card .description {
+    font-size: 1rem;
+    line-height: 1.55;
+    font-weight: 500;
+    margin: 0 0 30px;
+    max-width: 26rem;
+    color: #f0f0f0;
+}
+.glass-card .muted-link {
+    font-size: .875rem;
+    color: #e8e8e8;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+.glass-card .muted-link:hover { color: var(--spsul-primary-light); }
+
+/* FORM ELEMENTS */
+.glass-card form { width:100%; }
+.glass-card .form-group { margin-bottom: 18px; }
+.glass-card label { display:block; font-size:.85rem; font-weight:600; letter-spacing:.4px; color:#f2f2f2; margin-bottom:6px; }
+.glass-card input[type="text"],
+.glass-card input[type="email"],
+.glass-card input[type="password"] {
+    width:100%;
+    padding:12px 14px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35);
+    border-radius:12px;
+    font-size:15px;
+    color:#fff;
+    outline:none;
+    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.glass-card input::placeholder { color:rgba(255,255,255,.65); }
+.glass-card input:focus { border-color: var(--spsul-primary-light); background:rgba(255,255,255,.28); box-shadow:0 0 0 3px rgba(var(--spsul-primary-rgb),.35); }
+
+/* ORANGE BUTTON */
+.btn-auth {
+    --grad-start: var(--spsul-primary);
+    --grad-end: var(--spsul-primary-dark);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.5rem;
+    width:100%;
+    padding:14px 20px;
+    margin-top:6px;
+    font-size:1.05rem;
+    font-weight:700;
+    letter-spacing:.6px;
+    color:#fff;
+    background:linear-gradient(135deg, var(--grad-start) 0%, var(--grad-end) 100%);
+    border:0;
+    border-radius:14px;
+    cursor:pointer;
+    position:relative;
+    box-shadow:0 6px 16px rgba(var(--spsul-primary-rgb),.35), 0 1px 3px rgba(0,0,0,.35);
+    transition:transform .18s cubic-bezier(.21,.82,.24,1), box-shadow .18s ease, background .3s;
+}
+.btn-auth:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(var(--spsul-primary-rgb),.4), 0 4px 10px rgba(0,0,0,.3); }
+.btn-auth:active { transform:translateY(0); box-shadow:0 4px 10px rgba(var(--spsul-primary-rgb),.4), 0 2px 6px rgba(0,0,0,.35); }
+.btn-auth:focus-visible { outline:3px solid rgba(var(--spsul-primary-rgb),.55); outline-offset:4px; }
+.btn-auth[disabled] { opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-auth .spinner { width:18px; height:18px; border:3px solid rgba(255,255,255,.5); border-top-color:#fff; border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* SECONDARY TEXT LINK BUTTON */
+.btn-link-auth { display:inline-block; margin-top:18px; font-size:.85rem; font-weight:600; color:var(--spsul-primary-light); text-decoration:none; }
+.btn-link-auth:hover { text-decoration:underline; }
+
+.Header, .SubHeader {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.Header {
+    margin-block: 0px;
+    text-align: center;
+    color: var(--spsul-primary);
+    font-size: 4rem;
+    margin-top: 18px;
+}
+
+.SubHeader {
+    text-align: center;
+    color: #d77c1f;
+    margin-block: 0px;
+    font-family: sans-serif;
+    font-size: 1.4rem;
+}
+
+.Description {
+    color: black !important;
+    font-size: 18px;
+    font-weight: 500;
+    width: 24rem;
+}
