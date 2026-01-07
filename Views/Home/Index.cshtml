@@ -12,10 +12,12 @@
 <div class="tests-grid">
     <section class="hero">
         <div class="d-flex justify-content-center flex-column">
-            <h1 class="hero-title">
-                <span class="hero-title-top">Tvoř</span>
-                <span class="hero-title-bottom">Testy</span>
-            </h1>
+            <div class="hero-title">
+                <div>
+                    <span class="hero-title-top">Tvoř</span>
+                    <span class="hero-title-bottom">Testy</span>
+                </div>
+            </div>
             <a class="btn-primary" href="/Tests/Create">Vytvořit test</a>
         </div>
         <div class="donut-wrap">
@@ -26,62 +28,81 @@
             </div>
         </div>
     </section>
-
     <section class="content">
-        <div class="search">
-            <input id="searchInput" class="search-input" type="search" placeholder="Hledej v historii testů" />
+        <div class="desktop">
+            <div class="search">
+                <input id="searchInput" class="search-input" type="search" placeholder="Hledej v historii testů" />
+            </div>
+            <div class="table-scroll">
+                <table id="testsTable" class="tests-table">
+                    <thead>
+                        <tr>
+                            <th>ID Testu</th>
+                            <th>Počet studentů</th>
+                            <th>Procento úspěšnosti</th>
+                            <th>Počet otázek</th>
+                            <th>Datum vytvoření</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>5</td>
+                            <td>30</td>
+                            <td>70%</td>
+                            <td>100</td>
+                            <td>15.3.2025</td>
+                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>30</td>
+                            <td>70%</td>
+                            <td>100</td>
+                            <td>15.3.2025</td>
+                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>30</td>
+                            <td>70%</td>
+                            <td>100</td>
+                            <td>15.3.2025</td>
+                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>30</td>
+                            <td>70%</td>
+                            <td>100</td>
+                            <td>15.3.2025</td>
+                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>30</td>
+                            <td>70%</td>
+                            <td>100</td>
+                            <td>15.3.2025</td>
+                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-        <div class="table-scroll">
-            <table id="testsTable" class="tests-table">
-                <thead>
-                    <tr>
-                        <th>ID Testu</th>
-                        <th>Počet studentů</th>
-                        <th>Procento úspěšnosti</th>
-                        <th>Počet otázek</th>
-                        <th>Datum vytvoření</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>5</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
-                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                    </tr>
-                    <tr>
-                        <td>4</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
-                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                    </tr>
-                    <tr>
-                        <td>3</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
-                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                    </tr>
-                    <tr>
-                        <td>2</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
-                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                    </tr>
-                    <tr>
-                        <td>1</td><td>30</td><td>70%</td><td>100</td><td>15.3.2025</td>
-                        <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
         <div class="stats-container">
             <div class="stats-grid">
                 <div class="stats-item stats-item--xl bg-students">
-                    <p>Salmon</p>
+                    <h1 class="gridHeader" onclick="location.href='/Students/Index'">Studenti</h1>
                 </div>
-                <div class="stats-item stats-item--wide bg-broccoli">
-                    <p>Broccoli</p>
+                <div class="stats-item stats-item--wide bg-tests" onclick="location.href='/Question/Index'">
+                    <h1 class="gridHeader">Seznam testů</h1>
                 </div>
-                <div class="stats-item bg-tamago">
-                    <p>Tamago</p>
+                <div class="stats-item bg-score" onclick="location.href='/Detail/Index'">
+                    <h1 class="gridHeader">Výsledky testů</h1>
                 </div>
-                <div class="stats-item bg-pork">
-                    <p>Pork</p>
+                <div class="stats-item bg-questions" onclick="location.href='/Test/Create'">
+                    <h1 class="gridHeader">Vytvořit test</h1>
                 </div>
             </div>
         </div>

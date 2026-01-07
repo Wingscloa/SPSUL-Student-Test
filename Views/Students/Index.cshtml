@@ -1,8 +1,100 @@
-﻿@{
+﻿@using SPSUL.Models.Data
+@model List<Student>
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
     ViewData["Title"] = "Students";
 }
+<link rel="stylesheet" href="~/css/chartpage.css" />
 
-
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <h1 class="pageTitle">Students incoming</h1>
+<div class="container-fluid py-3">
+  <div class="row g-3">
+        <div class="col-lg-9 order-2 order-lg-1">
+      <div class="card shadow-sm cardTable">
+                <div class="card-header fw-bold brandText">Seznam studentů</div>
+                <div class="table-responsive tableContent">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Jméno</th>
+                <th class="d-none d-md-table-cell">Třída</th>
+                <th class="d-none d-md-table-cell">Obor</th>
+                <th class="d-none d-md-table-cell">Úspěšné testy</th>
+                <th class="text-center">Archiv</th>
+                <th class="text-center">Graf</th>
+                <th class="text-center">Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+            @foreach (var s in Model)
+            {
+              <tr id="@s.StudentId">
+                <td>@s.FirstName @s.LastName <span class="badge bg-@(s.IsActive?"success":"secondary") ms-2">@(s.IsActive?"Aktivní":"Neaktivní")</span></td>
+                <td class="d-none d-md-table-cell">4ITA</td>
+                <td class="d-none d-md-table-cell">IT</td>
+                <td class="d-none d-md-table-cell">4/20</td>
+                <td class="text-center"><button class="icon-btn" data-toggle="@s.StudentId" title="Archiv"><i class="bi bi-archive"></i></button></td>
+                <td class="text-center"><button class="icon-btn" data-toggle="@s.StudentId" title="Graf"><i class="bi bi-graph-up"></i></button></td>
+                <td class="text-center"><button class="icon-btn" data-toggle="@s.StudentId" title="Edit"><i class="bi bi-pencil-square"></i></button></td>
+              </tr>
+                    <tr class="details-row" id="@s.StudentId" aria-hidden="true">
+                <td colspan="7">
+                  <div class="details">
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <h6 class="fw-bold">Editace</h6>
+                        <label class="form-label">Křestní jméno</label>
+                        <input class="form-control" value="@s.FirstName" />
+                      </div>
+                      <div class="col-md-6 d-flex align-items-end justify-content-end">
+                        <button class="btn btn-outline-danger">Smazat žáka</button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            }
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div>Strana 1 / 1 (30 položek)</div>
+            <div class="btn-group">
+                <a class="btn btn-outline-secondary disabled" href="/Question/Index?page=0&amp;pageSize=40">Předchozí</a>
+                <a class="btn btn-outline-secondary disabled" href="/Question/Index?page=2&amp;pageSize=40">Další</a>
+            </div>
+        </div>
+      </div>
+    </div>
+    <aside class="col-lg-3 order-1 order-lg-2">
+      <div class="card shadow-sm sticky-top" style="top: 1rem;">
+                <div class="card-header fw-bold brandText">Filtrace</div>
+        <div class="card-body">
+          <form method="get" class="vstack gap-2">
+            <input class="form-control" name="q" value="@Context.Request.Query["q"]" placeholder="Jméno nebo příjmení" />
+            <select class="form-select" name="active">
+              <option value="">Aktivní/Neaktivní</option>
+              <option value="true" selected>Aktivní</option>
+              <option value="false">Neaktivní</option>
+            </select>
+                <button class="btn brandText">Filtrovat</button>
+          </form>
+        </div>
+      </div>
+    </aside>
+  </div>
 </div>
+
+@section Scripts{
+<script>
+  document.querySelectorAll('.icon-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const id = btn.getAttribute('data-toggle');
+      const row = document.getElementById(id);
+      const hidden = row.getAttribute('aria-hidden') === 'true';
+      row.setAttribute('aria-hidden', hidden ? 'false' : 'true');
+      row.classList.toggle('open', hidden);
+    });
+  });
+</script>
+}

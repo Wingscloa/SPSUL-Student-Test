@@ -1,0 +1,13 @@
+﻿@using SPSUL.ViewComponents
+@model UserNavbarViewModel
+
+<div class="username">
+    <p>
+        @foreach(var t in Model.Title){<span>@t.Title.Name</span>} 
+        @Model.Teacher.FirstName 
+        @Model.Teacher.LastName
+    </p>
+</div>
+<div class="profile me-2 ms-3" data-bs-toggle="modal" data-bs-target="#configModal" aria-label="Profil">
+    <i class="bi bi-person-circle" aria-hidden="true"></i>
+</div>

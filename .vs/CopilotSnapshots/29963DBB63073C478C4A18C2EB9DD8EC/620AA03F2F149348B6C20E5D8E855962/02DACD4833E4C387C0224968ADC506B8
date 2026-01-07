@@ -1,0 +1,74 @@
+﻿@model IEnumerable<SPSUL.Controllers.QuestionController.QuestionRow>
+@{
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+    ViewData["Title"] = "Otázky";
+}
+<link rel="stylesheet" href="~/css/chartpage.css" />
+
+<div class="container-fluid py-3">
+  <div class="row g-3">
+    <div class="col-lg-9 order-2 order-lg-1">
+      <div class="card shadow-sm">
+        <div class="card-header brandText">Seznam testů/otázkových balíčků</div>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Název</th>
+                <th>Tvůrce</th>
+                <th>Aktivní</th>
+                <th>Počet přiřazení</th>
+                <th class="text-center"><i class="bi bi-person-fill"></i> Studenti</th>
+                <th>Průměrná úspěšnost</th>
+                <th class="text-center"><i class="bi bi-pencil-square"></i> Edit</th>
+                <th>Pohled na test</th>
+              </tr>
+            </thead>
+            <tbody>
+            @foreach (var r in Model)
+            {
+              <tr>
+                <td>@r.Id</td>
+                <td>@r.Nazev</td>
+                <td>@r.Tvurce</td>
+                <td><span class="badge bg-@(r.Aktivni?"success":"secondary")">@(r.Aktivni?"Aktivní":"Neaktivní")</span></td>
+                <td>@r.PocetPrirazeni</td>
+                <td class="text-center"><button class="icon-btn" title="Studenti"><i class="bi bi-person-fill"></i></button></td>
+                <td>@r.PrumerUspech %</td>
+                <td class="text-center"><button class="icon-btn" title="Edit"><i class="bi bi-pencil-square"></i></button></td>
+                <td><a href="#" class="btn btn-outline-secondary btn-sm">Otevřít</a></td>
+              </tr>
+            }
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <div>Strana @ViewBag.Page / @ViewBag.TotalPages (@ViewBag.Total položek)</div>
+          <div class="btn-group">
+            <a class="btn btn-outline-secondary @(ViewBag.Page==1?"disabled":null)" href="@Url.Action("Index", new { q=ViewBag.Query, active=ViewBag.Active, author=ViewBag.Author, page=ViewBag.Page-1, pageSize=ViewBag.PageSize })">Předchozí</a>
+            <a class="btn btn-outline-secondary @(ViewBag.Page>=ViewBag.TotalPages?"disabled":null)" href="@Url.Action("Index", new { q=ViewBag.Query, active=ViewBag.Active, author=ViewBag.Author, page=ViewBag.Page+1, pageSize=ViewBag.PageSize })">Další</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="col-lg-3 order-1 order-lg-2">
+      <div class="card shadow-sm sticky-top" style="top: 1rem;">
+        <div class="card-header brandText fw-bold">Filtrace</div>
+        <div class="card-body">
+          <form method="get" class="vstack gap-2">
+            <input class="form-control" name="q" value="@ViewBag.Query" placeholder="Hledat název" />
+            <input class="form-control" name="author" value="@ViewBag.Author" placeholder="Tvůrce" />
+            <select class="form-select" name="active">
+              <option value="">Aktivní/Neaktivní</option>
+              <option value="true" @(ViewBag.Active==true?"selected":null)>Aktivní</option>
+              <option value="false" @(ViewBag.Active==false?"selected":null)>Neaktivní</option>
+            </select>
+            <button class="btn btn-warning">Filtrovat</button>
+          </form>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

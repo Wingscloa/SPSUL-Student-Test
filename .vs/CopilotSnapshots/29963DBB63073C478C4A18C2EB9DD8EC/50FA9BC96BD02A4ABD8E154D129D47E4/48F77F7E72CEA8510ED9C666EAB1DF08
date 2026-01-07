@@ -1,0 +1,153 @@
+﻿@model SPSUL.Models.ViewModels.DetailIndexViewModel
+@{
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+    ViewData["Title"] = "Detail";
+}
+
+<link rel="stylesheet" href="~/css/chartpage.css" />
+
+<div class="container-fluid py-3">
+    <div class="row g-3">
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm" style="height:91vh">
+                <div class="card-header brandText">Testy přiřazené studentům</div>
+                <div class="card-body border-bottom">
+                    <form method="get" class="row g-2">
+                        <div class="col-8">
+                            <input class="form-control" name="Q1" value="@Model.Q1" placeholder="Hledat podle názvu/jména" />
+                        </div>
+                        <div class="col-4">
+                            <select class="form-select" name="Active1">
+                                <option value="">Vše</option>
+@*                                 <option value="true" @(Model.Active1 == true ? "selected" : null)>Aktivní</option>
+                                <option value="false"
+                                        @(Model.Active1 == False ? "selected" : null)>Neaktivní</option>
+
+ *@                            
+                                                            <option value="true" selected>Aktivní</option>
+                                <option value="false">Neaktivní</option>
+
+                            </select>
+                        </div>
+                        <input type="hidden" name="Page2" value="@Model.Page2" />
+                        <input type="hidden" name="PageSize2" value="@Model.PageSize2" />
+                        <div class="col-12 text-end"><button class="btn btn-warning">Filtrovat</button></div>
+                    </form>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Název</th>
+                                <th>LoginId</th>
+                                <th>Jméno</th>
+                                <th>Začal v</th>
+                                <th>Dokončil v</th>
+                                <th>% úspěšnost</th>
+                                <th>Absolvoval</th>
+                                <th class="text-center"><i class="bi bi-file-earmark-break-fill"></i></th>
+                                <th>Aktivní</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var t in Model.Assigned.Items)
+                        {
+                            <tr>
+                                <td>@t.Id</td>
+                                <td>@t.Nazev</td>
+                                <td>@t.LoginId</td>
+                                <td>@t.Jmeno</td>
+                                <td>@t.ZacalV:dd.MM.yyyy HH:mm</td>
+                                <td>@t.DokoncilV:dd.MM.yyyy HH:mm</td>
+                                <td>@t.UspechPct %</td>
+                                <td>@(t.Absolvoval?"Ano":"Ne")</td>
+                                <td class="text-center"><button class="icon-btn" title="Prohlédnout test"><i class="bi bi-file-earmark-break-fill"></i></button></td>
+                                <td>
+                                    <span class="badge bg-@(t.Aktivni?"success":"secondary")">@(t.Aktivni?"Aktivní":"Neaktivní")</span>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div>Strana @Model.Assigned.Page / @Model.Assigned.TotalPages (@Model.Assigned.Total položek)</div>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-secondary @(Model.Assigned.Page==1?"disabled":null)" href="@Url.Action("Index", new { Q1=Model.Q1, Active1=Model.Active1, Page1=Model.Assigned.Page-1, PageSize1=Model.PageSize1, Q2=Model.Q2, Active2=Model.Active2, Page2=Model.Page2, PageSize2=Model.PageSize2 })">Předchozí</a>
+                        <a class="btn btn-outline-secondary @(Model.Assigned.Page>=Model.Assigned.TotalPages?"disabled":null)" href="@Url.Action("Index", new { Q1=Model.Q1, Active1=Model.Active1, Page1=Model.Assigned.Page+1, PageSize1=Model.PageSize1, Q2=Model.Q2, Active2=Model.Active2, Page2=Model.Page2, PageSize2=Model.PageSize2 })">Další</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Tests table -->
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header brandText">Testy (všechny)</div>
+                <div class="card-body border-bottom">
+                    <form method="get" class="row g-2">
+                        <div class="col-8">
+                            <input class="form-control" name="Q2" value="@Model.Q2" placeholder="Hledat podle názvu testu" />
+                        </div>
+                        <div class="col-4">
+                            <select class="form-select" name="Active2">
+                                <option value="">Vše</option>
+                                @* <option value="true" @(Model.Active2==true?"selected":null)>Aktivní</option>
+                                <option value="false" @(Model.Active2==false?"selected":null)>Neaktivní</option> *@
+                                <option value="true" selected>Aktivní</option>
+                                <option value="false">Neaktivní</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="Page1" value="@Model.Page1" />
+                        <input type="hidden" name="PageSize1" value="@Model.PageSize1" />
+                        <div class="col-12 text-end"><button class="btn btn-warning">Filtrovat</button></div>
+                    </form>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Název</th>
+                                <th>Počet otázek</th>
+                                <th>Vytvořen</th>
+                                <th>Aktivní</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var t in Model.Tests.Items)
+                        {
+                            <tr>
+                                <td>@t.Id</td>
+                                <td>@t.Nazev</td>
+                                <td>@t.PocetOtazek</td>
+                                <td>@t.Vytvoren:dd.MM.yyyy</td>
+                                <td><span class="badge bg-@(t.Aktivni?"success":"secondary")">@(t.Aktivni?"Aktivní":"Neaktivní")</span></td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div>Strana @Model.Tests.Page / @Model.Tests.TotalPages (@Model.Tests.Total položek)</div>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-secondary @(Model.Tests.Page==1?"disabled":null)" href="@Url.Action("Index", new { Q1=Model.Q1, Active1=Model.Active1, Page1=Model.Page1, PageSize1=Model.PageSize1, Q2=Model.Q2, Active2=Model.Active2, Page2=Model.Tests.Page-1, PageSize2=Model.PageSize2 })">Předchozí</a>
+                        <a class="btn btn-outline-secondary @(Model.Tests.Page>=Model.Tests.TotalPages?"disabled":null)" href="@Url.Action("Index", new { Q1=Model.Q1, Active1=Model.Active1, Page1=Model.Page1, PageSize1=Model.PageSize1, Q2=Model.Q2, Active2=Model.Active2, Page2=Model.Tests.Page+1, PageSize2=Model.PageSize2 })">Další</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Placeholder for potential row expansions in future (reuse pattern from Students page)
+        document.querySelectorAll('.icon-btn').forEach(btn=>{
+          btn.addEventListener('click',()=>{
+            // hook for history/detail actions
+          });
+        });
+    </script>
+}

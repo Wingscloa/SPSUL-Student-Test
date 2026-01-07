@@ -4,79 +4,72 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SPSUL</title>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <link rel="stylesheet" href="~/css/global.css" asp-append-version="true" />
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" />
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
-    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <script src="~/js/site.js" asp-append-version="true" defer></script>
+    <link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" asp-append-version="true" />
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true" defer></script>
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" asp-append-version="true" />
     <link rel="shortcut icon" href="~/Image/ico.ico" />
+    <link rel="stylesheet" href="~/css/tabbar.css" asp-append-version="true" />
+    <script src="~/js/configuration.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="~/image/logo/spsul.webp" width="32" height="32"/>
-                <img src="~/image/logo/spsul-logo-uk.png" class="ms-1" width="120" height="24"/>
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <img src="~/image/logo/spsul.webp" width="32" height="32" alt="SPSUL logo"/>
+                <img src="~/image/logo/spsul-logo-uk.png" class="ms-1" width="120" height="24" alt="SPSUL"/>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Desktop navigation only; on mobile používáme spodní Tab Bar -->
+            <div class="collapse navbar-collapse d-none d-lg-block" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item ">
-                        <a class="nav-link PrimaryButton" aria-current="page" asp-controller="Test" asp-action="Index">
-                            <i class="bi bi-clipboard-plus-fill testIcon me-1"></i>
+                        <a class="nav-link PrimaryButton" aria-current="page" asp-controller="Test" asp-action="Index" title="Vytvořit test">
+                            <i class="bi bi-clipboard-plus-fill testIcon me-1" aria-hidden="true"></i>
+                            <span class="visually-hidden">Vytvořit test</span>
                             Vytvořit test
                         </a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="nav-link SecondButton" asp-controller="Students" asp-action="Index">
-                            Studenti</a>
+                        <a class="nav-link SecondButton" asp-controller="Students" asp-action="Index" title="Studenti">Studenti</a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">
-                            <i class="bi bi-house-door-fill me-1"></i>
-                            Domu
+                        <a class="nav-link" asp-controller="Home" asp-action="Index" title="Domů">
+                            <i class="bi bi-house-door-fill me-1" aria-hidden="true"></i>
+                            Domů
                         </a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="nav-link" asp-controller="Detail" asp-action="Index">
-                            <i class="bi bi-clipboard2-fill me-1"></i>
+                        <a class="nav-link" asp-controller="Detail" asp-action="Index" title="Výsledky">
+                            <i class="bi bi-clipboard2-fill me-1" aria-hidden="true"></i>
                             Výsledky
                         </a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="nav-link" asp-controller="Question" asp-action="Index">
-                            <i class="bi bi-patch-question-fill me-1"></i>
+                        <a class="nav-link" asp-controller="Question" asp-action="Index" title="Otázky">
+                            <i class="bi bi-patch-question-fill me-1" aria-hidden="true"></i>
                             Otázky
                         </a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Vyhledej studenta" aria-label="Search" />
-                    <button class=" searchButton" type="submit">Hledat</button>
-                </form>
-                <div class="profile ms-4 me-2" data-bs-toggle="modal" data-bs-target="#configModal">
-                    <i class="bi bi-person-circle"></i>
-                </div>
+                @await Component.InvokeAsync("User")
             </div>
         </div>
     </nav>
+
     <div class="modal" id="configModal" tabindex="-1">
-        <div class="modal-dialog-centered modal-dialog modal-lg">
+        <div class="modal-dialog-centered modal-dialog modal-xl modal-fullscreen-lg-down">
             <div class="modal-content myModal d-flex flex-row">
-                <div class="MenuBar">
+                <nav class="navbar">
                     <ul class="customUl">
-                        <li class="menuItem active" style="border-top-left-radius: 12px;"><a>Profil a oprávnění</a></li>
+                        <li class="menuItem active"><a>Profil a oprávnění</a></li>
                         <li class="menuItem"><a>Administrace</a></li>
                         <li class="menuItem"><a>Studenti</a></li>
                         <li class="menuItem"><a>O aplikaci</a></li>
                         <li class="menuItem"><a asp-controller="Auth" asp-action="Logout">Odhlásit se</a></li>
                     </ul>
-                </div>
+                </nav>
                 <div class="modalContent">
                     <div class="ProfileContent">
                         <div class="Profile">
@@ -84,130 +77,15 @@
                         <p class="TeacherName">Bc. Jakub Pokorny</p>
                     </div>
                     <div class="modalBreak"></div>
-                    <div class="ConfigContent">
-                        <p class="ContentHeader">Údaje o profilu</p>
-                        <div class="row ms-1">
-                            <div class=col-3>
-                                <label class="configLabel" for="FirstName">
-                                    <span class="bi bi-person-circle me-1"></span>Křestní jméno
-                                </label>
-                                <input class="configInput" autocomplete="off" placeholder="Jakub" name="FirstName" id="FirstName" />
-                            </div>
-                            <div class=col-3>
-                                <label class="configLabel" for="LastName">
-                                    <span class="bi bi-person-circle me-1"></span>Příjmení
-                                </label>
-                                <input class="configInput" autocomplete="off" placeholder="Pokorny" name="LastName" id="LastName" />
-                            </div>
-                        </div>
-                        <div class="row ms-1 mt-2">
-                            <div class=col-6>
-                                <label class="configLabel" for="NickName">
-                                    <span class="bi bi-person-circle me-1"></span>Přezdívka
-                                </label>
-                                <input class="configInput" autocomplete="off" placeholder="jmeno.prijmeni@domena.com" name="NickName" id="NickName" />
-                            </div>
-                        </div>
-                        <div class="row ms-1 mt-2">
-                            <div class=col-6>
-                                <label class="configLabel" for="Password">
-                                    <span class="bi bi-person-circle me-1"></span>Heslo
-                                </label>
-                                <input class="configInput" autocomplete="off" placeholder="heslo1234" name="Password" id="Password" />
-                            </div>
-                        </div>
-                        <div class="row ms-1 mt-2">
-                            <div class=col-6>
-                                <label class="configLabel" for="PasswordRepeat">
-                                    <span class="bi bi-person-circle me-1"></span>Zopakuj heslo
-                                </label>
-                                <input class="configInput" autocomplete="off" placeholder="heslo1234" name="PasswordRepeat" id="PasswordRepeat" />
-                            </div>
-                        </div>
-                        <div class="row ms-1 mt-2">
-                            <div class=col-6>
-                                <label class="configLabel" for="NickName">
-                                    <span class="bi bi-person-circle me-1"></span>Přezdívka
-                                </label>
-                                <input class="configInput" autocomplete="off" placeholder="jmeno.prijmeni@domena.com" name="NickName" id="NickName" />
-                            </div>
-                        </div>
-                        <div class="row ms-1 mt-4">
-                            <div class="col-6 d-flex justify-content-end">
-                                <div class="w-50 text-center configButton">Změnit údaje</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modalBreakGrey mt-2"></div>
-                    <div class="ConfigContent">
-                        <p class="ContentHeader">Oprávnění</p>
-                        <table>
-                            <tr class="tableHeaders">
-                                <th class="col-2">Oprávnění</th>
-                                <th class="col-1">Povolení</th>
-                                <th class="col-6">Popis</th>
-                            </tr>
-                            <tr>
-                                <td>Administrator</td>
-                                <td>
-                                    <label class="switch" for="Administrator">
-                                        <input type="checkbox" id="Administrator" />
-                                        <div class="slider round"></div>
-                                    </label>
-                                </td>
-                                <td>Oprávnění uděluje plnou kontrolu nad systémem – správce může vytvářet, upravovat i mazat všechny účty.</td>
-                            </tr>
-                            <tr>
-                                <td>Vytváření studentu</td>
-                                <td>
-                                    <label class="switch" for="Vytváření studentu">
-                                        <input type="checkbox" id="Vytváření studentu" />
-                                        <div class="slider round"></div>
-                                    </label>
-                                </td>
-                                <td>Oprávnění umožňuje uživateli přidávat nové studenty do systému a nastavovat jejich základní údaje.</td>
-                            </tr>
-                            <tr>
-                                <td>Pohled na testy</td>
-                                <td>
-                                    <label class="switch" for="Pohled na testy">
-                                        <input type="checkbox" id="Pohled na testy" />
-                                        <div class="slider round"></div>
-                                    </label>
-                                </td>
-                                <td>Oprávnění umožňuje uživateli zobrazit všechny testy a jejich výsledky bez možnosti úprav.</td>
-                            </tr>
-                            <tr>
-                                <td>Vytváření testu</td>
-                                <td>
-                                    <label class="switch" for="Vytváření testu">
-                                        <input type="checkbox" id="Vytváření testu" />
-                                        <div class="slider round"></div>
-                                    </label>
-                                </td>
-                                <td>Oprávnění umožňuje vytvářet nové testy, přidávat otázky a přiřazovat je konkrétním studentům.</td>
-                            </tr>
-                            <tr>
-                                <td>Statistiky</td>
-                                <td>
-                                    <label class="switch" for="Statistiky">
-                                        <input type="checkbox" id="Statistiky"/>
-                                        <div class="slider round"></div>
-                                    </label>
-                                </td>
-                                <td>Oprávnění umožňuje zobrazit přehledné statistiky o výsledcích studentů, testech a celkovém výkonu.</td>
-                            </tr>
-                        </table>
-
-                    </div>
                 </div>
-                
             </div>
         </div>
     </div>
     @RenderBody()
     @await RenderSectionAsync("Scripts", required: false)
-    
 
+    @await Html.PartialAsync("_TabBar")
+
+    <script src="~/js/tabbar.js" asp-append-version="true" defer></script>
 </body>
 </html>

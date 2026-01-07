@@ -1,0 +1,93 @@
+﻿@model IEnumerable<SPSUL.Models.Data.Student>
+@{
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+    ViewData["Title"] = "Students";
+}
+<link rel="stylesheet" href="~/css/students.css" />
+
+<div class="container-fluid py-3">
+  <div class="row g-3">
+    <div class="col-lg-9 order-2 order-lg-1">
+      <div class="card shadow-sm">
+        <div class="card-header bg-warning fw-bold">Seznam studentů</div>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Jméno</th>
+                <th class="d-none d-md-table-cell">Třída</th>
+                <th class="d-none d-md-table-cell">Obor</th>
+                <th class="d-none d-md-table-cell">Úspěšné testy</th>
+                <th class="text-center">Archiv</th>
+                <th class="text-center">Graf</th>
+                <th class="text-center">Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+            @foreach (var s in Model)
+            {
+              var key = $"student-{s.StudentId}";
+              <tr data-row="@key">
+                <td>@s.FirstName @s.LastName <span class="badge bg-@(s.IsActive?"success":"secondary") ms-1">@(s.IsActive?"Aktivní":"Neaktivní")</span></td>
+                <td class="d-none d-md-table-cell">4ITA</td>
+                <td class="d-none d-md-table-cell">IT</td>
+                <td class="d-none d-md-table-cell">4/20</td>
+                <td class="text-center"><button class="icon-btn" data-toggle="@key" title="Archiv"><i class="bi bi-archive"></i></button></td>
+                <td class="text-center"><button class="icon-btn" data-toggle="@key" title="Graf"><i class="bi bi-graph-up"></i></button></td>
+                <td class="text-center"><button class="icon-btn" data-toggle="@key" title="Edit"><i class="bi bi-pencil-square"></i></button></td>
+              </tr>
+              <tr class="details-row" id="@key" aria-hidden="true">
+                <td colspan="7">
+                  <div class="details">
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <h6 class="fw-bold">Editace</h6>
+                        <label class="form-label">Křestní jméno</label>
+                        <input class="form-control" value="@s.FirstName" />
+                      </div>
+                      <div class="col-md-6 d-flex align-items-end justify-content-end">
+                        <button class="btn btn-outline-danger">Smazat žáka</button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <aside class="col-lg-3 order-1 order-lg-2">
+      <div class="card shadow-sm sticky-top" style="top: 1rem;">
+        <div class="card-header bg-light fw-bold">Filtrace</div>
+        <div class="card-body">
+          <form method="get" class="vstack gap-2">
+            <input class="form-control" name="q" value="@Context.Request.Query["q"]" placeholder="Jméno nebo příjmení" />
+            <select class="form-select" name="active">
+              <option value="">Aktivní/Neaktivní</option>
+              <option value="true" @(Context.Request.Query["active"]=="true"?"selected":null)>Aktivní</option>
+              <option value="false" @(Context.Request.Query["active"]=="false"?"selected":null)>Neaktivní</option>
+            </select>
+            <button class="btn btn-warning">Filtrovat</button>
+          </form>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+@section Scripts{
+<script>
+  document.querySelectorAll('.icon-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const id = btn.getAttribute('data-toggle');
+      const row = document.getElementById(id);
+      const hidden = row.getAttribute('aria-hidden') === 'true';
+      row.setAttribute('aria-hidden', hidden ? 'false' : 'true');
+      row.classList.toggle('open', hidden);
+    });
+  });
+</script>
+}

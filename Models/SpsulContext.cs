@@ -21,11 +21,11 @@ namespace SPSUL.Models
         public DbSet<QuestionOption> QuestionOptions { get; set; }
         public DbSet<QuestionType> QuestionTypes { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<StudentField> StudentFields { get; set; }
+        public DbSet<StudentField> Fields { get; set; }
         public DbSet<StudentTest> StudentTests { get; set; }
         public DbSet<Test> Tests { get; set; }
-        public DbSet<TestName> TestNames { get; set; }
         public DbSet<TeacherRole> TeacherRoles { get; set; }
+        public DbSet<ClassesFields> ClassesFields { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Teacher>(e =>
@@ -62,6 +62,8 @@ namespace SPSUL.Models
                 e.Property(e => e.Name).HasMaxLength(32);
 
                 e.Property(e => e.IsActive).HasDefaultValue(true);
+
+                e.Property(e => e.Description).HasMaxLength(256);
             });
 
             modelBuilder.Entity<Permission>(e =>
@@ -87,13 +89,6 @@ namespace SPSUL.Models
                 e.HasKey(e => e.TestId);
                 e.Property(e => e.IsActive).HasDefaultValue(true);
 
-                e.HasOne(e => e.Name).WithMany(e => e.Tests).HasForeignKey(e => e.NameId);
-            });
-
-            modelBuilder.Entity<TestName>(e =>
-            {
-                e.HasKey(e => e.TestNameId);
-                e.Property(e => e.Name).HasMaxLength(32);
             });
 
             modelBuilder.Entity<StudentTest>(e=>
@@ -149,7 +144,6 @@ namespace SPSUL.Models
                 e.Property(e => e.Description).HasMaxLength(512);
                 e.HasOne(e => e.QuestionType).WithMany(e => e.Questions).HasForeignKey(e => e.QuestionTypeId);
 
-                e.HasOne(e => e.StudentField).WithMany(e => e.Questions).HasForeignKey(e => e.StudentFieldId);
             });
 
             modelBuilder.Entity<QuestionOption>(e =>
@@ -165,6 +159,13 @@ namespace SPSUL.Models
                 e.HasKey(e => new { e.TeacherId, e.RoleId });
                 e.HasOne(e => e.Teacher).WithMany(e => e.TeacherRoles).HasForeignKey(e => e.TeacherId);
                 e.HasOne(e => e.Role).WithMany(e => e.TeacherRoles).HasForeignKey(e => e.RoleId);
+            });
+
+            modelBuilder.Entity<ClassesFields>(e =>
+            {
+                e.HasKey(e => new { e.ClassesId, e.StudentFieldId });
+                e.HasOne(e => e.Classes).WithMany(e => e.ClassesFields).HasForeignKey(e => e.ClassesId);
+                e.HasOne(e => e.StudentField).WithMany(e => e.ClassesFields).HasForeignKey(e => e.StudentFieldId);
             });
 
             base.OnModelCreating(modelBuilder);

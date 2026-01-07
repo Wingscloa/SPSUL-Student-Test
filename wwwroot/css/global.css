@@ -246,9 +246,9 @@ body {
     cursor:pointer;
 }
 
-    .profile:hover {
+.profile:hover {
         opacity: 0.6;
-    }
+}
 
 button {
     padding: 10px 15px;
@@ -262,19 +262,18 @@ button {
     cursor: pointer;
 }
 
-    button:hover {
-        color: white;
+button:hover {
+        color: rgb(200,200,200);
         -moz-transform: scale(1.05);
         -ms-transform: scale(1.05);
         -o-transform: scale(1.05);
         -webkit-transform: scale(1.05);
         transform: scale(1.05);
-    }
+}
 
 .myModal {
+    height: 90vh;
     background-color: white !important;
-    width: 1100px !important;
-    height: 900px !important;
     -moz-border-radius: 12px;
     -webkit-border-radius: 12px;
     border-radius: 12px;
@@ -291,27 +290,72 @@ button {
     border-bottom-left-radius: 12px;
 }
 
+.customUl li:first-child {
+    -webkit-border-top-left-radius: 12px;
+    border-top-left-radius: 12px;
+}
+
 .menuItem {
     cursor: pointer;
-    display: flex;
     list-style: none;
     text-decoration: none;
     width: 144px;
     height: 48px;
     background-color: #FCFCFC;
-    justify-content: center;
-    align-items: center;
+    font-size: 16px;
+    font-weight: 400;
     text-align: center;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
 }
-    .menuItem:hover {
-        background-color: #FAFAFA;
-        border-right: solid #FAC37B 2px;
-    }
 
-    .menuItem.active {
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.dropdown {
+    position: relative;
+    display: block;
+}
+
+.dropdown-content {
+    display: block;
+    position: absolute;
+    width: 144px;
+    top: 48px;
+    z-index: 50;
+    background-color: white;
+    padding: 0;
+}
+
+.subMenuItem {
+    padding: 4px 8px;
+    border-right: solid var(--spsul-primary) 4px;
+    color: rgb(100,100,100);
+    text-align: center;
+    font-size: 16px;
+}
+
+.subMenuItem:hover {
+    background-color: #FAFAFA;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.menuItem:hover {
+    background-color: #FAFAFA;
+    border-right: solid #FAC37B 2px;
+}
+
+.menuItem.active {
         border-right: solid #FF9000 4px;
         background-color: #F8F8F8;
-    }
+}
 
 .modalContent {
     display: block;
@@ -321,10 +365,11 @@ button {
 
 .ProfileContent {
     display: flex;
+    justify-content: flex-start;
     -webkit-align-items: center;
     align-items: flex-end;
-    padding: 6px;
-    gap: 6px;
+    padding: 8px;
+    gap: 14px;
 }
 
 .Profile {
@@ -338,10 +383,17 @@ button {
     border-radius: 50%;
     border: solid 2px var(--spsul-primary);
     background-color: whitesmoke;
+    cursor: pointer;
 }
 
-.modalBreak{
-    width:100%;
+.TeacherName {
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.modalBreak {
+    width: 100%;
     height: 2px;
     background-color: var(--spsul-primary)
 }
@@ -352,7 +404,6 @@ button {
     background-color: #DFDFDF;
 }
 
-
 .ConfigContent {
     margin-top: 8px;
     padding: 9px;
@@ -360,7 +411,7 @@ button {
 
 .ContentHeader {
     font-weight: 500;
-    font-size: 18px;
+    font-size: 24px;
     color: var(--spsul-primary); 
     margin-bottom: 8px;
 }
@@ -373,10 +424,10 @@ button {
 
 .configInput {
     width: 100%;
-    padding: 6px;
+    padding: 8px;
     border: solid 1px var(--spsul-primary);
-    border-radius: 2px;
-    font-size: 14px;
+    border-radius: 4px;
+    font-size: 18px;
 }
     .configInput:focus {
         outline: none;
@@ -385,13 +436,9 @@ button {
     }
 
     .configInput::placeholder {
-        font-size: 14px;
+        font-size: 18px;
         color: #BABABA;
     }
-
-#configModal {
-    /*--bs-modal-width: 75rem;*/
-}
 
 .configButton {
     background-color: var(--spsul-primary);
@@ -465,3 +512,89 @@ input:checked + .slider {
     font-weight: 300;
     padding-left: 4px;
 }
+
+.tableRow {
+    width: 100%;
+    background-color: rgb(250,250,250)
+}
+    .tableRow:hover {
+        background-color: rgb(240,240,240);
+    }
+
+.tableRow td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.tableRow td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.tableRow td {
+    padding: 0px 8px;
+}
+
+.permissionTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.permissionTable th {
+    text-align: left;
+    padding: 8px;
+    font-weight: 500;
+}
+
+.tableHeaders th:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.tableHeaders th:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.tableRow.disabled {
+    background-color: #e6e6e6;
+}
+
+.tests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .tests-table thead th {
+        text-align: left;
+        font-weight: 700;
+        color: var(--muted);
+        padding: 14px 18px;
+        border-bottom: 2px solid var(--border);
+    }
+
+    .tests-table tbody td {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .tests-table tbody tr:hover {
+        background: #fff7ef;
+    }
+
+    .tests-table a {
+        text-decoration: none;
+        color: var(--muted);
+    }
+
+.username{
+    width: fit-content;
+    height: 100%;
+}
+
+    .username p {
+        text-align: center;
+        margin: 0 auto;
+        font-weight: 500;
+    }

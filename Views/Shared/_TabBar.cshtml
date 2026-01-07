@@ -1,0 +1,28 @@
+@* Bottom Tab Bar (mobile) *@
+<nav class="tabbar d-lg-none" role="navigation" aria-label="Spodní navigace">
+    <a class="tabbar-item" asp-controller="Home" asp-action="Index" title="Domù">
+        <i class="bi bi-house-door" aria-hidden="true"></i>
+        <span>Domù</span>
+        <b class="indicator" aria-hidden="true"></b>
+    </a>
+    <a class="tabbar-item" asp-controller="Test" asp-action="Index" title="Vytvoøit test">
+        <i class="bi bi-plus-square" aria-hidden="true"></i>
+        <span>Vytvoøit</span>
+        <b class="indicator" aria-hidden="true"></b>
+    </a>
+    <a class="tabbar-item" asp-controller="Students" asp-action="Index" title="Studenti">
+        <i class="bi bi-people" aria-hidden="true"></i>
+        <span>Studenti</span>
+        <b class="indicator" aria-hidden="true"></b>
+    </a>
+    <a class="tabbar-item" asp-controller="Detail" asp-action="Index" title="Výsledky">
+        <i class="bi bi-graph-up-arrow" aria-hidden="true"></i>
+        <span>Výsledky</span>
+        <b class="indicator" aria-hidden="true"></b>
+    </a>
+    <button class="tabbar-item js-open-settings" type="button" data-bs-toggle="modal" data-bs-target="#configModal" title="Nastavení">
+        <i class="bi bi-gear" aria-hidden="true"></i>
+        <span>Nastavení</span>
+        <b class="indicator" aria-hidden="true"></b>
+    </button>
+</nav>

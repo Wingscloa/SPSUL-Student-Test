@@ -62,12 +62,6 @@
     requestAnimationFrame(() => {
         chart.data.datasets[0].data = [success, fail];
         chart.update();
-
-        // Subtle page entrance
-        gsap.from('.hero-title-top, .hero-title-bottom', { y: 20, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' });
-        gsap.from('.btn-primary', { y: 12, opacity: 0, duration: 0.5, delay: 0.2, ease: 'power2.out' });
-        gsap.from('.donut-wrap', { scale: 0.9, opacity: 0, duration: 0.6, delay: 0.25, ease: 'back.out(1.7)' });
-        gsap.from('#testsTable tbody tr', { y: 8, opacity: 0, duration: 0.4, stagger: 0.05, ease: 'power1.out', delay: 0.15 });
     });
 
     // Search filter

@@ -1,0 +1,109 @@
+﻿@* @using SPSUL.Models.Display.Menu
+@model Profile
+
+<div class="ConfigContent">
+    <p class="ContentHeader">Údaje o profilu</p>
+    <div class="row ms-1">
+        <div class=col-6>
+            <label class="configLabel" for="FirstName">
+                <span class="bi bi-person-circle me-1"></span>Křestní jméno
+            </label>
+            <input class="configInput" autocomplete="off" disabled value="@Model.Teacher.FirstName" name="FirstName" id="FirstName" />
+        </div>
+        <div class=col-6>
+            <label class="configLabel" for="LastName">
+                <span class="bi bi-person-circle me-1"></span>Příjmení
+            </label>
+            <input class="configInput" autocomplete="off" disabled value="@Model.Teacher.LastName" name="LastName" id="LastName" />
+        </div>
+    </div>
+    <div class="row ms-1 mt-2">
+        <div class=col-6>
+            <label class="configLabel" for="NickName">
+                <span class="bi bi-person-circle me-1"></span>Přezdívka
+            </label>
+            <input class="configInput" autocomplete="off" disabled value="@Model.Teacher.NickName" name="NickName" id="NickName" />
+        </div>
+    </div>
+    <div class="row ms-1 mt-4">
+        <div class="col-12 d-flex justify-content-end">
+            <div class="col-2 text-center configButton">Změnit údaje</div>
+        </div>
+    </div>
+</div>
+<div class="modalBreakGrey mt-2"></div>
+<div class="ConfigContent">
+    <p class="ContentHeader">Oprávnění</p>
+    <table class="permissionTable">
+        <tr class="tableHeaders">
+            <th class="col-2">Oprávnění</th>
+            <th class="col-1">Povolení</th>
+            <th class="col-6">Popis</th>
+        </tr>
+        @foreach(var role in Model.Roles)
+        {
+            var isAssigned = Model.Teacher.TeacherRoles.Any(e => e.RoleId == role.RoleId);
+            <tr class="tableRow @(isAssigned ? "" : "disabled")">
+                 <td>@role.Name</td>
+                 <td>
+                    <label class="switch" for="@role.Name">
+                        <input type="checkbox" id="@role.Name" @(isAssigned ? "checked" : "") disabled/>
+                        <div class="slider round"></div>
+                    </label>
+                 </td>
+                 @* <td>@role.Description</td> 
+            </tr>
+        }
+                 <tr class="tableRow disabled">
+            <td>Administrator</td>
+            <td>
+                <label class="switch" for="Administrator">
+                    <input type="checkbox" id="Administrator" />
+                    <div class="slider round"></div>
+                </label>
+            </td>
+            <td>Oprávnění uděluje plnou kontrolu nad systémem – správce může vytvářet, upravovat i mazat všechny účty.</td>
+        </tr>
+        <tr class="tableRow">
+            <td>Vytváření studentu</td>
+            <td>
+                <label class="switch" for="Vytváření studentu">
+                    <input type="checkbox" id="Vytváření studentu" />
+                    <div class="slider round"></div>
+                </label>
+            </td>
+            <td>Oprávnění umožňuje uživateli přidávat nové studenty do systému a nastavovat jejich základní údaje.</td>
+        </tr>
+        <tr class="tableRow">
+            <td>Pohled na testy</td>
+            <td>
+                <label class="switch" for="Pohled na testy">
+                    <input type="checkbox" id="Pohled na testy" />
+                    <div class="slider round"></div>
+                </label>
+            </td>
+            <td>Oprávnění umožňuje uživateli zobrazit všechny testy a jejich výsledky bez možnosti úprav.</td>
+        </tr>
+        <tr class="tableRow">
+            <td>Vytváření testu</td>
+            <td>
+                <label class="switch" for="Vytváření testu">
+                    <input type="checkbox" id="Vytváření testu" />
+                    <div class="slider round"></div>
+                </label>
+            </td>
+            <td>Oprávnění umožňuje vytvářet nové testy, přidávat otázky a přiřazovat je konkrétním studentům.</td>
+        </tr>
+        <tr class="tableRow">
+            <td>Statistiky</td>
+            <td>
+                <label class="switch" for="Statistiky">
+                    <input type="checkbox" id="Statistiky" />
+                    <div class="slider round"></div>
+                </label>
+            </td>
+            <td>Oprávnění umožňuje zobrazit přehledné statistiky o výsledcích studentů, testech a celkov2ém výkonu.</td>
+        </tr> 
+    </table>
+</div>
+*@
