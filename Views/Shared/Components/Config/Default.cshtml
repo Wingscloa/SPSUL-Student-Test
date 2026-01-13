@@ -1,0 +1,36 @@
+﻿@using SPSUL.ViewComponents
+@model ConfigurationViewModel
+
+<div class="modal fade" id="configModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-lg-down">
+        <div class="modal-content myModal d-flex flex-row">
+            <nav class="navbar">
+                <ul class="customUl">
+                    <li class="menuItem active" onclick="loadConfig('ConfigProfile')"><a>Profil a oprávnění</a></li>
+                    <li class="menuItem" onclick="loadConfig('ConfigClass')"><a>Třídy</a></li>
+                    <li class="menuItem" onclick="loadConfig('ConfigStudent')"><a>Studenti</a></li>
+                    <li class="menuItem" onclick="loadConfig('ConfigTeacher')"><a>Učitelé</a></li>
+                    <li class="menuItem" onclick="loadConfig('ConfigAbout')"><a>O aplikaci</a></li>
+                    <li class="menuItem"><a asp-controller="Auth" asp-action="Logout">Odhlásit se</a></li>
+                </ul>
+            </nav>
+            <div class="modalContent d-flex flex-column flex-grow-1" style="min-height:0;">
+                <div class="ProfileContent d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="Profile"></div>
+                        <p class="TeacherName mb-0">@Model.Teacher.FirstName @Model.Teacher.LastName
+                            <span class="Nickname">@Model.Teacher.NickName</span>
+                        </p>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal" aria-label="Zavřít konfiguraci">
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="modalBreak"></div>
+                <div id="modalContainer" class="flex-grow-1" style="min-height:0; overflow:auto;">
+                    @await Component.InvokeAsync("ConfigProfile")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

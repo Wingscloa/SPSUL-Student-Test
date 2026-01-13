@@ -1,15 +1,25 @@
-﻿@{
-    Layout = null;
-}
-<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
-<link href="~/css/global.css" rel="stylesheet" />
-<link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" />
-<link rel="shortcut icon" href="~/Image/ico.ico" />
+﻿<link rel="shortcut icon" href="~/Image/ico.ico" />
 
-<div class="background layout">
-    <div class="left ">
+<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+<link href="~/css/global.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/lib/toastr.js/toastr.css" rel="stylesheet" asp-append-version="true" />
+
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/lib/toastr.js/toastr.min.js" asp-append-version="true"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+    <div class="background layout">
+        <div class="left ">
+        </div>
+        <div class="right">
+            @RenderBody()
+        </div>
     </div>
-    <div class="right">
-        @RenderBody()
-    </div>
-</div>
+    </body>
+</html>
+
+@await Html.PartialAsync("_NotificationHandler")

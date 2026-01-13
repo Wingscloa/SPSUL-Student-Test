@@ -1,6 +1,4 @@
-﻿
-@{
-
+﻿@{
     ViewData["Title"] = "Login učitele";
     Layout = "~/Views/Shared/Layouts/_Auth.cshtml"; ;
 }
@@ -9,10 +7,9 @@
 <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
 <link href="~/css/global.css" rel="stylesheet" asp-append-version="true"/>
 
-
 <form asp-controller="Auth" asp-action="Login" onkeydown="return event.key != 'Enter';">
     <div class="container" style="min-width: 320px;">
-        <div class="row headContainer justify-content-center">
+        <div class="row headContainer justify-content-center gap-3">
             <img class="logo" src=".\image\logo\spsul.webp" />
             <h1 class="Header">SPSUL</h1>
         </div>
@@ -36,11 +33,6 @@
         <div class="row mt-3">
             <div class="col">
                 <button class="btn btn-primary w-100"><span class="boldWhite">Přihlásit se</span></button>
-            </div>
-        </div>
-        <div class="row mt-2 text-end">
-            <div class=col>
-                <a class="link-primary">Nemáte účet?</a>
             </div>
         </div>
         <hr class="mt-3" />

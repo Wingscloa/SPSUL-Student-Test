@@ -1,0 +1,48 @@
+.ct-wrapper{min-height:0}
+
+/* Scroll regions should fill available height inside the modal body area */
+.ct-scroll{overflow:auto;min-height:0;flex:1 1 auto}
+
+/* On mobile cap height to viewport to avoid giant panels */
+@media (max-width: 991.98px){ .ct-scroll{max-height:calc(100vh - 280px)} }
+
+.ct-list .name-cell{white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width: 260px}
+@media (max-width: 575.98px){ .ct-list .name-cell{max-width: 180px} }
+.ct-pager{position:sticky; bottom:0}
+.ct-savebar{position:sticky; bottom:0}
+
+/* Compact paddings on small screens */
+@media (max-width: 575.98px){
+  .ct-form .p-4{padding: 1rem !important}
+  .configInput{font-size: .95rem}
+}
+
+/* Focus: orange only on focus; default neutral */
+.ct-wrapper .configInput, .ct-wrapper .form-select{border-color:#dee2e6}
+.configInput:focus, .form-select:focus{box-shadow:0 0 0 .2rem rgba(255,138,0,.25); border-color:#ff8a00}
+
+/* Sticky table head */
+.table thead.sticky-top{background:#fff}
+
+/* Filters row fixes */
+.ct-filters .input-group{width:100%}
+.ct-filters .input-group .form-control{margin:0}
+.ct-filters .input-group-text{border-top-right-radius:0;border-bottom-right-radius:0}
+.ct-filters .form-select{margin:0}
+.ct-wrapper .p-3 .row.g-2{--bs-gutter-y: .5rem;}
+
+/* Offcanvas editor spacing */
+#ctEditor .offcanvas-body{padding-bottom: 96px;}
+
+/* Offcanvas opened from inside #configModal must be above the modal */
+#configModal .offcanvas{ z-index: 11060; }
+#configModal .offcanvas-backdrop{ z-index: 11050; }
+
+/* Select2 title picker: show more text */
+#ctRoot .select2-container--bootstrap-5{width:100% !important;}
+#ctRoot .select2-dropdown{min-width: 420px;}
+@media (max-width: 575.98px){ #ctRoot .select2-dropdown{min-width: 320px;} }
+
+#ctEditor .select2-container--bootstrap-5{width:100% !important;}
+#ctEditor .select2-dropdown{min-width: 420px;}
+@media (max-width: 575.98px){ #ctEditor .select2-dropdown{min-width: 320px;} }

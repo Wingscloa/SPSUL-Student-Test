@@ -1,0 +1,32 @@
+﻿@using SPSUL.Models.Display.Test
+@model CreateViewModel
+@{
+    ViewData["Title"] = "Vytvoření testu";
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml"; ;
+}
+<link href="~/css/create.css" rel="stylesheet" />
+
+<div class="createContainer">
+    <div class="createPanel">
+        <h1>Vytvoření testu</h1>
+        <div class="row">
+            <div class="col-3">
+                <label class="configLabel" for="Name">
+                    <span class="bi bi-file-earmark-medical-fill me-1"></span>Název testu
+                </label>
+                <input class="configInput" autocomplete="off" placeholder="Zadej název testu" name="Name" id="Name" />
+            </div>
+            <div class="col-3">
+                <label class="configLabel" for="StudentFieldId">
+                    <span class="bi bi-file-earmark-medical-fill me-1"></span>Předmět
+                </label>
+                <select class="form-select configInput" id="StudentFieldId">
+                    @foreach (var field in Model.StudentFields)
+                    {
+                        <option value="@field.StudentFieldId">@field.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,52 +3,56 @@
   "WorkspaceRootPath": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\viewcomponents\\userviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:viewcomponents\\userviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\wwwroot\\css\\home.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:wwwroot\\css\\home.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\controllers\\testcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:controllers\\testcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\test\\test.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\test\\test.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\models\\data\\test.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:models\\data\\test.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\models\\data\\studenttest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:models\\data\\studenttest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\shared\\layouts\\_main.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\shared\\layouts\\_main.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\shared\\components\\user\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\shared\\components\\user\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\auth\\test.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\auth\\test.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\shared\\usermenu\\_profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\shared\\usermenu\\_profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\shared\\layouts\\_auth.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\shared\\layouts\\_auth.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\shared\\layouts\\layoutcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\shared\\layouts\\layoutcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\wwwroot\\css\\auth.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:wwwroot\\css\\auth.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\wwwroot\\css\\global.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:wwwroot\\css\\global.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\shared\\layouts\\_auth.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\shared\\layouts\\_auth.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\students\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\students\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\shared\\_notificationhandler.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\shared\\_notificationhandler.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\question\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\question\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\views\\detail\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:views\\detail\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\wwwroot\\css\\chartpage.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:wwwroot\\css\\chartpage.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|c:\\users\\acer\\projects\\rocnikovka\\spsul-student-test\\controllers\\controllerextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DC7C877-EAE8-40A3-AB0C-27FC48EB18EA}|SPSUL.csproj|solutionrelative:controllers\\controllerextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -58,162 +62,175 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "_Profile.cshtml",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\UserMenu\\_Profile.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\UserMenu\\_Profile.cshtml",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\UserMenu\\_Profile.cshtml",
-              "RelativeToolTip": "Views\\Shared\\UserMenu\\_Profile.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAA3AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-07T11:34:30.16Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "_Auth.cshtml",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\_Auth.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\Layouts\\_Auth.cshtml",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\_Auth.cshtml",
-              "RelativeToolTip": "Views\\Shared\\Layouts\\_Auth.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-07T11:33:07.865Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Default.cshtml",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Components\\User\\Default.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\Components\\User\\Default.cshtml",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Components\\User\\Default.cshtml",
-              "RelativeToolTip": "Views\\Shared\\Components\\User\\Default.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-07T11:27:12.706Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UserViewComponent.cs",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\ViewComponents\\UserViewComponent.cs",
-              "RelativeDocumentMoniker": "ViewComponents\\UserViewComponent.cs",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\ViewComponents\\UserViewComponent.cs",
-              "RelativeToolTip": "ViewComponents\\UserViewComponent.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAowBEAAAAAAAAAAAAAAA==",
+              "Title": "StudentTest.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Models\\Data\\StudentTest.cs",
+              "RelativeDocumentMoniker": "Models\\Data\\StudentTest.cs",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Models\\Data\\StudentTest.cs",
+              "RelativeToolTip": "Models\\Data\\StudentTest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-07T11:18:57.206Z",
+              "WhenOpened": "2026-01-12T12:04:23.665Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAADIAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "Test.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Models\\Data\\Test.cs",
+              "RelativeDocumentMoniker": "Models\\Data\\Test.cs",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Models\\Data\\Test.cs",
+              "RelativeToolTip": "Models\\Data\\Test.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-07T10:55:06.406Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "LayoutController.cs",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\LayoutController.cs",
-              "RelativeDocumentMoniker": "Views\\Shared\\Layouts\\LayoutController.cs",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\LayoutController.cs",
-              "RelativeToolTip": "Views\\Shared\\Layouts\\LayoutController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-07T10:52:00.81Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "global.css",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\wwwroot\\css\\global.css",
-              "RelativeDocumentMoniker": "wwwroot\\css\\global.css",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\wwwroot\\css\\global.css",
-              "RelativeToolTip": "wwwroot\\css\\global.css",
-              "ViewState": "AgIAAPgBAAAAAAAAAAAAwE0CAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-01-07T10:41:51.967Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "_Main.cshtml",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\_Main.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\Layouts\\_Main.cshtml",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\_Main.cshtml",
-              "RelativeToolTip": "Views\\Shared\\Layouts\\_Main.cshtml",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAADcAAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-07T10:39:38.391Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Question\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Question\\Index.cshtml",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Question\\Index.cshtml",
-              "RelativeToolTip": "Views\\Question\\Index.cshtml",
-              "ViewState": "AgIAACEAAAAAAAAAAAAAACwAAAAOAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-07T10:37:35.056Z",
+              "WhenOpened": "2026-01-12T12:03:45.891Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Students\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Students\\Index.cshtml",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Students\\Index.cshtml",
-              "RelativeToolTip": "Views\\Students\\Index.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFkAAAA3AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-07T10:36:39.21Z",
+              "Title": "auth.css",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\wwwroot\\css\\auth.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\auth.css",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\wwwroot\\css\\auth.css",
+              "RelativeToolTip": "wwwroot\\css\\auth.css",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAABUAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-01-12T11:59:21.025Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Detail\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Detail\\Index.cshtml",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Detail\\Index.cshtml",
-              "RelativeToolTip": "Views\\Detail\\Index.cshtml",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAAC8AAAAkAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "TestController.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Controllers\\TestController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TestController.cs",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Controllers\\TestController.cs",
+              "RelativeToolTip": "Controllers\\TestController.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAiwC4AAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-12T11:57:39.654Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Auth\\Login.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\Login.cshtml",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Auth\\Login.cshtml",
+              "RelativeToolTip": "Views\\Auth\\Login.cshtml",
+              "ViewState": "AgIAABYAAAAAAAAAAAAiwCMAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-07T10:25:50.943Z",
+              "WhenOpened": "2026-01-12T11:56:27.412Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Test.cshtml",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Auth\\Test.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\Test.cshtml",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Auth\\Test.cshtml",
+              "RelativeToolTip": "Views\\Auth\\Test.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-12T11:56:27.739Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "home.css",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\wwwroot\\css\\home.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\home.css",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\wwwroot\\css\\home.css",
+              "RelativeToolTip": "wwwroot\\css\\home.css",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAAAHoAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-01-11T17:10:13.312Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Test.cshtml",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Test\\Test.cshtml",
+              "RelativeDocumentMoniker": "Views\\Test\\Test.cshtml",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Test\\Test.cshtml",
+              "RelativeToolTip": "Views\\Test\\Test.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-12T12:20:42.13Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "_Main.cshtml",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\_Main.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\Layouts\\_Main.cshtml",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\_Main.cshtml",
+              "RelativeToolTip": "Views\\Shared\\Layouts\\_Main.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-12T10:09:13.831Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 11,
-              "Title": "chartpage.css",
-              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\wwwroot\\css\\chartpage.css",
-              "RelativeDocumentMoniker": "wwwroot\\css\\chartpage.css",
-              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\wwwroot\\css\\chartpage.css",
-              "RelativeToolTip": "wwwroot\\css\\chartpage.css",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAACoAAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-01-07T10:32:07.469Z",
+              "Title": "_NotificationHandler.cshtml",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\_NotificationHandler.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_NotificationHandler.cshtml",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\_NotificationHandler.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_NotificationHandler.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-12T10:07:40.558Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "_Auth.cshtml",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\_Auth.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\Layouts\\_Auth.cshtml",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Views\\Shared\\Layouts\\_Auth.cshtml",
+              "RelativeToolTip": "Views\\Shared\\Layouts\\_Auth.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-12T10:07:32.542Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ControllerExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Controllers\\ControllerExtensions.cs",
+              "RelativeDocumentMoniker": "Controllers\\ControllerExtensions.cs",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Controllers\\ControllerExtensions.cs",
+              "RelativeToolTip": "Controllers\\ControllerExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-12T10:04:12.017Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Acer\\projects\\Rocnikovka\\SPSUL-Student-Test\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAiwE4AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-12T10:02:09.406Z",
               "EditorCaption": ""
             }
           ]

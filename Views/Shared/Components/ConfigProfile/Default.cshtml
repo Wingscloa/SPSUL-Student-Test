@@ -1,0 +1,58 @@
+﻿@using SPSUL.ViewComponents
+@model ConfigProfileViewModel
+
+<div class="ConfigContent">
+    <p class="ContentHeader">Údaje o profilu</p>
+    <div class="row ms-1">
+        <div class=col-6>
+            <label class="configLabel" for="FirstName">
+                <span class="bi bi-person-circle me-1"></span>Křestní jméno
+            </label>
+            <input class="configInput" autocomplete="off" disabled value="@Model.Teacher.FirstName" name="FirstName" id="FirstName" />
+        </div>
+        <div class=col-6>
+            <label class="configLabel" for="LastName">
+                <span class="bi bi-person-circle me-1"></span>Příjmení
+            </label>
+            <input class="configInput" autocomplete="off" disabled value="@Model.Teacher.LastName" name="LastName" id="LastName" />
+        </div>
+    </div>
+    <div class="row ms-1 mt-2">
+        <div class=col-6>
+            <label class="configLabel" for="NickName">
+                <span class="bi bi-person-circle me-1"></span>Přezdívka
+            </label>
+            <input class="configInput" autocomplete="off" disabled value="@Model.Teacher.NickName" name="NickName" id="NickName" />
+        </div>
+    </div>
+    <div class="row ms-1 mt-4">
+        <div class="col-12 d-flex justify-content-end">
+            <div class="col-2 text-center configButton">Změnit údaje</div>
+        </div>
+    </div>
+</div>
+<div class="modalBreakGrey mt-2"></div>
+<div class="ConfigContent">
+    <p class="ContentHeader">Oprávnění</p>
+    <table class="permissionTable">
+        <tr class="tableHeaders">
+            <th class="col-2">Oprávnění</th>
+            <th class="col-1">Povolení</th>
+            <th class="col-6">Popis</th>
+        </tr>
+        @foreach (var role in Model.Roles)
+        {
+            bool isAssigned = Model.Teacher.TeacherRoles is not null ? Model.Teacher.TeacherRoles.Any(e => e.RoleId == role.RoleId) : false;
+            <tr class="tableRow @(isAssigned ? "" : "disabled")">
+                <td>@role.Name</td>
+                <td>
+                    <label class="switch" for="@role.Name">
+                        <input type="checkbox" id="@role.Name" @(isAssigned ? "checked" : "") disabled />
+                        <div class="slider round"></div>
+                    </label>
+                </td>
+                <td>@role.Description</td>
+            </tr>
+        }
+    </table>
+</div>

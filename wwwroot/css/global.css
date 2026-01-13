@@ -189,6 +189,16 @@ body {
     display:none;
 }
 
+.brandIcon {
+    width: 32px;
+    height: 32px;
+    color: var(--spsul-primary);
+}
+
+.cursor {
+    cursor: pointer;
+}
+
 @media (max-width: 992px) {
     .PrimaryButton {
         text-align: start;
@@ -211,6 +221,10 @@ body {
         color: rgb(0,0,0,0.8) !important;
         padding: 0px;
         border: none;
+    }
+
+    .configTableHeight {
+        height: calc(95vh - 100px) !important;
     }
 }
 
@@ -367,7 +381,7 @@ ul {
     display: flex;
     justify-content: flex-start;
     -webkit-align-items: center;
-    align-items: flex-end;
+    align-items: center;
     padding: 8px;
     gap: 14px;
 }
@@ -390,6 +404,7 @@ ul {
     font-size: 22px;
     font-weight: 600;
     text-align: center;
+    margin: 0;
 }
 
 .modalBreak {
@@ -598,3 +613,96 @@ input:checked + .slider {
         margin: 0 auto;
         font-weight: 500;
     }
+
+
+.Nickname{
+    font-weight: 400;
+    font-size: 16px;
+}
+
+
+.configTableHeight {
+    height: calc(85vh - 100px);
+}
+
+/* Tlaèítko v brandové barvì */
+.btn-orange {
+    background-color: #ff9000;
+    color: white;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+    .btn-orange:hover {
+        background-color: #e68200;
+        color: white;
+        box-shadow: 0 4px 8px rgba(255, 144, 0, 0.3);
+    }
+
+/* Úprava tvého configInputu */
+.configInput {
+    border: 1px solid #dee2e6;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+    .configInput:focus {
+        border-color: #ff9000;
+        box-shadow: 0 0 0 3px rgba(255, 144, 0, 0.15);
+    }
+
+/* Ikony v popiscích */
+.configLabel {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Bootstrap input-group fix */
+.input-group-text {
+    border-radius: 8px 0 0 8px;
+}
+
+/* Brand utilities for badges and accents */
+.text-orange{ color: var(--spsul-primary) !important; }
+.border-orange{ border-color: var(--spsul-primary) !important; }
+.bg-orange{ background-color: var(--spsul-primary) !important; color:#fff !important; }
+/* subtle background that contrasts on white and light headers */
+.bg-orange-subtle{ background-color: rgba(255,144,0,.12) !important; }
+
+/* Improve badge legibility with subtle weight */
+.badge.bg-orange-subtle{ font-weight:600; }
+
+/* Scoped modal layout for config modal only (avoid breaking other modals) */
+#configModal .modal-body{display:flex; flex-direction:column; min-height:0; overflow:hidden;}
+#configModal #modalContainer{display:flex; flex-direction:column; min-height:0; height:100%;}
+
+/* Config modal: responsive height without hardcoded vh */
+#configModal .modal-dialog{ min-height: 70vh; }
+#configModal .modal-content.myModal{ min-height: 70vh; height: min(90vh, 100%); } 
+
+@media (max-width: 991.98px){
+  #configModal .modal-content.myModal{height: 100%;}
+}
+
+/* Config modal sizing/positioning (desktop) */
+@media (min-width: 992px){
+  /* even wider - almost full screen but with margins */
+  #configModal{ --bs-modal-width: min(1800px, 98vw); }
+
+  /* taller and closer to edges */
+  #configModal .modal-dialog{ min-height: 90vh; margin-top: 4vh; margin-bottom: 2vh; }
+  #configModal .modal-content.myModal{ min-height: 90vh; height: min(96vh, 100%); }
+
+  /* move slightly down from exact center */
+  #configModal .modal-dialog-centered{ align-items: flex-start; }
+  #configModal .modal-dialog{ margin-top: 6vh; margin-bottom: 2vh; }
+}
+
+/* (intentionally no global overrides to .modal-content/.modal-body) */
+
+

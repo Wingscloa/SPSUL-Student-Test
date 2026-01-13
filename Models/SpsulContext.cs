@@ -21,7 +21,7 @@ namespace SPSUL.Models
         public DbSet<QuestionOption> QuestionOptions { get; set; }
         public DbSet<QuestionType> QuestionTypes { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<StudentField> Fields { get; set; }
+        public DbSet<StudentField> StudentFields { get; set; }
         public DbSet<StudentTest> StudentTests { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<TeacherRole> TeacherRoles { get; set; }

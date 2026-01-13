@@ -52,7 +52,7 @@ body{
 .Header {
     margin: 0;
     padding: 0;
-    color: rgba(222,64,26,0.75);
+    color: var(--spsul-primary);
     text-align: center;
     font-size: 2.5rem;
 }
@@ -68,7 +68,7 @@ a {
 }
 
 hr {
-    background-color: #DE401A;
+    background-color: #f57e1d;
     margin: 0 auto;
     width: 16rem !important;
     height: 5px !important;

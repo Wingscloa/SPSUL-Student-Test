@@ -1,20 +1,16 @@
-:root{--tabbar-bg:rgba(20,20,20,.85);--tabbar-fg:#cfcfcf;--tabbar-active:#ff8a00}
-.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--tabbar-bg);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);padding:8px 10px;display:flex;justify-content:space-around;align-items:center;z-index:1045}
-.tabbar-item{appearance:none;background:none;border:0;color:var(--tabbar-fg);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 12px;border-radius:12px;position:relative;transform:translateY(0);transition:transform .15s ease,color .2s ease}
-.tabbar-item i{font-size:20px}
-.tabbar-item span{font-size:11px;font-weight:700}
-.tabbar-item .indicator{position:absolute;bottom:4px;height:4px;width:4px;border-radius:50%;background:transparent;transition:background .2s ease,transform .2s ease}
-.tabbar-item[aria-current="page"],.tabbar-item.active,.tabbar-item:active{color:#fff;transform:translateY(-2px)}
-.tabbar-item[aria-current="page"] .indicator,.tabbar-item.active .indicator{background:var(--tabbar-active);transform:scale(1.2)}
-.tabbar-item:focus-visible{outline:3px solid rgba(255,138,0,.5); outline-offset:2px}
-
-/ * Ripple/press effect */
-.tabbar-item::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,.15), transparent 45%);opacity:0;transition:opacity .25s ease}
+:root{--tabbar-bg:#fff;--tabbar-fg:#6b6b6b;--tabbar-active:#ff9000;--tabbar-border:#e9e9e9}
+.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--tabbar-bg);border-top:2px solid var(--tabbar-border);padding:8px 10px calc(8px + env(safe-area-inset-bottom)) 10px;display:flex;justify-content:space-around;align-items:center;z-index:1045;box-shadow:0 -2px 10px rgba(0,0,0,.08)}
+.tabbar-item{appearance:none;background:none;border:0;color:var(--tabbar-fg);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border-radius:12px;position:relative;transition:transform .2s ease,color .2s ease;min-width:64px;min-height:48px}
+.tabbar-item i{font-size:24px;transition:color .2s ease,transform .2s ease}
+.tabbar-item span{font-size:11px;font-weight:600;transition:color .2s ease}
+.tabbar-item .indicator{position:absolute;bottom:2px;height:3px;width:0;border-radius:2px;background:transparent;transition:width .3s ease,background .2s ease}
+.tabbar-item[aria-current="page"],.tabbar-item.active{color:var(--tabbar-active)}
+.tabbar-item[aria-current="page"] i,.tabbar-item.active i{color:var(--tabbar-active);transform:scale(1.1)}
+.tabbar-item[aria-current="page"] .indicator,.tabbar-item.active .indicator{background:var(--tabbar-active);width:32px}
+.tabbar-item:active{transform:scale(0.95)}
+.tabbar-item:focus-visible{outline:3px solid rgba(255,144,0,.4); outline-offset:2px}
+.tabbar-item::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,144,0,.2), transparent 50%);opacity:0;transition:opacity .25s ease}
 .tabbar-item:active::after{opacity:1}
-
-/ * Reduced motion */
-@media (prefers-reduced-motion: reduce){.tabbar-item{transition:none}.tabbar-item .indicator{transition:none}}
-
-/ * hide on desktop, add safe padding on mobile */
+@media (prefers-reduced-motion: reduce){.tabbar-item,.tabbar-item i,.tabbar-item .indicator{transition:none}}
 @media(min-width:992px){.tabbar{display:none}}
 @media(max-width:991.98px){body{padding-bottom: calc(72px + env(safe-area-inset-bottom));}}

@@ -1,0 +1,147 @@
+﻿@using SPSUL.ViewComponents
+@model ConfigTeacherViewModel
+
+<link rel="stylesheet" href="~/css/config-teacher.css" />
+
+<div class="d-flex flex-column h-100 ct-wrapper" id="ctRoot">
+    <div class="p-3 bg-light border-bottom flex-shrink-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 class="brandText mb-0">Správa učitelů</h5>
+            <span class="badge rounded-pill bg-orange-subtle text-orange border border-orange">
+                Celkem: @Model.Teachers.Count()
+            </span>
+        </div>
+
+        <div class="row g-2 ct-filters">
+            <div class="col-12 col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search" aria-hidden="true"></i></span>
+                    <input type="text" id="teacherSearch" class="form-control configInput border-start-0"
+                           placeholder="Hledej jméno nebo přezdívku..." onkeyup="filterTeachers()" aria-label="Hledání učitele">
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <select class="form-select configInput" id="titleFilter" onchange="filterTeachers()" aria-label="Filtr titulů">
+                    <option value="">Všechny tituly</option>
+                    <option value="Ph.D.">Ph.D.</option>
+                    <option value="Bc.">Bc.</option>
+                    <option value="Mgr.">Mgr.</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-0 flex-grow-1 overflow-hidden" style="min-height:0;">
+        <!-- LIST -->
+        <div class="col-12 col-lg-7 d-flex flex-column h-100 border-end overflow-hidden order-1 ct-list">
+            <div class="table-responsive flex-grow-1 ct-scroll">
+                <table class="table table-hover align-middle mb-0" id="teacherTable">
+                    <thead class="sticky-top bg-white" style="z-index: 5; box-shadow: 0 1px 0 rgba(0,0,0,0.05);">
+                        <tr>
+                            <th>Učitel</th>
+                            <th class="d-none d-md-table-cell">Tituly</th>
+                            <th class="d-none d-sm-table-cell">Přezdívka</th>
+                            <th class="text-center">Akce</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            <tr class="teacher-row"
+                                data-first="@teacher.FirstName"
+                                data-last="@teacher.LastName"
+                                data-nick="@teacher.NickName"
+                                role="button"
+                                tabindex="0">
+                                <td class="fw-bold name-cell">@teacher.FirstName @teacher.LastName</td>
+                                <td class="title-cell d-none d-md-table-cell"><span class="small">@string.Join(", ", teacher.Titles)</span></td>
+                                <td class="d-none d-sm-table-cell text-muted">@@@teacher.NickName</td>
+                                <td class="text-center">
+                                    <i class="bi bi-pencil-square text-orange" aria-hidden="true"></i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-2 bg-light border-top flex-shrink-0 d-flex justify-content-between align-items-center ct-pager">
+                <small class="text-muted">Kliknutím na řádek otevřete editaci</small>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-secondary" aria-label="Předchozí stránka"><i class="bi bi-chevron-left"></i></button>
+                    <button class="btn btn-outline-secondary" aria-label="Další stránka"><i class="bi bi-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESKTOP FORM (hidden on mobile) -->
+        <div class="col-12 col-lg-5 d-none d-lg-flex flex-column h-100 bg-white order-2 overflow-hidden ct-form">
+            <div class="p-4 flex-grow-1 ct-scroll">
+                <h6 class="configLabel mb-4"><i class="bi bi-pencil-square me-2"></i>Editace učitele</h6>
+
+                <form id="teacherConfigFormDesktop">
+                    <div class="mb-3">
+                        <label class="configLabel small mb-1" for="EditFirstName">Jméno</label>
+                        <input type="text" id="EditFirstName" class="configInput w-100" placeholder="Jméno">
+                    </div>
+                    <div class="mb-3">
+                        <label class="configLabel small mb-1" for="EditLastName">Příjmení</label>
+                        <input type="text" id="EditLastName" class="configInput w-100" placeholder="Příjmení">
+                    </div>
+                    <div class="mb-3">
+                        <label class="configLabel small mb-1" for="EditNickName">Přezdívka</label>
+                        <input type="text" id="EditNickName" class="configInput w-100" placeholder="Přezdívka">
+                    </div>
+                    <div class="mb-3">
+                        <label class="configLabel small mb-1" for="EditTitles">Tituly</label>
+                        <select id="EditTitles" class="js-example-basic-multiple form-select" multiple="multiple">
+                            <option value="Bc.">Bc.</option>
+                            <option value="Mgr.">Mgr.</option>
+                            <option value="Ph.D.">Ph.D.</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <div class="p-3 border-top bg-light flex-shrink-0 d-flex gap-2 ct-savebar">
+                <button class="btn btn-orange btn-sm w-100 py-2 shadow-sm" type="button">
+                    <i class="bi bi-check2-circle me-1"></i> Uložit změny
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MOBILE OFFCANVAS EDITOR -->
+<div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="ctEditor" aria-labelledby="ctEditorLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="ctEditorLabel">Editace učitele</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Zavřít"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form id="teacherConfigFormMobile">
+            <div class="mb-3">
+                <label class="configLabel small mb-1" for="EditFirstNameMobile">Jméno</label>
+                <input type="text" id="EditFirstNameMobile" class="configInput w-100" placeholder="Jméno">
+            </div>
+            <div class="mb-3">
+                <label class="configLabel small mb-1" for="EditLastNameMobile">Příjmení</label>
+                <input type="text" id="EditLastNameMobile" class="configInput w-100" placeholder="Příjmení">
+            </div>
+            <div class="mb-3">
+                <label class="configLabel small mb-1" for="EditNickNameMobile">Přezdívka</label>
+                <input type="text" id="EditNickNameMobile" class="configInput w-100" placeholder="Přezdívka">
+            </div>
+            <div class="mb-3">
+                <label class="configLabel small mb-1" for="EditTitlesMobile">Tituly</label>
+                <select id="EditTitlesMobile" class="form-select" multiple="multiple">
+                    <option value="Bc.">Bc.</option>
+                    <option value="Mgr.">Mgr.</option>
+                    <option value="Ph.D.">Ph.D.</option>
+                </select>
+            </div>
+            <button class="btn btn-orange w-100" type="button">
+                <i class="bi bi-check2-circle me-1"></i> Uložit změny
+            </button>
+        </form>
+    </div>
+</div>

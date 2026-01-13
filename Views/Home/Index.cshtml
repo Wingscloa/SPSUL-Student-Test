@@ -6,91 +6,83 @@
 
 @section Scripts {
     <script src="~/lib/chart.js/chart.umd.js"></script>
-    <script src="~/js/home.js"></script>
 }
 
-<div class="tests-grid">
-    <section class="hero">
-        <div class="d-flex justify-content-center flex-column">
-            <div class="hero-title">
-                <div>
-                    <span class="hero-title-top">Tvoř</span>
-                    <span class="hero-title-bottom">Testy</span>
+<div class="homeContainer">
+    <div class="tests-grid">
+        <section class="hero">
+            <div class="d-flex flex-column ">
+                <div class="hero-title">
+                    <div>
+                        <span class="hero-title-top">Tvoř</span>
+                        <span class="hero-title-bottom">Testy</span>
+                    </div>
+                </div>
+                <a class="btn-primary mt-5" id="createTestbtn" href="/Tests/Create">Vytvořit test</a>
+            </div>
+            <div class="statistics">
+                <div class="search">
+                    <input id="searchInput" class="search-input" type="search" placeholder="Hledej v historii testů" />
+                </div>
+                <div class="table-scroll">
+                    <table id="testsTable" class="tests-table">
+                        <thead>
+                            <tr>
+                                <th>ID Testu</th>
+                                <th>Počet studentů</th>
+                                <th>Procento úspěšnosti</th>
+                                <th>Počet otázek</th>
+                                <th>Datum vytvoření</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>5</td>
+                                <td>30</td>
+                                <td>70%</td>
+                                <td>100</td>
+                                <td>15.3.2025</td>
+                                <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>30</td>
+                                <td>70%</td>
+                                <td>100</td>
+                                <td>15.3.2025</td>
+                                <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>30</td>
+                                <td>70%</td>
+                                <td>100</td>
+                                <td>15.3.2025</td>
+                                <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>30</td>
+                                <td>70%</td>
+                                <td>100</td>
+                                <td>15.3.2025</td>
+                                <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>30</td>
+                                <td>70%</td>
+                                <td>100</td>
+                                <td>15.3.2025</td>
+                                <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <a class="btn-primary" href="/Tests/Create">Vytvořit test</a>
-        </div>
-        <div class="donut-wrap">
-            <canvas id="successDonut" width="320" height="320" aria-label="Úspěšnost"></canvas>
-            <div class="donut-legend">
-                <span class="legend success">Úspěšnost</span>
-                <span class="legend fail">Neúspěšnost</span>
-            </div>
-        </div>
-    </section>
-    <section class="content">
-        <div class="desktop">
-            <div class="search">
-                <input id="searchInput" class="search-input" type="search" placeholder="Hledej v historii testů" />
-            </div>
-            <div class="table-scroll">
-                <table id="testsTable" class="tests-table">
-                    <thead>
-                        <tr>
-                            <th>ID Testu</th>
-                            <th>Počet studentů</th>
-                            <th>Procento úspěšnosti</th>
-                            <th>Počet otázek</th>
-                            <th>Datum vytvoření</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>5</td>
-                            <td>30</td>
-                            <td>70%</td>
-                            <td>100</td>
-                            <td>15.3.2025</td>
-                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>30</td>
-                            <td>70%</td>
-                            <td>100</td>
-                            <td>15.3.2025</td>
-                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>30</td>
-                            <td>70%</td>
-                            <td>100</td>
-                            <td>15.3.2025</td>
-                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>30</td>
-                            <td>70%</td>
-                            <td>100</td>
-                            <td>15.3.2025</td>
-                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>30</td>
-                            <td>70%</td>
-                            <td>100</td>
-                            <td>15.3.2025</td>
-                            <td><a href="#" aria-label="Otevřít">&#x2197;</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="stats-container">
+        </section>
+        <section class="statsContainer">
             <div class="stats-grid">
                 <div class="stats-item stats-item--xl bg-students">
                     <h1 class="gridHeader" onclick="location.href='/Students/Index'">Studenti</h1>
@@ -105,6 +97,6 @@
                     <h1 class="gridHeader">Vytvořit test</h1>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 </div>

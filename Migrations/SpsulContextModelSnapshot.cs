@@ -81,29 +81,6 @@ namespace SPSUL.Migrations
                     b.ToTable("ClassesStudents");
                 });
 
-            modelBuilder.Entity("SPSUL.Models.Data.Field", b =>
-                {
-                    b.Property<int>("StudentFieldId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentFieldId"));
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
-
-                    b.HasKey("StudentFieldId");
-
-                    b.ToTable("Fields");
-                });
-
             modelBuilder.Entity("SPSUL.Models.Data.Permission", b =>
                 {
                     b.Property<int>("PermissionId")
@@ -135,6 +112,9 @@ namespace SPSUL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
 
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(512)
@@ -145,10 +125,15 @@ namespace SPSUL.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<int>("QuestionTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("QuestionId");
+
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("QuestionTypeId");
 
@@ -277,6 +262,29 @@ namespace SPSUL.Migrations
                     b.HasKey("StudentId");
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("SPSUL.Models.Data.StudentField", b =>
+                {
+                    b.Property<int>("StudentFieldId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentFieldId"));
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.HasKey("StudentFieldId");
+
+                    b.ToTable("StudentFields");
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.StudentTest", b =>
@@ -439,7 +447,7 @@ namespace SPSUL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SPSUL.Models.Data.Field", "StudentField")
+                    b.HasOne("SPSUL.Models.Data.StudentField", "StudentField")
                         .WithMany("ClassesFields")
                         .HasForeignKey("StudentFieldId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -471,11 +479,19 @@ namespace SPSUL.Migrations
 
             modelBuilder.Entity("SPSUL.Models.Data.Question", b =>
                 {
+                    b.HasOne("SPSUL.Models.Data.Teacher", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SPSUL.Models.Data.QuestionType", "QuestionType")
                         .WithMany("Questions")
                         .HasForeignKey("QuestionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Creator");
 
                     b.Navigation("QuestionType");
                 });
@@ -575,7 +591,7 @@ namespace SPSUL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SPSUL.Models.Data.Field", "StudentField")
+                    b.HasOne("SPSUL.Models.Data.StudentField", "StudentField")
                         .WithMany("Tests")
                         .HasForeignKey("StudentFieldId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -591,13 +607,6 @@ namespace SPSUL.Migrations
                     b.Navigation("ClassesFields");
 
                     b.Navigation("ClassesStudents");
-                });
-
-            modelBuilder.Entity("SPSUL.Models.Data.Field", b =>
-                {
-                    b.Navigation("ClassesFields");
-
-                    b.Navigation("Tests");
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Permission", b =>
@@ -627,6 +636,13 @@ namespace SPSUL.Migrations
                     b.Navigation("ClassesStudents");
 
                     b.Navigation("StudentTests");
+                });
+
+            modelBuilder.Entity("SPSUL.Models.Data.StudentField", b =>
+                {
+                    b.Navigation("ClassesFields");
+
+                    b.Navigation("Tests");
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Teacher", b =>

@@ -4,15 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SPSUL</title>
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    
+    <!-- CSS first -->
     <link rel="stylesheet" href="~/css/global.css" asp-append-version="true" />
-    <script src="~/js/site.js" asp-append-version="true" defer></script>
     <link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" asp-append-version="true" />
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true" defer></script>
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" asp-append-version="true" />
-    <link rel="shortcut icon" href="~/Image/ico.ico" />
     <link rel="stylesheet" href="~/css/tabbar.css" asp-append-version="true" />
-    <script src="~/js/configuration.js"></script>
+    <link href="~/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="~/select2-bootstrap-5-theme-1.3.0/dist/select2-bootstrap-5-theme.css" rel="stylesheet" />
+    <link href="~/lib/toastr.js/toastr.css" rel="stylesheet" asp-append-version="true" />
+    
+    <!-- JS libraries -->
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/toastr.js/toastr.min.js" asp-append-version="true"></script>
+    <script src="~/select2/js/select2.min.js" defer></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/gsap/gsap.min.js" asp-append-version="true"></script>
+    
+    <link rel="shortcut icon" href="~/Image/ico.ico" />
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -25,7 +34,7 @@
             <div class="collapse navbar-collapse d-none d-lg-block" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item ">
-                        <a class="nav-link PrimaryButton" aria-current="page" asp-controller="Test" asp-action="Index" title="Vytvořit test">
+                        <a class="nav-link PrimaryButton" aria-current="page" asp-controller="Test" asp-action="Create" title="Vytvořit test">
                             <i class="bi bi-clipboard-plus-fill testIcon me-1" aria-hidden="true"></i>
                             <span class="visually-hidden">Vytvořit test</span>
                             Vytvořit test
@@ -52,40 +61,26 @@
                             Otázky
                         </a>
                     </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="nav-link" asp-controller="Test" asp-action="Index" title="Testy">
+                            <i class="bi bi-patch-question-fill me-1" aria-hidden="true"></i>
+                            Testy
+                        </a>
+                    </li>
                 </ul>
                 @await Component.InvokeAsync("User")
             </div>
         </div>
     </nav>
-
-    <div class="modal" id="configModal" tabindex="-1">
-        <div class="modal-dialog-centered modal-dialog modal-xl modal-fullscreen-lg-down">
-            <div class="modal-content myModal d-flex flex-row">
-                <nav class="navbar">
-                    <ul class="customUl">
-                        <li class="menuItem active"><a>Profil a oprávnění</a></li>
-                        <li class="menuItem"><a>Administrace</a></li>
-                        <li class="menuItem"><a>Studenti</a></li>
-                        <li class="menuItem"><a>O aplikaci</a></li>
-                        <li class="menuItem"><a asp-controller="Auth" asp-action="Logout">Odhlásit se</a></li>
-                    </ul>
-                </nav>
-                <div class="modalContent">
-                    <div class="ProfileContent">
-                        <div class="Profile">
-                        </div>
-                        <p class="TeacherName">Bc. Jakub Pokorny</p>
-                    </div>
-                    <div class="modalBreak"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @await Component.InvokeAsync("Config")
     @RenderBody()
+    
+    <script src="~/js/configuration.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
     @await Html.PartialAsync("_TabBar")
-
-    <script src="~/js/tabbar.js" asp-append-version="true" defer></script>
+    <script src="~/js/tabbar.js" asp-append-version="true"></script>
 </body>
 </html>
+
+@await Html.PartialAsync("_NotificationHandler")

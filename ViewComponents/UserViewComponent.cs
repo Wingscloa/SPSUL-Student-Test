@@ -15,7 +15,6 @@ namespace SPSUL.ViewComponents
             _ctx = ctx;
             _cache = cache;
         }
-
         public async Task<IViewComponentResult> InvokeAsync()
         {
             int? teacherId = HttpContext.Session.GetInt32("TeacherId");
@@ -47,5 +46,4 @@ namespace SPSUL.ViewComponents
         public Teacher Teacher { get; set; }
         public List<TeacherTitle>? Title { get; set; }
     }
-
 }

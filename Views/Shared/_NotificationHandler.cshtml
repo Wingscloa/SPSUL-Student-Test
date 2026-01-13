@@ -1,0 +1,7 @@
+﻿@if (TempData["Notification"] != null)
+{
+    var alert = TempData["Notification"] as dynamic;
+    <script>
+        toastr["@alert.type.ToString().ToLower()"]("@alert.message");
+    </script>
+}

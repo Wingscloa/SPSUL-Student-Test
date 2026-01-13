@@ -45,12 +45,12 @@ namespace SPSUL.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest(ex);
+                    return BadRequest(new {message = "Při vytváření vznikla chyba."});
                 }
             }
             else
             {
-                return View();
+                return BadRequest(new { message = "Špatně vyplněné údaje." });
             }
         }
 
@@ -71,7 +71,7 @@ namespace SPSUL.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        this.Alert("Zkontroluj přihlašovací údaje.", NotificationType.Error);
                         return View();
                     }
                 }
