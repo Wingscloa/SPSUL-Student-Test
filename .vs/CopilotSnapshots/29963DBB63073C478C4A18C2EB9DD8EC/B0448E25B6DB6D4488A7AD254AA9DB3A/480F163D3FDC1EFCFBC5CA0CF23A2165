@@ -1,8 +1,0 @@
-﻿@{
-    ViewData["Title"] = "Test";
-}
-
-
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <h1 class="pageTitle">Test incoming</h1>
-</div>
