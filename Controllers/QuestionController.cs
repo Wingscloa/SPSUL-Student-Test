@@ -36,6 +36,7 @@ namespace SPSUL.Controllers
                 return View("Error");
             }
         }
+        
         public async Task<IActionResult> Create()
         {
             QuestCreateVM model = new()
@@ -44,59 +45,127 @@ namespace SPSUL.Controllers
             };
             return View(model);
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> CreateQuestion([FromBody] QuestionCreateDto dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                // TODO: Get current teacher ID from session/auth
+                int currentTeacherId = 1; // Placeholder
+
+                var question = new Question
+                {
+                    Header = dto.Header,
+                    Description = dto.Description,
+                    QuestionTypeId = dto.QuestionTypeId,
+                    CreatorId = currentTeacherId,
+                    IsActive = true,
+                    QuestionOptions = dto.Options.Select(o => new QuestionOption
+                    {
+                        Text = o.Text,
+                        ImageBase64 = o.ImageBase64 ?? string.Empty,
+                        IsCorrect = o.IsCorrect
+                    }).ToList()
+                };
+
+                _ctx.Questions.Add(question);
+                await _ctx.SaveChangesAsync();
+
+                return Ok(new { questionId = question.QuestionId, message = "Otázka byla úspěšně vytvořena!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Chyba při vytváření otázky: " + ex.Message });
+            }
+        }
+
         // API (CURD)
         [HttpGet]
         public async Task<IActionResult> Detail(int id)
         {
-            Question? question = await _ctx.Questions.FindAsync(id);
+            Question? question = await _ctx.Questions
+                .Include(q => q.QuestionOptions)
+                .Include(q => q.QuestionType)
+                .FirstOrDefaultAsync(q => q.QuestionId == id);
+            
             if (question == null)
             {
                 return NotFound();
             }
             return View(question);
         }
-        [HttpPost]
-        public async Task<IActionResult> Create(Question question)
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] QuestionUpdateDto dto)
         {
             try
             {
-                Question before = await _ctx.Questions.FindAsync(question.QuestionId);
-                if (before == null)
+                var question = await _ctx.Questions
+                    .Include(q => q.QuestionOptions)
+                    .FirstOrDefaultAsync(q => q.QuestionId == dto.QuestionId);
+
+                if (question == null)
                 {
-                    _ctx.Questions.Add(question);
+                    return NotFound(new { message = "Otázka nebyla nalezena." });
                 }
-                else
+
+                question.Header = dto.Header;
+                question.Description = dto.Description;
+                question.QuestionTypeId = dto.QuestionTypeId;
+                question.IsActive = dto.IsActive;
+
+                // Remove old options
+                _ctx.QuestionOptions.RemoveRange(question.QuestionOptions);
+
+                // Add new options
+                question.QuestionOptions = dto.Options.Select(o => new QuestionOption
                 {
-                    before.Header = question.Header;
-                    before.Description = question.Description;
-                    before.IsActive = question.IsActive;
-                    before.QuestionTypeId = question.QuestionTypeId;
-                }
-                return Ok();
+                    QuestionId = question.QuestionId,
+                    Text = o.Text,
+                    ImageBase64 = o.ImageBase64 ?? string.Empty,
+                    IsCorrect = o.IsCorrect
+                }).ToList();
+
+                await _ctx.SaveChangesAsync();
+
+                return Ok(new { message = "Otázka byla úspěšně aktualizována!" });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = "Chyba při aktualizaci otázky: " + ex.Message });
             }
         }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                Question? question = await _ctx.Questions.FindAsync(id);
+                Question? question = await _ctx.Questions
+                    .Include(q => q.QuestionOptions)
+                    .FirstOrDefaultAsync(q => q.QuestionId == id);
+                
                 if (question != null)
                 {
                     _ctx.Questions.Remove(question);
+                    await _ctx.SaveChangesAsync();
+                    return Ok(new { message = "Otázka byla úspěšně smazána!" });
                 }
-                return Ok();
+                return NotFound(new { message = "Otázka nebyla nalezena." });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = "Chyba při mazání otázky: " + ex.Message });
             }
         }
     }
+
     public class QuestionRow
     {
         public int Id { get; set; }
@@ -105,5 +174,26 @@ namespace SPSUL.Controllers
         public bool Aktivni { get; set; }
         public int PocetPrirazeni { get; set; }
         public int PrumerUspech { get; set; }
+    }
+
+    public class QuestionCreateDto
+    {
+        public string Header { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public int QuestionTypeId { get; set; }
+        public List<QuestionOptionDto> Options { get; set; } = new();
+    }
+
+    public class QuestionUpdateDto : QuestionCreateDto
+    {
+        public int QuestionId { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class QuestionOptionDto
+    {
+        public string Text { get; set; } = string.Empty;
+        public string? ImageBase64 { get; set; }
+        public bool IsCorrect { get; set; }
     }
 }
