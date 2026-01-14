@@ -1,4 +1,15 @@
-﻿async function handleResponse(response) {
+﻿window.onload = () => {
+    var select2elements = document.querySelectorAll('.select2');
+
+    select2elements.forEach(function (element) {
+        $(element).select2({
+            theme: "bootstrap-5",
+            width: '100%',
+        })
+    });
+}
+
+async function handleResponse(response) {
     const data = await response.json();
 
     if (response.ok) {
@@ -71,7 +82,6 @@ async function openTeacherDetail(teacherId) {
     //}
 }
 
-// Ensure profile click always opens config modal (fallback to BS API)
 document.addEventListener('click', function(e){
   const trigger = e.target.closest('.profile');
   if(!trigger) return;
@@ -79,12 +89,10 @@ document.addEventListener('click', function(e){
   const modalEl = document.getElementById('configModal');
   if(!modalEl) return;
 
-  // If Bootstrap is available, open programmatically
   if (window.bootstrap && bootstrap.Modal) {
     const instance = bootstrap.Modal.getOrCreateInstance(modalEl);
     instance.show();
   } else {
-    // last resort: toggle classes (won't create backdrop)
     modalEl.classList.add('show');
     modalEl.style.display = 'block';
     modalEl.removeAttribute('aria-hidden');
@@ -92,7 +100,6 @@ document.addEventListener('click', function(e){
   }
 });
 
-// When offcanvas is opened while a modal is open, ensure it stacks above the modal
 (function(){
   document.addEventListener('shown.bs.offcanvas', function(e){
     const off = e.target;
@@ -100,25 +107,21 @@ document.addEventListener('click', function(e){
     const modalOpen = document.querySelector('.modal.show');
     if(!modalOpen) return;
 
-    // Raise offcanvas above modal/backdrop
     off.style.zIndex = '11060';
 
     const backdrops = Array.from(document.querySelectorAll('.offcanvas-backdrop.show'));
     backdrops.forEach(b => b.style.zIndex = '11050');
 
-    // Keep body in modal-open state so background doesn't scroll
     document.body.classList.add('modal-open');
   });
 })();
 
-// GSAP animations for config modal and offcanvas
 (function(){
   if(!window.gsap) return;
 
   const modalEl = document.getElementById('configModal');
   if(!modalEl) return;
 
-  // Config modal GSAP animation
   modalEl.addEventListener('show.bs.modal', function(){
     const dialog = this.querySelector('.modal-dialog');
     const content = this.querySelector('.modal-content');
@@ -142,7 +145,6 @@ document.addEventListener('click', function(e){
     gsap.to(dialog, { scale: 0.85, opacity: 0, duration: 0.25, ease: 'power2.in' });
   });
 
-  // Offcanvas GSAP animation
   const offcanvasEl = document.getElementById('ctEditor');
   if(!offcanvasEl){
     console.warn('[GSAP] #ctEditor not found for animation');
@@ -160,3 +162,143 @@ document.addEventListener('click', function(e){
     gsap.to(this, { x: -320, opacity: 0, duration: 0.3, ease: 'power2.in' });
   });
 })();
+
+
+function hideMode() {
+    const elements = document.querySelectorAll('.mode')
+    elements.forEach(function (e) { e.style.display = 'none'; });
+}
+
+function showMode() {
+    const elements = document.querySelectorAll('.mode')
+    elements.forEach(function (e) { e.style.display = 'inline-block'; });
+}
+
+function showOptions() {
+    const elements = document.querySelectorAll('.option')
+    elements.forEach(function (e) { e.style.display = 'inline-block'; });
+}
+function hideOptions() {
+    const elements = document.querySelectorAll('.option')
+    elements.forEach(function (e) { e.style.display = 'none'; });
+}
+
+activatedMode = ''
+function setMode(name) {
+    activatedMode = name
+    var modes = ['edit', 'delete','deactivate']
+    modes = modes.filter(m => m !== name);
+
+    modes.forEach(function (m) {  
+        var button = m + 'Button'
+        const elements = document.querySelectorAll('.'+ m + 'Button')
+        elements.forEach(function (e) { e.classList.add('d-none') });
+        const header = document.getElementById(m + 'Header')
+        header.classList.add('d-none')
+    });
+
+    const elements = document.querySelectorAll('.' + name + 'Button')
+    elements.forEach(function (e) { e.classList.remove('d-none')});
+    const header = document.getElementById(name + 'Header')
+    header.classList.remove('d-none')
+}
+
+function resetRows() {
+    const rows = document.querySelectorAll('tr.table-danger, tr.table-warning')
+    rows.forEach(function (row) { arguments[0].classList.remove('table-danger', 'table-warning'); });
+    document.getElementById('deleteIds').value = '';
+    document.getElementById('deactivateIds').value = '';
+    setMode('edit');
+}
+
+function deleteRows(endpoint) {
+    alert("Delete rows: " + endpoint);
+}
+
+
+function deactivateRows(endpoint) {
+    alert("Deactivate rows: " + endpoint);
+}
+
+
+// Row selection for delete /deactivate actions
+document.addEventListener('click', function (e) {
+    const deleteMode = e.target.closest('#deleteMode');
+
+    if (deleteMode) {
+        hideMode()
+        showOptions();
+        setMode('delete');
+    }
+
+    const deactivateMode = e.target.closest('#deactivateMode');
+
+    if (deactivateMode) {
+        hideMode()
+        showOptions();
+        setMode('deactivate');
+    }
+
+    const cancelOption = e.target.closest('#cancelOption');
+
+    if (cancelOption) {
+        showMode()
+        hideOptions();
+        resetRows();
+        if (activatedMode == 'delete') {
+
+        }
+    }
+
+    const acceptOption = e.target.closest('#acceptOption');
+
+    if (acceptOption) {
+        showMode()
+        hideOptions();
+        resetRows();
+        if (activatedMode == 'delete') {
+            deleteRows(deleteMode.getAttribute('data-endpoint'));
+        }
+        else if (activatedMode == 'deactivate') {
+            deactivateRows(deactivateMode.getAttribute('data-endpoint'));
+        }
+    }
+
+    const deactivateBtn = e.target.closest('.btn-deactivate');
+    const deleteBtn = e.target.closest('.btn-delete');
+
+    if (deleteBtn) {
+        const row = deleteBtn.closest('tr');
+        var ids = document.getElementById('deleteIds').value.split(';');
+        var rowId = row.getAttribute('data-id');
+
+        if (row.classList.contains('table-danger')) {
+            row.classList.remove('table-danger')
+            ids = ids.filter(id => id !== rowId);
+        }
+        else {
+            var ids = document.getElementById('deleteIds').value.split(';');
+            row.classList.add('table-danger')
+            ids.push(rowId)
+        }
+        document.getElementById('deleteIds').value = ids.filter(id => id).join(';');
+        console.log("To be deleted IDs:", document.getElementById('deleteIds').value.split(';'));
+    }
+
+    if (deactivateBtn) {
+        const row = deactivateBtn.closest('tr');
+        var ids = document.getElementById('deactivateIds').value.split(';');
+        var rowId = row.getAttribute('data-id');
+
+        if (row.classList.contains('table-warning')) {
+            row.classList.remove('table-warning')
+            ids = ids.filter(id => id !== rowId);
+        }
+        else {
+            row.classList.add('table-warning')
+            ids.push(rowId)
+        }
+        document.getElementById('deactivateIds').value = ids.filter(id => id).join(';');
+        console.log("To be deactivate IDs:", document.getElementById('deactivateIds').value.split(';'));
+    }
+})

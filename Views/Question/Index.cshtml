@@ -1,10 +1,11 @@
-﻿@using SPSUL.Controllers
-@model List<QuestionRow>
+﻿@using SPSUL.Models.Display
+@using SPSUL.Models.Display.Quest
+@model PaginatedList<QuestionRow>
 @{
     ViewData["Title"] = "Otázky";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
 }
-<link rel="stylesheet" href="~/css/chartpage.css" />
+<link rel="stylesheet" href="~/css/chartpage.css" asp-append-version="true"/>
 
 <div class="container-fluid py-3">
   <div class="row g-3">
@@ -12,52 +13,102 @@
             <div class="card shadow-sm cardTable">
                 <div class="card-header brandText d-flex justify-content-between">
                     <span>Seznam otázek</span>
-                    <a class="iconLink" asp-action="Create" asp-controller="Question">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" class="bi bi-patch-plus" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5" />
-                            <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z" />
-                        </svg>
-                        Vytvořit
-                    </a>
+                    <div class="tools d-flex gap-3">
+                        <!--Cancel-->
+                        <a class="iconLink cursor option" id="cancelOption" style="display: none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                            </svg>
+                            Zrušit
+                        </a>
+                        <!--Confirm-->
+                        <a class="iconLink cursor option" id="acceptOption" style="display: none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                            </svg>
+                            Potvrdit
+                        </a>
+                        <!--Deactivate-->
+                        <a class="iconLink cursor mode" title="Deaktivovat otázky" id="deactivateMode">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
+                                <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z" />
+                            </svg>
+                            Deaktivace
+                        </a>
+                        <!--Delete Mode-->
+                        <a class="iconLink cursor mode" title="Smazat otázky" id="deleteMode">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7zm3-.5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                            Smazat
+                        </a>
+                        <!--Create-->
+                        <a class="iconLink mode" asp-action="Create" asp-controller="Question" title="Vytvořit otázky">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" class="bi bi-patch-plus" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5" />
+                                <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z" />
+                            </svg>
+                            Vytvořit
+                        </a>
+                    </div>
+                    
         </div>
         <div class="table-responsive tableContent">
-          <table class="table align-middle mb-0">
+          <table class="table align-middle mb-0" style="min-width: 1200px">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Název</th>
-                <th>Tvůrce</th>
-                <th>Aktivní</th>
-                <th>Počet přiřazení</th>
-                <th class="text-center"><i class="bi bi-person-fill"></i> Studenti</th>
-                <th>Průměrná úspěšnost</th>
-                <th class="text-center"><i class="bi bi-pencil-square"></i> Edit</th>
-                <th>Pohled na test</th>
+                <th class="col-2">Název</th>
+                <th class="col-4">Popis</th>
+                <th class="col-2">Tvůrce</th>
+                <th class="col-1">Počet odpovědí</th>
+                <th class="col-2">Typ otázky</th>
+                <th class="col-2">Typ předmětu</th>
+                <th class="col-1">Aktivní</th>
+                <th class="col-1 text-center" id="editHeader" style="display:table-cell"><i class="bi bi-pencil-square"></i> Edit</th>
+                <!--Delete-->
+                 <th class="col-1 d-none" id="deleteHeader">
+                    <div class="col-1 text-center"><i class="bi bi-trash-fill text-center"></i></div>Smazat
+                </th>
+                <!--Deaktivace-->
+                <th class="col-1 d-none" id="deactivateHeader">
+                    Deaktivace
+                </th>
               </tr>
             </thead>
             <tbody>
-            @foreach (var r in Model)
+            @foreach (var r in Model.Items)
             {
-              <tr>
-                <td>@r.Id</td>
-                <td>@r.Nazev</td>
-                <td>@r.Tvurce</td>
-                <td><span class="badge bg-@(r.Aktivni?"success":"secondary")">@(r.Aktivni?"Aktivní":"Neaktivní")</span></td>
-                <td>@r.PocetPrirazeni</td>
-                <td class="text-center"><button class="icon-btn" title="Studenti"><i class="bi bi-person-fill"></i></button></td>
-                <td>@r.PrumerUspech %</td>
-                <td class="text-center"><button class="icon-btn" title="Edit"><i class="bi bi-pencil-square"></i></button></td>
-                <td><a href="#" class="btn btn-outline-secondary btn-sm">Otevřít</a></td>
+              <tr data-id="@r.QuestionId">
+                <td>@r.Header</td>
+                <td>@r.Description</td>
+                <td>@r.CreatorName</td>
+                <td>@r.OptionCount</td>
+                <td>@r.QuestionTypeName</td>
+                <td>@r.FieldName</td>
+                <td><span class="badge bg-@(r.IsActive ? "success" : "secondary")">@(r.IsActive ? "Aktivní" : "Neaktivní")</span></td>
+                <td class="text-center editButton"><a class="icon-btn" title="Edit" href="/Question/Edit?id=@r.QuestionId"><i class="bi bi-pencil-square"></i></a></td>
+                <!-- Delete Button --> 
+                <td class="text-center deleteButton d-none">
+                    <div class="btn-delete">
+                        <i class="bi bi-trash-fill"></i>
+                    </div>
+                </td>
+                <!-- Deactivate Button -->
+                <td class="text-center deactivateButton d-none">
+                    <div class="btn-deactivate">
+                    <i class="bi bi-archive-fill"></i>
+                    </div>
+                </td>
               </tr>
             }
             </tbody>
           </table>
         </div>
         <div class="card-footer d-flex justify-content-between align-items-center">
-          <div>Strana @ViewBag.Page / @ViewBag.TotalPages (@ViewBag.Total položek)</div>
+          <div>Strana @Model.PageIndex / @Model.TotalPages (@Model.TotalItems)</div>
           <div class="btn-group">
-            <a class="btn btn-outline-secondary @(ViewBag.Page==1?"disabled":null)" href="@Url.Action("Index", new { q=ViewBag.Query, active=ViewBag.Active, author=ViewBag.Author, page=ViewBag.Page-1, pageSize=ViewBag.PageSize })">Předchozí</a>
-            <a class="btn btn-outline-secondary @(ViewBag.Page>=ViewBag.TotalPages?"disabled":null)" href="@Url.Action("Index", new { q=ViewBag.Query, active=ViewBag.Active, author=ViewBag.Author, page=ViewBag.Page+1, pageSize=ViewBag.PageSize })">Další</a>
+            <a class="btn btn-outline-secondary @(Model.PageIndex==1?"disabled":null)" asp-route-pageNumber="@(Model.PageIndex - 1)">Předchozí</a>
+            <a class="btn btn-outline-secondary @(Model.PageIndex>=@Model.TotalPages?"disabled":null)" asp-route-pageNumber="@(Model.PageIndex + 1)">Další</a>
           </div>
         </div>
       </div>
@@ -68,9 +119,9 @@
         <div class="card-header brandText fw-bold">Filtrace</div>
         <div class="card-body">
           <form method="get" class="vstack gap-2">
-            <input class="form-control" name="q" value="@ViewBag.Query" placeholder="Hledat název" />
-            <input class="form-control" name="author" value="@ViewBag.Author" placeholder="Tvůrce" />
-            <select class="form-select" name="active">
+            <input class="form-control" name="q" placeholder="Hledat název" />
+            <input class="form-control" name="author"placeholder="Tvůrce" />
+            <select class="form-select select2" name="active">
               <option value="">Aktivní/Neaktivní</option>
               <option value="true" selected>Aktivní</option>
               <option value="false">Neaktivní</option>
@@ -82,3 +133,6 @@
     </aside>
   </div>
 </div>
+
+<input type="hidden" id="deleteIds" name="deleteIds" value="" />
+<input type="hidden" id="deactivateIds" name="deactivateIds" value="" />

@@ -4,14 +4,33 @@
 <link href="~/css/global.css" rel="stylesheet" asp-append-version="true" />
 <link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" asp-append-version="true" />
 <link href="~/lib/toastr.js/toastr.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/css/loading.css" rel="stylesheet" asp-append-version="true" />
 
 <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
 <script src="~/lib/toastr.js/toastr.min.js" asp-append-version="true"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/loading.js" asp-append-version="true"></script>
 
 <!DOCTYPE html>
 <html lang="en">
     <body>
+    <div id="loader-overlay">
+        <div class="mascot-container">
+            <div class="mascot-body">
+                <div class="grad-cap">
+                    <div class="cap-top">
+                        <div class="tassel"></div>
+                    </div>
+                    <div class="cap-base"></div>
+                </div>
+                <div class="eye left"><div class="pupil"></div></div>
+                <div class="eye right"><div class="pupil"></div></div>
+                <div class="mouth"></div>
+            </div>
+            <div class="shadow-oval"></div>
+        </div>
+        <p class="loading-text">Chvilku strpení,<br><span style="color: #ff8a00">vystavujeme diplom...</span></p>
+    </div>
     <div class="background layout">
         <div class="left ">
         </div>

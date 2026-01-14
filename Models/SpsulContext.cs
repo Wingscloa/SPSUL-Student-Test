@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SPSUL.Models.Data;
+using SPSUL.Models.Display.Quest;
 
 namespace SPSUL.Models
 {
@@ -26,6 +27,7 @@ namespace SPSUL.Models
         public DbSet<Test> Tests { get; set; }
         public DbSet<TeacherRole> TeacherRoles { get; set; }
         public DbSet<ClassesFields> ClassesFields { get; set; }
+        public DbSet<QuestionRow> QuestionRow { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Teacher>(e =>
@@ -144,6 +146,7 @@ namespace SPSUL.Models
                 e.Property(e => e.Description).HasMaxLength(512);
                 e.HasOne(e => e.QuestionType).WithMany(e => e.Questions).HasForeignKey(e => e.QuestionTypeId);
 
+                e.HasOne(e => e.Field).WithMany(e => e.Questions).HasForeignKey(e => e.FieldId);
             });
 
             modelBuilder.Entity<QuestionOption>(e =>
@@ -166,6 +169,12 @@ namespace SPSUL.Models
                 e.HasKey(e => new { e.ClassesId, e.StudentFieldId });
                 e.HasOne(e => e.Classes).WithMany(e => e.ClassesFields).HasForeignKey(e => e.ClassesId);
                 e.HasOne(e => e.StudentField).WithMany(e => e.ClassesFields).HasForeignKey(e => e.StudentFieldId);
+            });
+
+            modelBuilder.Entity<QuestionRow>(e =>
+            {
+                e.HasNoKey();
+                e.ToView("QuestionRow");
             });
 
             base.OnModelCreating(modelBuilder);

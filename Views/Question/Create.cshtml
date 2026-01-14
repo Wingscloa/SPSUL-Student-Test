@@ -1,4 +1,4 @@
-﻿@using SPSUL.Models.Display.Question
+﻿@using SPSUL.Models.Display.Quest
 @model QuestCreateVM
 @{
     ViewData["Title"] = "Vytvořit otázku";
@@ -7,7 +7,7 @@
 <link href="~/css/create.css" rel="stylesheet" asp-append-version="true" />
 <link href="~/css/test.css" rel="stylesheet" asp-append-version="true" />
 <link href="~/css/createtest.css" rel="stylesheet" asp-append-version="true" />
-<script src="~/js/test.js" asp-append-version="true"></script>
+<script src="~/js/question.js" asp-append-version="true"></script>
 
 <div class="container-fluid py-4">
     <div class="row g-4">
@@ -45,10 +45,24 @@
                             <label class="form-label fw-bold" for="QuestionTypeId">
                                 <i class="bi bi-ui-radios text-orange"></i> Typ otázky
                             </label>
-                            <select class="form-select" id="QuestionTypeId" name="QuestionTypeId" required>
+                            <select class="form-select select2" id="QuestionTypeId" name="QuestionTypeId" required>
                                 @foreach (var qt in Model.QuestionTypes)
                                 {
                                     <option value="@qt.QuestionTypeId">@qt.Name</option>
+                                }
+                            </select>
+                        </div>
+
+
+                        <!-- Školní předmět -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="FieldId">
+                                <i class="bi bi-ui-radios text-orange"></i>Předmět
+                            </label>
+                            <select class="form-select select2" id="FieldId" name="FieldId" required>
+                                @foreach (var qt in Model.StudentFields)
+                                {
+                                    <option value="@qt.StudentFieldId">@qt.Name</option>
                                 }
                             </select>
                         </div>
@@ -73,7 +87,7 @@
 
                         <!-- Action buttons -->
                         <div class="d-grid gap-2">
-                            <button type="button" class="btn btn-orange" onclick="saveQuestion()">
+                            <button type="button" class="btn btn-orange" id="submit" onclick="CreateQuestion()">
                                 <i class="bi bi-check2-circle me-1"></i> Uložit otázku
                             </button>
                             <a href="@Url.Action("Index", "Question")" class="btn btn-outline-secondary">

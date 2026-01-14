@@ -61,3 +61,48 @@
     color: white !important;
     font-weight: 600;
 }
+
+
+.btn-delete {
+    text-align: center;
+    width: max-content;
+    padding: 8px 16px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .btn-delete:hover {
+        background: #dc2626;
+        color: white;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    .btn-delete:active {
+        transform: scale(0.95);
+    }
+
+.btn-deactivate {
+    text-align: center;
+    width: max-content;
+    padding: 8px 16px;
+    background: #f7d7b7;
+    color: #ed841a;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .btn-deactivate:hover {
+        background: #e9793a;
+        color: white;
+        box-shadow: 0 4px 12px rgb(240 140 46 / 30%);
+    }
+
+.btn-deactivate:active {
+    transform: scale(0.95);
+}

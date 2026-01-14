@@ -7,7 +7,9 @@
         public required string Description { get; set; }
         public int QuestionTypeId { get; set; }
         public int CreatorId { get; set; }
+        public int FieldId { get; set; }
         public bool IsActive { get; set; }
+        public virtual StudentField Field { get; set; }
         public virtual QuestionType QuestionType { get; set; }
         public virtual Teacher Creator { get; set; }
         public virtual ICollection<QuestionOption> QuestionOptions { get; set; }

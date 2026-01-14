@@ -1,0 +1,195 @@
+﻿@using SPSUL.Models.Display.Quest
+@model QuestEditVM
+@{
+    ViewData["Title"] = "Editovat otázku";
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+}
+
+<link href="~/css/create.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/css/test.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/css/createtest.css" rel="stylesheet" asp-append-version="true" />
+<script src="~/js/question.js" asp-append-version="true"></script>
+
+<div class="container-fluid py-4" id="edit">
+    <div class="row g-4">
+        <!-- Left: Editor -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-header brandText d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Editor otázky</h5>
+                    <button type="button" class="btn btn-sm btn-light" onclick="resetForm()">
+                        <i class="bi bi-arrow-clockwise"></i> Reset
+                    </button>
+                </div>
+                <div class="card-body" style="overflow-y: auto;">
+                    <form id="questionForm" asp-action="Update" asp-controller="Question" method="post" novalidate>
+                        <!-- Nadpis -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="Header">
+                                <i class="bi bi-card-heading text-orange"></i> Nadpis otázky
+                            </label>
+                            <input type="text" class="form-control" id="Header" name="Header"
+                                   placeholder="Zadej nadpis otázky" required value="@Model.Question.Header"/>
+                        </div>
+
+                        <!-- Popis -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="Description">
+                                <i class="bi bi-text-paragraph text-orange"></i> Popis/Znění otázky
+                            </label>
+                            <textarea class="form-control" id="Description" name="Description"
+                                      rows="4" placeholder="Zadej popis/znění otázky" required>@Model.Question.Description</textarea>
+                        </div>
+
+                        <!-- Typ otázky -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="QuestionTypeId">
+                                <i class="bi bi-ui-radios text-orange"></i> Typ otázky
+                            </label>
+                            <select class="form-select select2" id="QuestionTypeId" name="QuestionTypeId" placeholder="Vyber typ otázky" required>
+                                @foreach (var qt in Model.QuestionTypes)
+                                {
+                                    if(qt.QuestionTypeId == Model.Question.QuestionTypeId)
+                                    {
+                                        <option value="@qt.QuestionTypeId" selected>@qt.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@qt.QuestionTypeId">@qt.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+
+                        <!-- Školní předmět -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="FieldId">
+                                <i class="bi bi-ui-radios text-orange"></i>Předmět
+                            </label>
+                            <select class="form-select select2" id="FieldId" name="FieldId" required>
+                                @foreach (var qt in Model.StudentFields)
+                                {
+                                    if(qt.StudentFieldId == Model.Question.FieldId)
+                                    {
+                                        <option value="@qt.StudentFieldId" selected>@qt.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@qt.StudentFieldId">@qt.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Počet možností -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-list-ol text-orange"></i> Počet možností odpovědí
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="optionCount"
+                                        min="2" max="10" value="@Model.Question.QuestionOptions.Count"/>
+                                <button type="button" class="btn btn-outline-secondary" onclick="generateOptions()">
+                                    <i class="bi bi-arrow-repeat"></i> Generovat
+                                </button>
+                            </div>
+                            <small class="text-muted">Zadej počet odpovědí (2-10) a stiskni Generovat</small>
+                        </div>
+
+                        <!-- Možnosti odpovědí (dynamicky) -->
+                        <div id="optionsContainer" class="mb-3">
+                            @for(int i = 0; i < Model.Question.QuestionOptions.Count; i++)
+                            {
+                                var opt = Model.Question.QuestionOptions.ToList()[i];
+                                <div class="card mb-2 option-card" data-option-index="@i">
+                                    <div class="card-body p-3">
+                                        <div class="d-flex align-items-start gap-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="isCorrect_@i" onchange="updatePreview()" @(opt.IsCorrect ? "checked" : "")>
+                                                <label class="form-check-label fw-bold text-success" for="isCorrect_@i">
+                                                    Správná
+                                                </label>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <label class="form-label small mb-1">Text odpovědi:</label>
+                                                <input type="text" class="form-control option-text"
+                                                       data-index="@i" value="@opt.Text"
+                                                       oninput="updatePreview()" required />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            </div>
+
+                        <!-- Action buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-orange" id="submit" onclick="EditQuestion()">
+                                <i class="bi bi-check2-circle me-1"></i> Uložit otázku
+                            </button>
+                            <a href="@Url.Action("Index", "Question")" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i> Zpět na seznam
+                            </a>
+                        </div>
+                        <input type="hidden" name="QuestionId" id="QuestionId" value="@Model.Question.QuestionId" />
+                        <input type="hidden" name="IsActive" id="IsActive" value="@Model.Question.IsActive.ToString()" />
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Right: Preview -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm h-100">
+                <div class="card-header brandText">
+                    <h5 class="mb-0"><i class="bi bi-eye me-2"></i>Náhled otázky</h5>
+                </div>
+                <div class="card-body" style="overflow-y: auto; background: #f8f9fa;">
+                    <div id="previewContainer" class="test-preview">
+                        <div class="questContainer">
+                            <h2 id="previewHeader" class="questionHeader">Nadpis otázky</h2>
+                            <h3 id="previewDescription" class="questionName">Popis otázky se zobrazí zde...</h3>
+                            <div id="previewOptions" class="mt-4">
+                                <div class="radio-note">Vyber správnou odpověď</div>
+                                <div class="radio-group">
+                                    @for(int i = 0; i < Model.Question.QuestionOptions.Count; i++)
+                                    {
+                                        var opt = Model.Question.QuestionOptions.ToList()[i];
+                                        var isCorrect = opt.IsCorrect;
+                                        <label class="radio-option @(isCorrect ? "correct-option" : "")">
+                                            <input type="radio" name="preview_answer" value="@i" disabled />
+                                            <span class="radio-label">@((char)(65 + i))) @opt.Text</span>
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-white rounded border">
+                            <h6 class="fw-bold mb-2"><i class="bi bi-info-circle text-orange"></i> Správné odpovědi:</h6>
+                            <div id="correctAnswersList" class="text-muted">
+                            @if(!Model.Question.QuestionOptions.Any(e => e.IsCorrect))
+                            {
+                                <span class="text-muted">Zatím nejsou označeny žádné správné odpovědi</span>
+                            }
+                            else
+                            {
+                                for(int i = 0; i < Model.Question.QuestionOptions.Count; i++)
+                                {
+                                    var opt = Model.Question.QuestionOptions.ToList()[i];
+                                    if(opt.IsCorrect)
+                                    {
+                                        var a = $"{(char)(65 + i)}) {opt.Text}";
+                                        <div class="text-success"><i class="bi bi-check-circle-fill me-1"></i>@a</div>
+                                    }
+                                }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

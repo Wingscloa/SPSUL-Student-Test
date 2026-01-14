@@ -120,6 +120,9 @@ namespace SPSUL.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
+                    b.Property<int>("FieldId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Header")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -134,6 +137,8 @@ namespace SPSUL.Migrations
                     b.HasKey("QuestionId");
 
                     b.HasIndex("CreatorId");
+
+                    b.HasIndex("FieldId");
 
                     b.HasIndex("QuestionTypeId");
 
@@ -485,6 +490,12 @@ namespace SPSUL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SPSUL.Models.Data.StudentField", "Field")
+                        .WithMany("Questions")
+                        .HasForeignKey("FieldId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SPSUL.Models.Data.QuestionType", "QuestionType")
                         .WithMany("Questions")
                         .HasForeignKey("QuestionTypeId")
@@ -492,6 +503,8 @@ namespace SPSUL.Migrations
                         .IsRequired();
 
                     b.Navigation("Creator");
+
+                    b.Navigation("Field");
 
                     b.Navigation("QuestionType");
                 });
@@ -641,6 +654,8 @@ namespace SPSUL.Migrations
             modelBuilder.Entity("SPSUL.Models.Data.StudentField", b =>
                 {
                     b.Navigation("ClassesFields");
+
+                    b.Navigation("Questions");
 
                     b.Navigation("Tests");
                 });

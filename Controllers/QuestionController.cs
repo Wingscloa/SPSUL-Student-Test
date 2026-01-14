@@ -2,8 +2,9 @@
 using SPSUL.Models;
 using System.Linq;
 using SPSUL.Models.Data;
-using SPSUL.Models.Display.Question;
 using Microsoft.EntityFrameworkCore;
+using SPSUL.Models.Display.Quest;
+using SPSUL.Models.Display;
 
 namespace SPSUL.Controllers
 {
@@ -16,20 +17,23 @@ namespace SPSUL.Controllers
             _ctx = ctx;
         }
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var questions = _ctx.Questions.Select(q => new QuestionRow
-                {
-                    Id = q.QuestionId,
-                    Nazev = q.Header,
-                    Tvurce = string.Join(' ', q.Creator.Titles) + q.Creator.FirstName + q.Creator.LastName,
-                    Aktivni = q.IsActive,
-                    PocetPrirazeni = -1,
-                    PrumerUspech = 0
-                }).ToList();
-                return View(questions);
+                var query = _ctx.QuestionRow.AsNoTracking();
+
+                int count = await query.CountAsync();
+
+                var rows = await query
+                    .OrderByDescending(q => q.QuestionId)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                var model = new PaginatedList<QuestionRow>(rows, count, pageNumber, pageSize);
+
+                return View(model);
             }
             catch (Exception ex)
             {
@@ -41,8 +45,32 @@ namespace SPSUL.Controllers
         {
             QuestCreateVM model = new()
             {
-                QuestionTypes = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync()
+                QuestionTypes = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync(),
+                StudentFields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync()
             };
+            return View(model);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var question = await _ctx.Questions
+                .Include(q => q.QuestionOptions)
+                .Include(q => q.QuestionType)
+                .Include(q => q.Field)
+                .FirstOrDefaultAsync(q => q.QuestionId == id);
+
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            QuestEditVM model = new()
+            {
+                Question = question,
+                QuestionTypes = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync(),
+                StudentFields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync()
+            };
+
             return View(model);
         }
         
@@ -56,16 +84,21 @@ namespace SPSUL.Controllers
                     return BadRequest(ModelState);
                 }
 
-                // TODO: Get current teacher ID from session/auth
-                int currentTeacherId = 1; // Placeholder
+                int? currentTeacherId = HttpContext.Session.GetInt32("TeacherId");
+
+                if(currentTeacherId == null)
+                {
+                    return Unauthorized(new { message = "Uživatel není přihlášen." });
+                }
 
                 var question = new Question
                 {
                     Header = dto.Header,
                     Description = dto.Description,
                     QuestionTypeId = dto.QuestionTypeId,
-                    CreatorId = currentTeacherId,
+                    CreatorId = currentTeacherId.Value,
                     IsActive = true,
+                    FieldId = dto.FieldId,
                     QuestionOptions = dto.Options.Select(o => new QuestionOption
                     {
                         Text = o.Text,
@@ -85,13 +118,13 @@ namespace SPSUL.Controllers
             }
         }
 
-        // API (CURD)
         [HttpGet]
         public async Task<IActionResult> Detail(int id)
         {
             Question? question = await _ctx.Questions
                 .Include(q => q.QuestionOptions)
                 .Include(q => q.QuestionType)
+                .Include(q => q.Field)
                 .FirstOrDefaultAsync(q => q.QuestionId == id);
             
             if (question == null)
@@ -118,6 +151,7 @@ namespace SPSUL.Controllers
                 question.Header = dto.Header;
                 question.Description = dto.Description;
                 question.QuestionTypeId = dto.QuestionTypeId;
+                question.FieldId = dto.FieldId;
                 question.IsActive = dto.IsActive;
 
                 // Remove old options
@@ -164,36 +198,5 @@ namespace SPSUL.Controllers
                 return BadRequest(new { message = "Chyba při mazání otázky: " + ex.Message });
             }
         }
-    }
-
-    public class QuestionRow
-    {
-        public int Id { get; set; }
-        public string Nazev { get; set; } = string.Empty;
-        public string Tvurce { get; set; } = string.Empty;
-        public bool Aktivni { get; set; }
-        public int PocetPrirazeni { get; set; }
-        public int PrumerUspech { get; set; }
-    }
-
-    public class QuestionCreateDto
-    {
-        public string Header { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public int QuestionTypeId { get; set; }
-        public List<QuestionOptionDto> Options { get; set; } = new();
-    }
-
-    public class QuestionUpdateDto : QuestionCreateDto
-    {
-        public int QuestionId { get; set; }
-        public bool IsActive { get; set; }
-    }
-
-    public class QuestionOptionDto
-    {
-        public string Text { get; set; } = string.Empty;
-        public string? ImageBase64 { get; set; }
-        public bool IsCorrect { get; set; }
     }
 }
