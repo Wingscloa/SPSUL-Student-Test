@@ -255,36 +255,6 @@ function disableSubmitButton(choice) {
     submitButton.disabled = choice;
 }
 
-function validateQuestion() {
-    
-
-    //try {
-    //    loadingScreen(true);
-    //    const response = await fetch('/Question/CreateQuestion', {
-    //        method: 'POST',
-    //        headers: { 'Content-Type': 'application/json' },
-    //        body: JSON.stringify(data)
-    //    })
-
-    //    const result = await response.json();
-
-    //    if (response.ok) {
-    //        toastr.success(result.message || 'Otázka vytvořena!', 'Úspěch');
-    //        setTimeout(() => {
-    //            window.location.href = '/Question/Index';
-    //        }, 1500);
-    //    } else 
-    //    {
-    //        loadingScreen(false)
-    //        toastr.error(result.message || 'Chyba při vytváření otázky', 'Chyba');
-    //    }
-    //} catch (err) {
-    //    loadingScreen(false)
-    //    toastr.error('Chyba při komunikaci se serverem', 'Chyba');
-    //    console.error(err);
-    //}
-}
-
 function resetForm() {
     document.getElementById('questionForm').reset();
     document.getElementById('optionsContainer').innerHTML = '';

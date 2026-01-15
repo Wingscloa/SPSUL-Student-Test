@@ -2,7 +2,7 @@
 using SPSUL.Models;
 using System.Linq;
 using SPSUL.Models.Data;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore; 
 using SPSUL.Models.Display.Quest;
 using SPSUL.Models.Display;
 
@@ -17,21 +17,55 @@ namespace SPSUL.Controllers
             _ctx = ctx;
         }
         
-        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string? Name,bool? IsActive, int? FieldId, int? QuestionTypeId, int? CreatorId, int pageNumber = 1, int pageSize = 13)
         {
             try
             {
-                var query = _ctx.QuestionRow.AsNoTracking();
+                bool offFilter = true;
+                List<int> questionIds = new List<int>();
+                if(Name != null || IsActive != null || FieldId != null || QuestionTypeId != null || CreatorId != null)
+                {
+                    pageNumber = 1;
+                    questionIds = await _ctx.Questions
+                    .Include(q => q.Creator)
+                    .Include(q => q.QuestionType)
+                    .Include(q => q.Field)
+                    .Include(q => q.QuestionOptions)
+                    .Where(e =>
+                        (Name == null || e.Header.Contains(Name)) &&
+                        (IsActive == null || e.IsActive == IsActive) &&
+                        (FieldId == null || e.FieldId == FieldId) &&
+                        (QuestionTypeId == null || e.QuestionTypeId == QuestionTypeId) &&
+                        (CreatorId == null || e.CreatorId == CreatorId)
+                        )
+                    .Select(q => q.QuestionId)
+                    .ToListAsync();
+                    offFilter = false;
+                }
 
-                int count = await query.CountAsync();
+                List<QuestionRow> query = await _ctx.QuestionRow.Where(e =>
+                    (offFilter || questionIds.Contains(e.QuestionId))).ToListAsync();
 
-                var rows = await query
-                    .OrderByDescending(q => q.QuestionId)
+                List<QuestionRow> rows = query
+                    .OrderByDescending(e => e.QuestionId)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
+                    .ToList();
 
-                var model = new PaginatedList<QuestionRow>(rows, count, pageNumber, pageSize);
+                int count = query.Count;
+
+                QuestIndexVM model = new()
+                {
+                    Questions = new PaginatedList<QuestionRow>(rows, count, pageNumber, pageSize),
+                    Fields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync(),
+                    QuestionTypes = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync(),
+                    Teachers = await _ctx.Teachers.Include(e => e.Titles).ThenInclude(e => e.Title).ToListAsync(),
+                    CreatorId = CreatorId,
+                    FieldId = FieldId,
+                    IsActive = IsActive,
+                    Name = Name,
+                    QuestionTypeId = QuestionTypeId
+                };
 
                 return View(model);
             }
@@ -43,12 +77,19 @@ namespace SPSUL.Controllers
         
         public async Task<IActionResult> Create()
         {
-            QuestCreateVM model = new()
+            try
             {
-                QuestionTypes = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync(),
-                StudentFields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync()
-            };
-            return View(model);
+                QuestCreateVM model = new()
+                {
+                    QuestionTypes = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync(),
+                    StudentFields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync()
+                };
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -73,7 +114,83 @@ namespace SPSUL.Controllers
 
             return View(model);
         }
-        
+
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromBody] List<int> Ids)
+        {
+            try
+            {
+                var questions = await _ctx.Questions
+                    .Where(q => Ids.Contains(q.QuestionId))
+                    .ToListAsync();
+                if (questions.Count == 0)
+                {
+                    return NotFound(new { message = "Žádné otázky nebyly nalezeny." });
+                }
+                foreach (var question in questions)
+                {
+                    _ctx.Questions.Remove(question);
+                }
+                await _ctx.SaveChangesAsync();
+                return Ok(new { message = "Otázky byly úspěšně smazány!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Chyba při smazání"});
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Activate([FromBody] List<int> Ids)
+        {
+            try
+            {
+                var questions = await _ctx.Questions
+                    .Where(q => Ids.Contains(q.QuestionId))
+                    .ToListAsync();
+                if (questions.Count == 0)
+                {
+                    return NotFound(new { message = "Žádné otázky nebyly nalezeny." });
+                }
+                foreach (var question in questions)
+                {
+                    question.IsActive = true;
+                }
+                await _ctx.SaveChangesAsync();
+                return Ok(new { message = "Otázky byly úspěšně aktivovány!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Chyba při aktivaci otázek: " + ex.Message });
+
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Deactivate([FromBody] List<int>Ids)
+        {
+            try
+            {
+                var questions = await _ctx.Questions
+                    .Where(q => Ids.Contains(q.QuestionId))
+                    .ToListAsync();
+                if (questions.Count == 0)
+                {
+                    return NotFound(new { message = "Žádné otázky nebyly nalezeny." });
+                }
+                foreach (var question in questions)
+                {
+                    question.IsActive = false;
+                }
+                await _ctx.SaveChangesAsync();
+                return Ok(new { message = "Otázky byly úspěšně deaktivovány!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Chyba při deaktivaci otázek: " + ex.Message });
+
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> CreateQuestion([FromBody] QuestionCreateDto dto)
         {

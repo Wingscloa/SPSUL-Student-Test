@@ -1,6 +1,6 @@
 ﻿@using SPSUL.Models.Display
 @using SPSUL.Models.Display.Quest
-@model PaginatedList<QuestionRow>
+@model QuestIndexVM
 @{
     ViewData["Title"] = "Otázky";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
@@ -28,15 +28,22 @@
                             </svg>
                             Potvrdit
                         </a>
+                        <!--Activate-->
+                        <a class="iconLink cursor mode" title="Aktivovat otázky" id="activate" data-endpoint="Question/Activate/">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
+                                <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z" />
+                            </svg>
+                            Aktivace
+                        </a>
                         <!--Deactivate-->
-                        <a class="iconLink cursor mode" title="Deaktivovat otázky" id="deactivateMode">
+                        <a class="iconLink cursor mode" title="Deaktivovat otázky" id="deactivateMode" data-endpoint="Question/Deactivate/">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
                                 <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z" />
                             </svg>
                             Deaktivace
                         </a>
                         <!--Delete Mode-->
-                        <a class="iconLink cursor mode" title="Smazat otázky" id="deleteMode">
+                        <a class="iconLink cursor mode" title="Smazat otázky" id="deleteMode" data-endpoint="Question/Delete/">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" class="bi bi-trash-fill" viewBox="0 0 16 16">
                                 <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7zm3-.5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5z"/>
                             </svg>
@@ -51,7 +58,6 @@
                             Vytvořit
                         </a>
                     </div>
-                    
         </div>
         <div class="table-responsive tableContent">
           <table class="table align-middle mb-0" style="min-width: 1200px">
@@ -64,19 +70,23 @@
                 <th class="col-2">Typ otázky</th>
                 <th class="col-2">Typ předmětu</th>
                 <th class="col-1">Aktivní</th>
-                <th class="col-1 text-center" id="editHeader" style="display:table-cell"><i class="bi bi-pencil-square"></i> Edit</th>
+                <th class="col-1 text-center" id="editHeader" style="display:table-cell">Edit</th>
                 <!--Delete-->
                  <th class="col-1 d-none" id="deleteHeader">
-                    <div class="col-1 text-center"><i class="bi bi-trash-fill text-center"></i></div>Smazat
+                    Smazat
                 </th>
                 <!--Deaktivace-->
                 <th class="col-1 d-none" id="deactivateHeader">
                     Deaktivace
                 </th>
+                <!--Aktivace-->
+                <th class="col-1 d-none" id="activateHeader">
+                    Aktivace
+                </th>
               </tr>
             </thead>
             <tbody>
-            @foreach (var r in Model.Items)
+            @foreach (var r in Model.Questions.Items)
             {
               <tr data-id="@r.QuestionId">
                 <td>@r.Header</td>
@@ -99,32 +109,113 @@
                     <i class="bi bi-archive-fill"></i>
                     </div>
                 </td>
+                <!-- Activate Button -->
+                <td class="text-center activateButton d-none">
+                    <div class="btn-activate">
+                        <i class="bi bi-archive-fill"></i>
+                    </div>
+                </td>
               </tr>
             }
             </tbody>
           </table>
         </div>
         <div class="card-footer d-flex justify-content-between align-items-center">
-          <div>Strana @Model.PageIndex / @Model.TotalPages (@Model.TotalItems)</div>
+          <div>Strana @Model.Questions.PageIndex / @Model.Questions.TotalPages (@Model.Questions.TotalItems)</div>
           <div class="btn-group">
-            <a class="btn btn-outline-secondary @(Model.PageIndex==1?"disabled":null)" asp-route-pageNumber="@(Model.PageIndex - 1)">Předchozí</a>
-            <a class="btn btn-outline-secondary @(Model.PageIndex>=@Model.TotalPages?"disabled":null)" asp-route-pageNumber="@(Model.PageIndex + 1)">Další</a>
+                        <a class="btn btn-outline-secondary @(Model.Questions.PageIndex == 1 ? "disabled" : null)" asp-route-pageNumber="@(Model.Questions.PageIndex - 1)">Předchozí</a>
+                        <a class="btn btn-outline-secondary @(Model.Questions.PageIndex >= @Model.Questions.TotalPages ? "disabled" : null)" asp-route-pageNumber="@(Model.Questions.PageIndex + 1)">Další</a>
           </div>
         </div>
       </div>
     </div>
-
     <aside class="col-lg-3 order-1 order-lg-2">
       <div class="card shadow-sm sticky-top" style="top: 1rem;">
         <div class="card-header brandText fw-bold">Filtrace</div>
         <div class="card-body">
           <form method="get" class="vstack gap-2">
-            <input class="form-control" name="q" placeholder="Hledat název" />
-            <input class="form-control" name="author"placeholder="Tvůrce" />
-            <select class="form-select select2" name="active">
-              <option value="">Aktivní/Neaktivní</option>
-              <option value="true" selected>Aktivní</option>
-              <option value="false">Neaktivní</option>
+              <!--Nazev-->
+                        <input class="form-control" name="Name" placeholder="Hledat název" value="@(string.IsNullOrEmpty(Model.Name) ? "" : Model.Name)" />
+            <!--Tvurce-->
+            <select class="form-select select2" name="CreatorId">
+                <option disabled selected>Vyber tvůrce</option>
+                @foreach (var t in Model.Teachers)
+                    {
+                        if(Model.CreatorId.HasValue && Model.CreatorId.Value == t.TeacherId)
+                        {
+                        <option value="@t.TeacherId" selected>
+                            @foreach(var ti in t.Titles)
+                                {
+                                    @(ti.Title.Shortcut + " ")
+                                }
+                                        @t.FirstName @t.LastName
+                        </option>                
+                        }
+                        else
+                        {
+                        <option value="@t.TeacherId">
+                            @foreach (var ti in t.Titles)
+                            {
+                                @(ti.Title.Shortcut + " ")
+                            }
+                            @t.FirstName @t.LastName
+                        </option>
+                        }
+                    }
+            </select>
+            <!-- Typ Otazky -->
+            <select class="form-select select2" name="QuestionTypeId">
+                <option disabled selected>Vyber typ otázky</option>
+                @foreach (var t in Model.QuestionTypes)
+                {
+                    if(Model.QuestionTypeId.HasValue && Model.QuestionTypeId.Value == t.QuestionTypeId)
+                    {
+                        <option value="@t.QuestionTypeId" selected>@t.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@t.QuestionTypeId">@t.Name</option>
+                    }
+                }
+            </select>
+            <!-- Typ Predmetu -->
+            <select class="form-select select2" name="FieldId">
+                <option disabled selected>Vyber typ předmětu</option>
+                @foreach (var t in Model.Fields)
+                {
+                    if(Model.FieldId.HasValue && Model.FieldId.Value == t.StudentFieldId)
+                    {
+                        <option value="@t.StudentFieldId" selected>@t.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@t.StudentFieldId">@t.Name</option>
+                    }
+                }
+            </select>
+            <!--Aktivni-->
+            <select class="form-select select2" name="IsActive">
+            @{
+                var isActiveValues = new List<string?> { "Aktivní/Neaktivní", "Aktivní", "Neaktivní" };
+                foreach(var val in isActiveValues)
+                {
+                    if (val == "Aktivní/Neaktivní")
+                    {
+                        <option disabled selected>@val</option>
+                    }
+                    else
+                    {
+                        if(Model.IsActive.HasValue && Model.IsActive.Value.ToString() == (val == "Aktivní" ? "True" : "False"))
+                        {
+                            <option value="@(val == "Aktivní" ? "true" : "false")" selected>@val</option>
+                        }
+                        else
+                        {
+                            <option value="@(val == "Aktivní" ? "true" : "false")">@val</option>
+                        }
+                    }
+                }
+            }
             </select>
             <button class="btn brandText">Filtrovat</button>
           </form>
@@ -133,6 +224,4 @@
     </aside>
   </div>
 </div>
-
-<input type="hidden" id="deleteIds" name="deleteIds" value="" />
-<input type="hidden" id="deactivateIds" name="deactivateIds" value="" />
+<input type="hidden" id="Ids" name="Ids" value="" />

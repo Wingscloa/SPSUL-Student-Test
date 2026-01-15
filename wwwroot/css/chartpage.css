@@ -106,3 +106,25 @@
 .btn-deactivate:active {
     transform: scale(0.95);
 }
+
+.btn-activate {
+    text-align: center;
+    width: max-content;
+    padding: 8px 16px;
+    background: #8ee08e;
+    color: #267c2e;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .btn-activate:hover {
+        background: #1fae3f;
+        color: white;
+        box-shadow: 0 4px 12px rgb(240 140 46 / 30%);
+    }
+
+    .btn-activate:active {
+        transform: scale(0.95);
+    }
