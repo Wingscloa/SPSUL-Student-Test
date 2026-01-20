@@ -38,6 +38,15 @@ function initTitlesSelect2() {
     });
 }
 
+async function loadConfig(componentName) {
+    const container = document.getElementById("modalContainer")
+    container.innerHTML = "Načítám...";
+    const response = await fetch(`/api/config/section/${componentName}`);
+    const html = await response.text();
+    container.innerHTML = html;
+    initTitlesSelect2()
+}
+
 (function () {
     function showCanvas() {
         if (!window.matchMedia('(max-width: 991.98px)').matches) {
@@ -353,7 +362,7 @@ function initTitlesSelect2() {
     let filterTimeout; 
     let filterToast
 
-    $('#filterForm').on('focusout', function (e) {
+    $(document).on('change', '#filterForm', 'focusout', function (e) {
         const target = $(e.relatedTarget);
         const isInsideForm = $(this).has(e.relatedTarget).length > 0;
         const isSelect2 = target.closest('.select2-container').length > 0;
@@ -374,11 +383,11 @@ function initTitlesSelect2() {
             $('#filterForm').find(':focus').blur();
             filterForm();
         }, 1000);
-    });
+    })
 
-    $('#filterForm').on('focus', function () {
+    $(document).on('input', '#filterForm', 'focus', function () {
         if (filterToast) { toastr.clear(filterToast); };
-    });
+    })
 
     async function filterForm() {
         const data = getDataFromForm('filterForm');

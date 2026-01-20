@@ -19,7 +19,6 @@ async function handleResponse(response) {
     }
 }
 
-// Toastr config must run after toastr.js is loaded
 if(typeof toastr !== 'undefined'){
   toastr.options = {
     "closeButton": true,
@@ -41,44 +40,6 @@ if(typeof toastr !== 'undefined'){
   console.log('[toastr] configured with options:', toastr.options);
 } else {
   console.error('[toastr] library not loaded - check if toastr.min.js is included before site.js');
-}
-
-async function loadConfig(componentName) {
-    const container = document.getElementById("modalContainer")
-    container.innerHTML = "Načítám...";
-    const response = await fetch(`/api/config/section/${componentName}`);
-    const html = await response.text();
-    container.innerHTML = html;
-    $('.js-example-basic-multiple').select2({
-        theme: "bootstrap-5",
-        width: '100%',
-        placeholder: "Vyberte tituly...",
-        allowClear: true,
-        dropdownParent: container,
-        closeOnSelect: false
-    });
-}
-
-async function openTeacherDetail(teacherId) {
-    const myModal = new bootstrap.Modal(document.getElementById('teacherDetailModal'));
-    myModal.show();
-
-    //try {
-    //    const response = await fetch(`/Configuration/GetTeacherDetail?id=${teacherId}`);
-    //    const html = await response.text();
-
-    //    document.getElementById('teacherModalContent').innerHTML = html;
-
-    //    $('#teacherModalContent').find('.js-example-basic-multiple').select2({
-    //        theme: "bootstrap-5",
-    //        width: '100%',
-    //        dropdownParent: $('#teacherDetailModal')
-    //    });
-
-    //} catch (error) {
-    //    console.error("Chyba při načítání detailu:", error);
-    //    document.getElementById('teacherModalContent').innerHTML = '<div class="p-4 text-danger">Nepodařilo se načíst data.</div>';
-    //}
 }
 
 document.addEventListener('click', function(e){
@@ -241,7 +202,6 @@ function deactivateRows(endpoint) {
 }
 
 
-// Row selection for delete /deactivate actions
 document.addEventListener('click', function (e) {
     const deleteMode = e.target.closest('#deleteMode');
 

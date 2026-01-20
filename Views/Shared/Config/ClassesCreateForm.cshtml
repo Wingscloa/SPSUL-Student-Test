@@ -1,0 +1,51 @@
+﻿@using SPSUL.Models.Data
+@using SPSUL.Models.Display.ConfigModels
+@model ClassesFormCreateVM
+
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="Name">Název</label>
+    <input type="text" class="configInput w-100" placeholder="Název" name="Name"
+           data-v-name="Název"
+           data-v-required="true"
+           data-v-reg="^[a-zA-Zá-žÁ-Ž0-9 ]+$"
+           data-v-msg="Název může obsahovat písmena, čísla a musí být vyplněn."
+           data-v-length="3,30"
+           required>
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="StartFrom">Rok zahájení</label>
+    <input type="text" class="configInput w-100" name="StartFrom"
+           inputmode="numeric"
+           placeholder="RRRR"
+           data-v-name="Rok"
+           data-v-required="true"
+           data-v-length="4,4"
+           data-v-reg="^(19|20)\d{2}$"
+           data-v-msg="Zadejte platný rok ve formátu RRRR (např. 2024)."
+           required>
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="EndTo">Konec studia</label>
+    <input type="text" class="configInput w-100" name="EndTo" required
+           inputmode="numeric"
+           placeholder="RRRR"
+           data-v-name="Rok"
+           data-v-required="true"
+           data-v-length="4,4"
+           data-v-reg="^(19|20)\d{2}$"
+           data-v-msg="Zadejte platný rok ve formátu RRRR (např. 2024).">
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="StudentFieldIds">Předměty</label>
+    <input type="hidden" name="StudentFieldIds" value="" />
+    <select class="form-select select2" multiple="multiple" name="StudentFieldIds"
+            data-v-name="Předměty"
+            data-v-required="true"
+            data-v-length="1,@Model.StudentFields.Count"
+            data-v-msg="Vyberte prosím alespoň jednu roli. (maximálně @Model.StudentFields.Count)">
+        @foreach (var field in Model.StudentFields)
+        {
+            <option value="@field.StudentFieldId">@field.Name</option>
+        }
+    </select>
+</div>

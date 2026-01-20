@@ -2,18 +2,56 @@
 @using System.Reflection
 @model dynamic // PaginatedList<T>
 
+@{
+    if (Model.Items.Count == 0)
+    {
+        <div class="p-4 text-center text-muted">
+            Nic k zobrazení.
+        </div>
+        return;
+    }
+    var ModelType = Model.Items[0].GetType().Name;
+}
+
 <div class="table-responsive flex-grow-1 ct-scroll">
     <table class="table table-hover align-middle mb-0" id="table">
         <thead class="sticky-top bg-white" style="z-index: 5; box-shadow: 0 1px 0 rgba(0,0,0,0.05);">
             <tr>
-                <th>Učitel</th>
-                <th class="d-none d-md-table-cell">Tituly</th>
-                <th class="d-none d-sm-table-cell">Přezdívka</th>
-                <th class="text-center">Akce</th>
+                @if(ModelType == "Classes")
+                {
+                    <th>Třída</th>
+                    <th class="d-none d-md-table-cell">Předměty</th>
+                    <th class="d-none d-sm-table-cell">Začátek</th>
+                    <th class="d-none d-sm-table-cell">Konec</th>
+                }
+                else if(ModelType == "Student")
+                {
+                    <th>Student</th>
+                    <th class="d-none d-md-table-cell">Třída</th>
+                    <th class="d-none d-sm-table-cell">Přezdívka</th>
+                }
+                else if(ModelType == "Teacher")
+                {
+                    <th>Učitel</th>
+                    <th class="d-none d-md-table-cell">Tituly</th>
+                    <th class="d-none d-sm-table-cell">Přezdívka</th>
+                    <th class="text-center">Akce</th>
+                }
             </tr>
         </thead>
         <tbody id="tableContent">
-            @await Html.PartialAsync("TableContent/_TeacherRows", Model.Items as IEnumerable<object>)
+            @if(ModelType == "Teacher")
+            {
+                @await Html.PartialAsync("TableContent/_TeacherRows", Model.Items as IEnumerable<object>)
+            }
+            else if(ModelType == "Student")
+            {
+                @await Html.PartialAsync("TableContent/_StudentRows", Model.Items as IEnumerable<object>)
+            }
+            else if(ModelType == "Classes")
+            {
+                @await Html.PartialAsync("TableContent/_ClassesRows", Model.Items as IEnumerable<object>)
+            }
         </tbody>
     </table>
 </div>

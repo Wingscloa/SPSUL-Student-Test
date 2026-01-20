@@ -9,9 +9,11 @@ namespace SPSUL.Controllers.API
     public class ConfigController : Controller
     {
         private readonly SpsulContext _ctx;
-        public ConfigController(SpsulContext ctx, IHttpContextAccessor httpContextAccessor)
+        private readonly IWebHostEnvironment _env;
+        public ConfigController(SpsulContext ctx, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment env)
         {
             _ctx = ctx;
+            _env = env;
         }
 
         [HttpGet("/api/config/section/{sectionName}")]
@@ -20,12 +22,15 @@ namespace SPSUL.Controllers.API
             return ViewComponent(sectionName);
         }
 
-
         // TEACHER FORMS
         [HttpGet]
         [Route("/api/Config/TeacherEditForm/{id}")]
         public async Task<IActionResult> TeacherEditForm(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest("Neplatné ID");
+            }
             TeacherFormEditVM vm = new()
             {
                 Teacher = await _ctx.Teachers.Include(e => e.TeacherRoles).Include(e => e.Titles).FirstOrDefaultAsync(e => e.TeacherId == id),
@@ -49,6 +54,56 @@ namespace SPSUL.Controllers.API
             return PartialView("Views/Shared/Config/TeacherCreateForm.cshtml", vm);
         }
 
-        // STUDENT
+        // Classes Forms
+        [HttpGet]
+        [Route("/api/Config/ClassesEditForm/{id}")]
+        public async Task<IActionResult> ClassesEditForm(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Neplatné ID");
+            }
+
+            Classes? myClasses = await _ctx.Classes.Include(e => e.ClassesFields).FirstOrDefaultAsync(e => e.ClassesId == id);
+
+            if (myClasses == null) { 
+                return NotFound("Třída nebyla nalezena.");
+            }
+
+            ClassesFormEditVM vm = new()
+            {
+                Classes = myClasses,
+                StudentFields = await _ctx.StudentFields.ToListAsync(),
+            };
+
+            return PartialView("Views/Shared/Config/ClassesEditForm.cshtml", vm);
+        }
+
+        [HttpGet]
+        [Route("/api/Config/ClassesCreateForm/")]
+        public async Task<IActionResult> ClassesCreateForm()
+        {
+            ClassesFormCreateVM vm = new()
+            {
+                StudentFields = await _ctx.StudentFields.ToListAsync(),
+            };
+
+            return PartialView("Views/Shared/Config/ClassesCreateForm.cshtml", vm);
+        }
+
+        [HttpGet]
+        public IActionResult DownloadDocumentation()
+        {
+            string filePath = Path.Combine(_env.WebRootPath, "docs", "technicka-dokumentace.pdf");
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("Soubor nebyl nalezen.");
+            }
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+            return File(fileBytes, "application/pdf", "Elektronicka Dokumentace - SPSUL Tvoření Testu.pdf");
+        }
     }
 }

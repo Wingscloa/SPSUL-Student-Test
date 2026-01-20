@@ -2,35 +2,42 @@
 using SPSUL.Models;
 using SPSUL.Models.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+using SPSUL.Models.Display;
 
 namespace SPSUL.ViewComponents
 {
     public class ConfigClassViewComponent : ViewComponent
     {
         private readonly SpsulContext _ctx;
-        private readonly IMemoryCache _cache;
-        public ConfigClassViewComponent(SpsulContext ctx, IMemoryCache cache)
+        public ConfigClassViewComponent(SpsulContext ctx)
         {
             _ctx = ctx;
-            _cache = cache;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(int pageNumber = 1, int pageSize = 13)
         {
-            int? teacherId = HttpContext.Session.GetInt32("TeacherId");
-            if (teacherId == null)
-            {
-                return View("Views/Auth/Login");
-            }
+            List<Classes> query = await _ctx.Classes.Include(c => c.ClassesFields).ThenInclude(e => e.StudentField).ToListAsync();
 
-            ConfigClassViewModel model = new();
+            List<Classes> rows = query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .OrderByDescending(c => c.ClassesId)
+                .ToList();
+
+            int totalCount = query.Count;
+
+            ConfigClassVM model = new()
+            {
+                Classes = new PaginatedList<Classes>(rows, totalCount, pageNumber, pageSize),
+                Fields = await _ctx.StudentFields.ToListAsync()
+            };
 
             return View(model);
         }
     }
-    public class ConfigClassViewModel
+    public class ConfigClassVM
     {
-
+        public PaginatedList<Classes> Classes { get; set; }
+        public List<StudentField> Fields { get; set; }
     }
 }

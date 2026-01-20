@@ -73,7 +73,14 @@
     <div class="row g-0 flex-grow-1 overflow-hidden" style="min-height:0;">
         <!-- LIST -->
         <div class="col-12 d-flex flex-column h-100 overflow-hidden order-1 ct-list" id="list">
-            @await Html.PartialAsync("TableContent/_TableContent", Model.Teachers)
+            @if(Model.Teachers.Items == null)
+            {
+                
+            }
+            else
+            {
+                @await Html.PartialAsync("TableContent/_TableContent", Model.Teachers)
+            }
         </div>
 
         <!-- DESKTOP FORM (hidden on mobile) -->

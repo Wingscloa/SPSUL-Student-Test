@@ -1,4 +1,113 @@
-﻿@page
-@model SPSUL.Views.Shared.Components.ConfigClass.DefaultModel
-@{
-}
+﻿@using SPSUL.Models.Data
+@using SPSUL.Models.Display
+@using SPSUL.Models.Display.ConfigModels
+@using SPSUL.ViewComponents
+@model ConfigClassVM
+
+<div class="d-flex flex-column h-100 ct-wrapper" id="ctRoot">
+    <div class="p-3 bg-light border-bottom flex-shrink-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 class="configHeader mb-0">Správa tříd</h5>
+            <div id="configMods">
+                <button class="btn btn-sm" id="btnDelete" type="button">
+                    <i class="bi bi-dash-lg me-1"></i> Smazat
+                </button>
+                <button class="btn btn-sm" id="btnCreate" type="button">
+                    <i class="bi bi-plus-lg me-1"></i> Nový učitel
+                </button>
+            </div>
+            <div id="configOptions" class="d-none">
+                <button class="btn btn-sm" id="configAccept" type="button">
+                    <i class="bi bi-plus-lg me-1"></i> Potvrdit
+                </button>
+                <button class="btn btn-sm" id="configCancel" type="button">
+                    <i class="bi bi-x-lg me-1"></i> Zrušit
+                </button>
+            </div>
+        </div>
+        <form id="filterForm" novalidate>
+            <div class="row g-2 ct-filters">
+                <div class="col-12">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control configInput border-start-0"
+                               placeholder="Hledej název" aria-label="Hledání názvů" name="SearchFilter">
+                    </div>
+                </div>
+            </div>
+            <div class="row g-2 ct-filters" style="margin-top: 2px">
+                <div class="col-12 col-md-6">
+                    <select class="form-select configInput select2" multiple id="fieldFilter" name="fieldFilterIds" aria-label="Filtr oborů">
+                        @foreach (var field in Model.Fields)
+                        {
+                            <option value="@field.StudentFieldId">@field.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-12 col-md-6">
+                    <select class="form-select configInput select2" id="activeFilter" name="ActiveFilter" aria-label="Filtr titulů">
+                        <option value="">Všechny aktivní</option>
+                        <option value="on">Aktivní</option>
+                        <option value="off">Neaktivní</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row g-0 flex-grow-1 overflow-hidden" style="min-height:0;">
+        <!-- LIST -->
+        <div class="col-12 d-flex flex-column h-100 overflow-hidden order-1 ct-list" id="list">
+            @await Html.PartialAsync("TableContent/_TableContent", Model.Classes)
+        </div>
+
+        <!-- DESKTOP FORM (hidden on mobile) -->
+        <div class="col-12 col-lg-5 d-none d-lg-flex flex-column h-100 bg-white order-2 ct-form overflow-auto" style="display:none !important;max-height: inherit" id="editDesktop">
+            <div class="p-4 flex-grow-1 ct-scroll">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="configLabel mb-0" id="formTitleDesktop">
+                        <i class="bi bi-pencil-square me-2" id="formIconDesktop"></i>
+                        <span id="formTitleTextDesktop">Editace třídy</span>
+                    </h6>
+                    <button class="btn btn-sm btn-outline-secondary" id="btnCancelDesktop" type="button">
+                        <i class="bi bi-x-circle me-1"></i> Zrušit
+                    </button>
+                </div>
+                <form id="formDesktop">
+                    @* @await Html.PartialAsync("Config/ClassesCreateForm", createModel) *@
+                </form>
+            </div>
+            <div class="border-top bg-light flex-shrink-0 d-flex ct-savebar" style="padding:7px !important">
+                <button class="btn btn-orange btn-sm w-100 py-2 shadow-sm configSubmit" id="btnSaveDesktop" data-form="formDesktop" type="button">
+                    <i class="bi bi-check2-circle me-1"></i>
+                    <span>Uložit změny</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MOBILE OFFCANVAS EDITOR -->
+<div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="ctEditor" aria-labelledby="ctEditorLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="ctEditorLabel">Editace třídy</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Zavřít"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form id="ConfigFormMobile">
+            @* @await Html.PartialAsync("Config/ClassesCreateForm", createModel) *@
+        </form>
+    </div>
+    <div class="border-top text-center p-3">
+        <button class="btn configSubmit cursor" data-form="ConfigFormMobile" style="position: sticky; bottom: 0; height: 65px" type="button">
+            <i class="bi bi-check2-circle me-1"></i>
+            <span>Uložit změny</span>
+        </button>
+    </div>
+</div>
+
+<input type="hidden" id="deleteIds" value="" />
+<input type="hidden" id="filterUrl" value="/api/classes/content/" />
+<input type="hidden" id="crudURL" value="/api/classes" />
+<input type="hidden" id="DeleteUrl" value="/api/classes/delete/" />
+<input type="hidden" id="EditForm" value="/api/Config/ClassesEditForm/" />
+<input type="hidden" id="CreateForm" value="/api/Config/ClassesCreateForm/" />
