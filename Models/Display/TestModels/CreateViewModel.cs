@@ -1,6 +1,6 @@
 ﻿using SPSUL.Models.Data;
 
-namespace SPSUL.Models.Display.Test
+namespace SPSUL.Models.Display.TestModels
 {
     public class CreateViewModel
     {

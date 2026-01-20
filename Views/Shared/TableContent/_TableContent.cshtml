@@ -1,0 +1,28 @@
+﻿@using SPSUL.Models.Display
+@using System.Reflection
+@model dynamic // PaginatedList<T>
+
+<div class="table-responsive flex-grow-1 ct-scroll">
+    <table class="table table-hover align-middle mb-0" id="table">
+        <thead class="sticky-top bg-white" style="z-index: 5; box-shadow: 0 1px 0 rgba(0,0,0,0.05);">
+            <tr>
+                <th>Učitel</th>
+                <th class="d-none d-md-table-cell">Tituly</th>
+                <th class="d-none d-sm-table-cell">Přezdívka</th>
+                <th class="text-center">Akce</th>
+            </tr>
+        </thead>
+        <tbody id="tableContent">
+            @await Html.PartialAsync("TableContent/_TeacherRows", Model.Items as IEnumerable<object>)
+        </tbody>
+    </table>
+</div>
+<div class="p-2 bg-light border-top flex-shrink-0 d-flex justify-content-between align-items-center ct-pager">
+    <div>
+        Strana @Model.PageIndex / @Model.TotalPages (@Model.TotalItems)
+        </div>
+    <div class="btn-group">
+        <a class="btn btn-outline-secondary @(Model.HasPreviousPage ? "" : "disabled")" href="">Předchozí</a>
+        <a class="btn btn-outline-secondary @(Model.HasNextPage ? "" : "disabled")" href="">Další</a>
+    </div>
+</div>

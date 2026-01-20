@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SPSUL.Models.Data;
-using SPSUL.Models.Display.Quest;
+using SPSUL.Models.Display.QuestionModels;
 
 namespace SPSUL.Models
 {
@@ -38,6 +38,7 @@ namespace SPSUL.Models
                 e.Property(e => e.FirstName).HasMaxLength(64);
                 e.Property(e => e.NickName).HasMaxLength(64);
                 e.Property(e => e.PasswordHash).HasMaxLength(255);
+                e.Property(e => e.IsActive).HasDefaultValue(true);
             });
 
             modelBuilder.Entity<TeacherTitle>(e =>
@@ -55,6 +56,8 @@ namespace SPSUL.Models
                 e.Property(e => e.Shortcut).HasMaxLength(16);
 
                 e.Property(e => e.Name).HasMaxLength(64);
+
+                e.Property(e => e.IsActive).HasDefaultValue(true);
             });
 
             modelBuilder.Entity<Role>(e =>
@@ -144,8 +147,9 @@ namespace SPSUL.Models
                 e.HasKey(e => e.QuestionId);
                 e.Property(e => e.Header).HasMaxLength(128);
                 e.Property(e => e.Description).HasMaxLength(512);
-                e.HasOne(e => e.QuestionType).WithMany(e => e.Questions).HasForeignKey(e => e.QuestionTypeId);
+                e.Property(e => e.IsActive).HasDefaultValue(true);
 
+                e.HasOne(e => e.QuestionType).WithMany(e => e.Questions).HasForeignKey(e => e.QuestionTypeId);
                 e.HasOne(e => e.Field).WithMany(e => e.Questions).HasForeignKey(e => e.FieldId);
             });
 

@@ -14,148 +14,6 @@ h1,h2,h3,h4,h5,p,a,i {
     font-family: Myfont, sans-serif;
 }
 
-@font-face {
-    font-family: Myfont;
-    font-weight: 100;
-    font-display: swap;
-    src: url('/fonts/roboto-condensed-v31-latin-100.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 100;
-    font-display: swap;
-    font-style: italic;
-    src: url('/fonts/roboto-condensed-v31-latin-100italic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 200;
-    font-display: swap;
-    src: url('/fonts/roboto-condensed-v31-latin-200.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 200;
-    font-display: swap;
-    font-style: italic;
-    src: url('/fonts/roboto-condensed-v31-latin-200italic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 300;
-    font-display: swap;
-    src: url('/fonts/roboto-condensed-v31-latin-300.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 300;
-    font-display: swap;
-    font-style: italic;
-    src: url('/fonts/roboto-condensed-v31-latin-300italic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 500;
-    font-display: swap;
-    src: url('/fonts/roboto-condensed-v31-latin-500.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 500;
-    font-display: swap;
-    font-style: italic;
-    src: url('/fonts/roboto-condensed-v31-latin-500italic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 600;
-    font-display: swap;
-    src: url('/fonts/roboto-condensed-v31-latin-600.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 600;
-    font-display: swap;
-    font-style: italic;
-    src: url('/fonts/roboto-condensed-v31-latin-600italic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 700;
-    font-display: swap;
-    src: url('/fonts/roboto-condensed-v31-latin-700.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 700;
-    font-display: swap;
-    font-style: italic;
-    src: url('/fonts/roboto-condensed-v31-latin-700italic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 800;
-    font-display: swap;
-    src: url('/fonts/roboto-condensed-v31-latin-800.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 800;
-    font-display: swap;
-    font-style: italic;
-    font-style: italic;
-    src: url('/fonts/roboto-condensed-v31-latin-800italic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 900;
-    font-display: swap;
-    src: url('/fonts/roboto-condensed-v31-latin-900.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-weight: 900;
-    font-display: swap;
-    font-style: italic;
-    src: url('/fonts/roboto-condensed-v31-latin-900italic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-display: swap;
-    font-style: italic;
-    src: url('/fonts/roboto-condensed-v31-latin-italic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: Myfont;
-    font-display: swap;
-    font-style:normal;
-    src: url('/fonts/roboto-condensed-v31-latin-regular.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: SecondFont;
-    font-display: swap;
-    font-style: normal;
-    src: url('/fonts/roboto-v50-latin-700.woff2')
-}
-
 body {
     box-sizing: border-box;
     margin: 0;
@@ -625,7 +483,6 @@ input:checked + .slider {
     height: calc(85vh - 100px);
 }
 
-/* Tlaèítko v brandové barvì */
 .btn-orange {
     background-color: #ff9000;
     color: white;
@@ -639,7 +496,6 @@ input:checked + .slider {
         box-shadow: 0 4px 8px rgba(255, 144, 0, 0.3);
     }
 
-/* Úprava tvého configInputu */
 .configInput {
     border: 1px solid #dee2e6;
     padding: 0.6rem 0.75rem;
@@ -653,7 +509,6 @@ input:checked + .slider {
         box-shadow: 0 0 0 3px rgba(255, 144, 0, 0.15);
     }
 
-/* Ikony v popiscích */
 .configLabel {
     font-weight: 600;
     font-size: 0.85rem;
@@ -662,47 +517,56 @@ input:checked + .slider {
     letter-spacing: 0.5px;
 }
 
-/* Bootstrap input-group fix */
 .input-group-text {
     border-radius: 8px 0 0 8px;
 }
 
-/* Brand utilities for badges and accents */
-.text-orange{ color: var(--spsul-primary) !important; }
-.border-orange{ border-color: var(--spsul-primary) !important; }
-.bg-orange{ background-color: var(--spsul-primary) !important; color:#fff !important; }
-/* subtle background that contrasts on white and light headers */
-.bg-orange-subtle{ background-color: rgba(255,144,0,.12) !important; }
+.text-orange{ 
+    color: var(--spsul-primary) !important; 
+}
 
-/* Improve badge legibility with subtle weight */
-.badge.bg-orange-subtle{ font-weight:600; }
+.border-orange{ 
+    border-color: var(--spsul-primary) !important; 
+}
 
-/* Scoped modal layout for config modal only (avoid breaking other modals) */
-#configModal .modal-body{display:flex; flex-direction:column; min-height:0; overflow:hidden;}
-#configModal #modalContainer{display:flex; flex-direction:column; min-height:0; height:100%;}
+.bg-orange{ 
+    background-color: var(--spsul-primary) !important; 
+    color:#fff !important; 
+}
 
-/* Config modal: responsive height without hardcoded vh */
-#configModal .modal-dialog{ min-height: 70vh; }
-#configModal .modal-content.myModal{ min-height: 70vh; height: min(90vh, 100%); } 
+.bg-orange-subtle{ 
+    background-color: rgba(255,144,0,.12) !important; 
+}
+
+.badge.bg-orange-subtle{ 
+    font-weight:600; 
+}
+
+#configModal .modal-body{
+    display:flex; 
+    flex-direction:column; 
+    min-height:0; 
+    overflow:hidden;
+}
+
+#configModal #modalContainer{
+    display:flex; 
+    flex-direction:column; 
+    min-height:0; 
+    height:100%;
+}
+
+#configModal .modal-dialog{
+    min-height: 70vh; 
+}
 
 @media (max-width: 991.98px){
   #configModal .modal-content.myModal{height: 100%;}
 }
 
-/* Config modal sizing/positioning (desktop) */
 @media (min-width: 992px){
-  /* even wider - almost full screen but with margins */
   #configModal{ --bs-modal-width: min(1800px, 98vw); }
-
-  /* taller and closer to edges */
   #configModal .modal-dialog{ min-height: 90vh; margin-top: 4vh; margin-bottom: 2vh; }
-  #configModal .modal-content.myModal{ min-height: 90vh; height: min(96vh, 100%); }
-
-  /* move slightly down from exact center */
   #configModal .modal-dialog-centered{ align-items: flex-start; }
   #configModal .modal-dialog{ margin-top: 6vh; margin-bottom: 2vh; }
 }
-
-/* (intentionally no global overrides to .modal-content/.modal-body) */
-
-

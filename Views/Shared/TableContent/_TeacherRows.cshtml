@@ -1,0 +1,33 @@
+﻿@using SPSUL.Models.Data
+
+@model IEnumerable<object>
+
+@{
+    var rows = Model?.OfType<Teacher>().ToList();
+}
+
+@if (rows == null || !rows.Any())
+{
+    <tr>
+        <td colspan="4" class="text-center text-muted py-4">
+            Žádní učitelé k zobrazení.
+        </td>
+    </tr>
+    return;
+}
+
+@foreach (Teacher teacher in rows)
+{
+    <tr class="configRow"
+        data-id="@teacher.TeacherId"
+        role="button"
+        tabindex="0">
+        <td class="fw-bold name-cell">@teacher.FirstName @teacher.LastName</td>
+        <td class="title-cell d-none d-md-table-cell"><span class="small">@string.Join(", ", teacher.Titles.Select(e => e.Title.Shortcut))</span></td>
+        <td class="d-none d-sm-table-cell text-muted">@@@teacher.NickName</td>
+        <td class="text-center">
+            <i class="bi bi-pencil-square text-orange iconEdit" aria-hidden="true"></i>
+            <i class="bi bi-trash d-none iconDelete" style="color:#FF7070;" aria-hidden="true"></i>
+        </td>
+    </tr>
+}

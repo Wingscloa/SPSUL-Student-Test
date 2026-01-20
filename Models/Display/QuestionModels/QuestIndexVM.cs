@@ -1,6 +1,6 @@
 ﻿using SPSUL.Models.Data;
 
-namespace SPSUL.Models.Display.Quest
+namespace SPSUL.Models.Display.QuestionModels
 {
     public class QuestIndexVM
     {

@@ -211,8 +211,6 @@
     }
 }
 
-/*Bootstrap breakpoints*/
-
 @media(max-width: 992px) {
     .homeContainer {
         height: 84vh;

@@ -1,0 +1,67 @@
+﻿@using SPSUL.Models.Data
+@using SPSUL.Models.Display.ConfigModels
+@model TeacherFormCreateVM
+
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="FirstName">Jméno</label>
+    <input type="text" class="configInput w-100" placeholder="Jméno" name="FirstName" 
+           data-v-name="Jméno"
+           data-v-required="true"
+           data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
+           data-v-msg="Jméno musí obsahovat pouze písmena a být vyplněno."
+           data-v-length="3,30"
+           required>
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="LastName">Příjmení</label>
+    <input type="text" class="configInput w-100" placeholder="Příjmení" name="LastName" 
+        data-v-name="Příjmení"
+        data-v-required="true"
+        data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
+        data-v-length="3,30"
+        data-v-msg="Příjmení musí obsahovat pouze písmena a být vyplněno."
+    required>
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="NickName">Přezdívka</label>
+    <input type="text" class="configInput w-100" placeholder="Přezdívka" name="NickName" required
+           data-v-name="Přezdívka"
+           data-v-required="true"
+           data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
+           data-v-length="3,30"
+           data-v-msg="Přezdívka musí obsahovat pouze písmena a být vyplněno.">
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="Password">Heslo</label>
+    <input type="text" class="configInput w-100" name="Password" required
+           data-v-name="Heslo"
+           data-v-required="true"
+           data-v-length="8,30"
+           data-v-reg="^[a-zA-Z0-9]+$"
+           data-v-msg="Heslo musí obsahovat jen písmena a číslice.">
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="TitleIds">Tituly</label>
+    <input type="hidden" name="TitleIds" value="" />
+    <select class="form-select select2" multiple="multiple" name="TitleIds">
+        @foreach (var title in Model.Titles)
+        {
+            <option value="@title.TitleId">@title.Shortcut</option>
+        }
+    </select>
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="RoleIds">Role</label>
+    <input type="hidden" name="RoleIds" value="" />
+    <select class="form-select select2" multiple="multiple" name="RoleIds"
+            data-v-name="Role"
+            data-v-required="true"
+            data-v-length="1,1"
+            data-v-msg="Vyberte prosím alespoň jednu roli."
+            required>
+        @foreach (var role in Model.Roles)
+        {
+            <option value="@role.RoleId">@role.Name</option>
+        }
+    </select>
+</div>

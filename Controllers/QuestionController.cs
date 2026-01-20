@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SPSUL.Models;
-using System.Linq;
 using SPSUL.Models.Data;
 using Microsoft.EntityFrameworkCore; 
-using SPSUL.Models.Display.Quest;
+using SPSUL.Models.Display.QuestionModels;
 using SPSUL.Models.Display;
 
 namespace SPSUL.Controllers

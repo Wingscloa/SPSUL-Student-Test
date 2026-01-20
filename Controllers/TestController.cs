@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SPSUL.Models;
-using SPSUL.Models.Display.Test;
+using SPSUL.Models.Display.TestModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace SPSUL.Controllers

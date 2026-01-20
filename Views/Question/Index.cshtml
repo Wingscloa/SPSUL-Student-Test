@@ -1,5 +1,5 @@
 ﻿@using SPSUL.Models.Display
-@using SPSUL.Models.Display.Quest
+@using SPSUL.Models.Display.QuestionModels
 @model QuestIndexVM
 @{
     ViewData["Title"] = "Otázky";
@@ -90,7 +90,9 @@
             {
               <tr data-id="@r.QuestionId">
                 <td>@r.Header</td>
-                <td>@r.Description</td>
+                <td>
+                    <div class="myTruncate">@r.Description</div>
+                </td>
                 <td>@r.CreatorName</td>
                 <td>@r.OptionCount</td>
                 <td>@r.QuestionTypeName</td>

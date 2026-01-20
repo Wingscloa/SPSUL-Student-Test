@@ -1,6 +1,6 @@
 ﻿namespace SPSUL.Models.Display
 {
-    public class PaginatedList<T>
+    public class PaginatedList<T> : List<T>
     {
         public List<T> Items { get; set; }
         public int PageIndex { get; set; }

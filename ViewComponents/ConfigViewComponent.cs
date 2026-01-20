@@ -10,36 +10,28 @@ namespace SPSUL.ViewComponents
     {
         private readonly SpsulContext _ctx;
         private readonly IMemoryCache _cache;
-
-        public ConfigViewComponent(SpsulContext ctx, IMemoryCache cache)
+        private readonly SharedService _sharedService;
+        public ConfigViewComponent(SpsulContext ctx, IMemoryCache cache, SharedService sharedService)
         {
             _ctx = ctx;
             _cache = cache;
+            _sharedService = sharedService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            int? teacherId = HttpContext.Session.GetInt32("TeacherId");
-
-            if (teacherId == null)
-            {
-                return View("Views/Auth/Login");
-            }
-
+            var teacherId = _sharedService.GetTeacherId();
             ConfigurationViewModel model = new()
             {
-                Teacher = await _ctx.Teachers.Where(e => e.TeacherId == teacherId).FirstOrDefaultAsync(),
-                Title = await _ctx.TeacherTitles.Include(e => e.Title)
-                .Where(e => e.TeacherId == teacherId).FirstOrDefaultAsync(),
-
+                Name = await _sharedService.GetNameAsync() ?? string.Empty,
+                Nickname = await _ctx.Teachers.Where(e => e.TeacherId == teacherId).Select(e => e.NickName).FirstOrDefaultAsync() ?? string.Empty
             };
-
             return View(model);
         }
     }
     public class ConfigurationViewModel
     {
-        public Teacher Teacher { get; set; }
-        public TeacherTitle? Title { get; set; }
+        public  required string Name { get; set; }
+        public required string Nickname { get; set; } 
     }
 }

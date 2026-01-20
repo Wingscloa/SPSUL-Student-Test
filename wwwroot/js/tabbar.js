@@ -2,7 +2,6 @@
   const items=[...document.querySelectorAll('.tabbar-item')];
   if(items.length===0) return;
 
-  // apply min touch target
   items.forEach(i=>{ i.style.minWidth='64px'; i.style.minHeight='44px'; i.setAttribute('role','link'); });
 
   const setActive=(el)=>{
@@ -11,7 +10,6 @@
     localStorage.setItem('tabbar:last', el.textContent.trim());
   };
 
-  // set active based on URL or last stored
   const path = location.pathname.toLowerCase();
   const map=[
     {match: p=> p==='/' || p.includes('/home'), sel: ".tabbar a[asp-controller='Home']"},
@@ -27,7 +25,6 @@
   }
   if(el) setActive(el);
 
-  // event handlers
   items.forEach(i=>{
     i.addEventListener('click',()=> setActive(i));
     i.addEventListener('pointerdown',(e)=>{

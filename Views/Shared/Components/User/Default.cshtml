@@ -1,11 +1,7 @@
-﻿@using SPSUL.ViewComponents
-@model UserNavbarViewModel
-
+﻿@model string?
 <div class="username">
     <p>
-        @foreach(var t in Model.Title){<span>@t.Title.Name</span>} 
-        @Model.Teacher.FirstName 
-        @Model.Teacher.LastName
+        @(string.IsNullOrEmpty(Model) ? "Host" : Model)
     </p>
 </div>
 <div class="d-flex align-items-center">

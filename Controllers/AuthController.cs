@@ -23,38 +23,6 @@ namespace SPSUL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterViewModel model)
-        {
-            if(ModelState.IsValid)
-            {
-                try
-                {
-                    string passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
-
-                    Teacher teacher = new()
-                    {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        NickName = model.NickName,
-                        PasswordHash = passwordHash,
-                    };
-
-                    _ctx.Add(teacher);
-                    _ctx.SaveChanges();
-                    return RedirectToAction("Login");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(new {message = "Při vytváření vznikla chyba."});
-                }
-            }
-            else
-            {
-                return BadRequest(new { message = "Špatně vyplněné údaje." });
-            }
-        }
-
-        [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
             if(ModelState.IsValid)

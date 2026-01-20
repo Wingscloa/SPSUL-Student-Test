@@ -1,4 +1,4 @@
-﻿namespace SPSUL.Models.Display.Quest
+﻿namespace SPSUL.Models.Display.QuestionModels
 {
     public class QuestionUpdateDto : QuestionCreateDto
     {

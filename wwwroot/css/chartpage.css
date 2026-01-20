@@ -34,6 +34,7 @@
     padding: 12px
 }
 
+
 .brandText {
     background-color: var(--brand);
     color: white;
@@ -48,11 +49,13 @@
     height: 100% !important;
 }
 
-@media (max-width: 992px) {
-    .cardTable {
-        height: 67vh;
+
+
+    @media (max-width: 992px) {
+        .cardTable {
+            height: 67vh;
+        }
     }
-}
 
 .iconLink {
     font-size: 16px;
@@ -128,3 +131,15 @@
     .btn-activate:active {
         transform: scale(0.95);
     }
+
+.myTruncate {
+    display: block;
+    max-height: 100px;
+    overflow-y: hidden;
+}
+
+
+.tableContent table tbody tr {
+    height: 0px;
+    max-height: 100px;
+}

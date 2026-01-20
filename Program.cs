@@ -8,6 +8,11 @@ namespace SPSUL
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+            builder.Logging.AddDebug();
+
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddDistributedSqlServerCache(options =>
             {
                 options.ConnectionString = builder.Configuration.GetConnectionString("Default");
@@ -22,9 +27,10 @@ namespace SPSUL
                 options.Cookie.IsEssential = true;
             });
 
+            builder.Services.AddScoped(typeof(CacheService));
+            builder.Services.AddScoped(typeof(SharedService));
             // Add services to the container.
             builder.Services.AddDbContext<SpsulContext>(e => e.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-
             builder.Services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
 

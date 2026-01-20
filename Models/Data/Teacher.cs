@@ -7,6 +7,7 @@
         public required string LastName { get; set; }
         public required string NickName { get; set; }
         public required string PasswordHash { get; set; }
+        public bool IsActive { get; set; }
         public ICollection<TeacherTitle> Titles {get; set;}
         public ICollection<TeacherRole> TeacherRoles { get; set; }
     }

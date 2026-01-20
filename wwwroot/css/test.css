@@ -110,6 +110,7 @@ body {
     background: #fff;
     transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
 }
+
 .radio-option input[type="radio"]::before {
     content: "";
     width: 14px; height: 14px;
@@ -118,8 +119,14 @@ body {
     background: var(--brand);
     transition: transform .15s ease;
 }
-.radio-option input[type="radio"]:checked { border-color: var(--brand); }
-.radio-option input[type="radio"]:checked::before { transform: scale(1); }
+
+.radio-option input[type="radio"]:checked{
+    border-color: var(--brand); 
+}
+
+.radio-option input[type="radio"]:checked::before{ 
+    transform: scale(1); 
+}
 
 .radio-label {
     font-family: sans-serif;

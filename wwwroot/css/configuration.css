@@ -1,0 +1,158 @@
+:root {
+    --var-spsul: #ff9000;
+}
+
+.ct-wrapper{
+    min-height:0
+}
+
+.ct-scroll{
+    overflow:auto;
+    min-height:0;
+    flex:1 1 auto
+}
+
+@media (max-width: 991.98px){ 
+    .ct-scroll{max-height:calc(100vh - 280px)} 
+}
+
+.ct-list .name-cell{
+    white-space:nowrap; 
+    text-overflow:ellipsis; 
+    overflow:hidden; 
+    max-width: 260px
+}
+
+@media (max-width: 575.98px){ 
+    .ct-list .name-cell{
+        max-width: 180px
+    } 
+}
+
+.ct-pager{
+    position:sticky; 
+    bottom:0
+}
+
+.ct-savebar{
+    position:sticky; 
+    bottom:0
+}
+
+@media (max-width: 575.98px){
+  .ct-form .p-4{padding: 1rem !important}
+  .configInput{font-size: .95rem}
+}
+
+.ct-wrapper .configInput, .ct-wrapper .form-select{
+    border-color:#dee2e6
+}
+
+.configInput:focus, .form-select:focus{
+    box-shadow:0 0 0 .2rem rgba(255,138,0,.25); 
+    border-color:#ff8a00
+}
+
+.table thead.sticky-top{
+    background:#fff
+}
+
+.ct-filters .input-group{
+    width:100%
+}
+
+.ct-filters .input-group .form-control{
+    margin:0
+}
+
+.ct-filters .input-group-text{
+    border-top-right-radius:0;
+    border-bottom-right-radius:0
+}
+
+.ct-filters .form-select{
+    margin:0
+}
+
+.ct-wrapper .p-3 .row.g-2{
+    --bs-gutter-y: .5rem;
+}
+
+#configModal .offcanvas{ 
+    z-index: 11060; 
+}
+
+#configModal .offcanvas-backdrop{ 
+    z-index: 11050; 
+}
+
+#ctRoot .select2-container--bootstrap-5{
+    width:100% !important;
+}
+
+#ctRoot .select2-dropdown{
+    min-width: 420px;
+}
+
+@media (max-width: 575.98px){ 
+    #ctRoot .select2-dropdown{
+        min-width: 320px;
+    }
+}
+
+#ctEditor .select2-container--bootstrap-5{
+    width:100% !important;
+}
+
+#ctEditor .select2-dropdown{
+    min-width: 420px;
+}
+
+@media (max-width: 575.98px){ 
+    #ctEditor .select2-dropdown{
+        min-width: 320px;
+    } 
+}
+
+.configSubmit {
+    background-color: white;
+}
+
+.btn:hover {
+    -moz-transform: scale(1.0);
+    -ms-transform: scale(1.0);
+    -o-transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+}
+
+#table tr.configRow.deleteMode td {
+    background-color: #FFDFDF !important;
+}
+
+#table.table-hover tr.configRow.deleteMode:hover td {
+    background-color: #FFCACA;
+}
+
+#table tr.configRow.is-deleting td {
+    background-color: #ff4d4d !important; 
+    color: white !important;
+}
+
+.configHeader {
+    color: var(--var-spsul);
+    font-size: 1.225rem;
+    font-weight: 600;
+}
+
+.is-invalid{
+    border: 1px solid red;
+}
+
+.select2-container.is-invalid .selection .select2-selection {
+    border-color: #dc3545 !important;
+}
+
+    .select2-container.is-invalid .selection .select2-selection:focus {
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
