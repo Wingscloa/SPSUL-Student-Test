@@ -1,0 +1,38 @@
+﻿@using SPSUL.Models.Data
+@using SPSUL.Models.Display.ConfigModels
+@model StudentFormCreateVM
+
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="FirstName">Jméno</label>
+    <input type="text" class="configInput w-100" placeholder="Jméno" name="FirstName"
+           data-v-name="Jméno"
+           data-v-required="true"
+           data-v-reg="^[a-zA-Zá-žÁ-Ž]+$"
+           data-v-msg="Název musí obsahovat jen písmena a musí být vyplněn."
+           data-v-length="3,30"
+           required>
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="LastName">Příjmení</label>
+    <input type="text" class="configInput w-100" placeholder="Příjmení" name="LastName"
+           data-v-name="Příjmení"
+           data-v-required="true"
+           data-v-reg="^[a-zA-Zá-žÁ-Ž]+$"
+           data-v-msg="Název musí obsahovat jen písmena a musí být vyplněn."
+           data-v-length="3,30"
+           required>
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="ClassesIds">Třídy</label>
+    <input type="hidden" name="ClassesIds" value="" />
+    <select class="form-select select2" multiple="multiple" name="ClassesIds"
+            data-v-name="Třídy"
+            data-v-required="true"
+            data-v-length="1,@Model.Classes.Count"
+            data-v-msg="Vyberte prosím alespoň jednu třídu. (maximálně @Model.Classes.Count)">
+        @foreach (var classes in Model.Classes)
+        {
+            <option value="@classes.ClassesId">@classes.Name</option>
+        }
+    </select>
+</div>

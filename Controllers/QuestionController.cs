@@ -83,6 +83,7 @@ namespace SPSUL.Controllers
                     QuestionTypes = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync(),
                     StudentFields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync()
                 };
+
                 return View(model);
             }
             catch (Exception ex)

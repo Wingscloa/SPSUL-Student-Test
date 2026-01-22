@@ -91,19 +91,44 @@ namespace SPSUL.Controllers.API
             return PartialView("Views/Shared/Config/ClassesCreateForm.cshtml", vm);
         }
 
+        // Students Forms
         [HttpGet]
-        public IActionResult DownloadDocumentation()
+        [Route("/api/Config/StudentEditForm/{id}")]
+        public async Task<IActionResult> StudentEditForm(int id)
         {
-            string filePath = Path.Combine(_env.WebRootPath, "docs", "technicka-dokumentace.pdf");
-
-            if (!System.IO.File.Exists(filePath))
+            if (id <= 0)
             {
-                return NotFound("Soubor nebyl nalezen.");
+                return BadRequest("Neplatné ID");
             }
 
-            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+            Student? student = await _ctx.Students.Include(e => e.ClassesStudents)
+                .ThenInclude(e => e.Classes)
+                .FirstOrDefaultAsync(e => e.StudentId == id);
 
-            return File(fileBytes, "application/pdf", "Elektronicka Dokumentace - SPSUL Tvoření Testu.pdf");
+            if (student == null)
+            {
+                return NotFound("Třída nebyla nalezena.");
+            }
+
+            StudentFormEditVM vm = new()
+            {
+                Student = student,
+                Classes = await _ctx.Classes.ToListAsync(),
+            };
+
+            return PartialView("Views/Shared/Config/StudentEditForm.cshtml", vm);
+        }
+
+        [HttpGet]
+        [Route("/api/Config/StudentCreateForm/")]
+        public async Task<IActionResult> StudentCreateForm()
+        {
+            StudentFormCreateVM vm = new()
+            {
+                Classes = await _ctx.Classes.ToListAsync(),
+            };
+
+            return PartialView("Views/Shared/Config/StudentCreateForm.cshtml", vm);
         }
     }
 }

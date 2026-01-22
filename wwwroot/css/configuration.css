@@ -156,3 +156,111 @@
     .select2-container.is-invalid .selection .select2-selection:focus {
         box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
     }
+
+.ConfigContent {
+    margin-top: 8px;
+    padding: 9px;
+}
+
+.ContentHeader {
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--spsul-primary);
+    margin-bottom: 8px;
+}
+
+.configLabel {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.configInput {
+    width: 100%;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    border: solid 1px var(--spsul-primary);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+    .configInput:focus {
+        outline: none;
+        box-shadow: 0 0 2px var(--spsul-primary);
+        border: solid 1.5px var(--spsul-primary);
+    }
+
+    .configInput::placeholder {
+        font-size: 18px;
+        color: #BABABA;
+    }
+
+.configButton {
+    background-color: var(--spsul-primary);
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    font-weight: 700;
+    padding: 7.5px 0px;
+}
+
+    .configButton:hover {
+        background-color: #e67c00;
+    }
+
+/* Kontejner zajistí, že prvky jsou v jedné øadì */
+.input-container {
+    display: flex;
+    align-items: center;
+}
+
+    .input-container .configInput {
+        border-radius: 0.5rem 0px 0px 0.5rem;
+        border-right: none;
+        padding: 0.375rem 0rem 0.375rem 0.75rem
+    }
+        .input-container .configInput:focus + .btn-clear {
+            border: 1.5px solid var(--var-spsul);
+            box-shadow: 0 0 2px var(--var-spsul);
+            border-left: none;
+        }
+
+/* Tlaèítko - žádné display: none nebo opacity: 0 */
+.btn-clear {
+    display: inline-block; /* Vždy viditelné */
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-left: none;
+    border-radius: 0px 0.5rem 0.5rem 0px;
+    cursor: pointer;
+    padding: 0.375rem 0.5rem 0.375rem 0.5rem;
+    color: #333;
+    height: inherit;
+    white-space: nowrap; /* Zabrání zalomení textu v tlaèítku */
+}
+    .btn-clear:hover {
+        background-color: #f1f0f0;
+    }
+
+
+.input-container:focus-within .searchGroup {
+    border: 1.5px solid var(--var-spsul);
+    box-shadow: 0 0 2px var(--var-spsul);
+    border-right: none;
+}
+
+
+.searchBar {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0px !important;
+    padding: 0.375rem 0.5rem 0.375rem 0.5rem;
+}
+
+.searchGroup {
+    display: inline-block;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-right: none;
+    border-radius: 0.5rem 0px 0px 0.5rem;
+    padding: 0.375rem 0.5rem 0.375rem 0.5rem;
+}

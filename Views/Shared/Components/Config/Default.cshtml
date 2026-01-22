@@ -4,20 +4,19 @@
 <div class="modal fade" id="configModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-lg-down">
         <div class="modal-content myModal d-flex flex-row">
-            <nav class="navbar">
+            <nav class="navbar" style="padding: 0;">
                 <ul class="customUl">
                     <li class="menuItem active" onclick="loadConfig('ConfigProfile')"><a>Profil a oprávnění</a></li>
                     <li class="menuItem" onclick="loadConfig('ConfigClass')"><a>Třídy</a></li>
                     <li class="menuItem" onclick="loadConfig('ConfigStudent')"><a>Studenti</a></li>
                     <li class="menuItem" onclick="loadConfig('ConfigTeacher')"><a>Učitelé</a></li>
                     <li class="menuItem" onclick="loadConfig('ConfigAbout')"><a>O aplikaci</a></li>
-                    <li class="menuItem"><a asp-controller="Auth" asp-action="Logout">Odhlásit se</a></li>
+                    <li class="menuItem"><a class="signout" asp-controller="Auth" asp-action="Logout">Odhlásit se</a></li>
                 </ul>
             </nav>
             <div class="modalContent d-flex flex-column flex-grow-1" style="min-height:0;">
-                <div class="ProfileContent d-flex justify-content-between align-items-center">
+                <div class="ProfileContent d-flex justify-content-between align-items-center" style="height: 46px">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="Profile"></div>
                         <p class="TeacherName mb-0">@Model.Name
                             <span class="Nickname">@Model.Nickname</span>
                         </p>
@@ -28,8 +27,8 @@
                 </div>
                 <div class="modalBreak"></div>
                 <div id="modalContainer" class="flex-grow-1" style="overflow:auto;">
-                    @* @await Component.InvokeAsync("ConfigProfile") *@
-                    @await Component.InvokeAsync("ConfigClass")
+                    @await Component.InvokeAsync("ConfigProfile")
+                    @* @await Component.InvokeAsync("ConfigClass") *@
                 </div>
             </div>
         </div>

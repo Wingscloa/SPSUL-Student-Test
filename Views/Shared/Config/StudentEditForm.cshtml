@@ -1,0 +1,53 @@
+﻿@using SPSUL.Models.Data
+@using SPSUL.Models.Display.ConfigModels
+@model StudentFormEditVM
+
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="FirstName">Jméno</label>
+    <input type="text" class="configInput w-100" value="@Model.Student.FirstName" placeholder="Jméno" name="FirstName"
+           data-v-name="Jméno"
+           data-v-required="true"
+           data-v-reg="^[a-zA-Zá-žÁ-Ž]+$"
+           data-v-msg="Název musí obsahovat jen písmena a musí být vyplněn."
+           data-v-length="3,30"
+           required>
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="LastName">Příjmení</label>
+    <input type="text" class="configInput w-100" value="@Model.Student.LastName" placeholder="Příjmení" name="LastName"
+           data-v-name="Příjmení"
+           data-v-required="true"
+           data-v-reg="^[a-zA-Zá-žÁ-Ž]+$"
+           data-v-msg="Název musí obsahovat jen písmena a musí být vyplněn."
+           data-v-length="3,30"
+           required>
+</div>
+<div class="mb-3">
+    <label class="configLabel small mb-1" for="ClassesIds">Třídy</label>
+    <input type="hidden" name="ClassesIds" value="" />
+    <select class="form-select select2" multiple="multiple" name="ClassesIds"
+            data-v-name="Třídy"
+            data-v-required="true"
+            data-v-length="1,@Model.Classes.Count"
+            data-v-msg="Vyberte prosím alespoň jednu třídu. (maximálně @Model.Classes.Count)">
+        @foreach (var classes in Model.Classes)
+        {
+            if(Model.Student.ClassesStudents.Any(e => e.ClassesId == classes.ClassesId))
+            {
+                <option value="@classes.ClassesId" selected>@classes.Name</option>
+            }
+            else
+            {
+               <option value="@classes.ClassesId">@classes.Name</option>
+            }
+        }
+    </select>
+</div>
+<div>
+    <label class="configLabel small mb-1" for="IsActive">Aktivní</label>
+</div>
+<label class="switch" for="IsActive">
+    <input type="checkbox" name="IsActive" id="IsActive" @(Model.Student.IsActive ? "checked" : "")>
+    <div class="slider round"></div>
+</label>
+<input type="hidden" name="StudentId" value="@Model.Student.StudentId"/>

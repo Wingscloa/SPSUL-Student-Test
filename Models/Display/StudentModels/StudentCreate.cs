@@ -4,6 +4,6 @@
     {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
-        public int ClassesId { get; set; }
+        public List<int>? ClassesIds { get; set; }
     }
 }

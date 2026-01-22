@@ -183,6 +183,10 @@ button:hover {
     justify-content: center;
 }
 
+.signout {
+    color: #7c7c7c;
+}
+
 ul {
     list-style-type: none;
     padding: 0;
@@ -276,54 +280,6 @@ ul {
     height: 2px;
     background-color: #DFDFDF;
 }
-
-.ConfigContent {
-    margin-top: 8px;
-    padding: 9px;
-}
-
-.ContentHeader {
-    font-weight: 500;
-    font-size: 24px;
-    color: var(--spsul-primary); 
-    margin-bottom: 8px;
-}
-
-.configLabel {
-    font-weight: 500;
-    font-size: 16px;
-    margin-bottom: 4px;
-}
-
-.configInput {
-    width: 100%;
-    padding: 8px;
-    border: solid 1px var(--spsul-primary);
-    border-radius: 4px;
-    font-size: 18px;
-}
-    .configInput:focus {
-        outline: none;
-        box-shadow: 0 0 2px var(--spsul-primary);
-        border: solid 1.5px var(--spsul-primary);
-    }
-
-    .configInput::placeholder {
-        font-size: 18px;
-        color: #BABABA;
-    }
-
-.configButton {
-    background-color: var(--spsul-primary);
-    border-radius: 4px;
-    cursor: pointer;
-    color: white;
-    font-weight: 700;
-    padding: 7.5px 0px;
-}
-    .configButton:hover {
-        background-color: #e67c00;
-    }
 
 
 .switch {
@@ -560,12 +516,22 @@ input:checked + .slider {
     min-height: 70vh; 
 }
 
+.statsContainer {
+    display: none !important;
+}
+
 @media (max-width: 991.98px){
   #configModal .modal-content.myModal{height: 100%;}
+    .statsContainer {
+        display: block !important;
+    }
 }
 
 @media (min-width: 992px){
-  #configModal{ --bs-modal-width: min(1800px, 98vw); }
+
+    #configModal {
+        --bs-modal-width: min(1800px, 98vw);
+    }
   #configModal .modal-dialog{ min-height: 90vh; margin-top: 4vh; margin-bottom: 2vh; }
   #configModal .modal-dialog-centered{ align-items: flex-start; }
   #configModal .modal-dialog{ margin-top: 6vh; margin-bottom: 2vh; }

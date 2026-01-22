@@ -1,0 +1,42 @@
+﻿@using SPSUL.Models.Data
+
+@model IEnumerable<object>
+
+@{
+    var rows = Model?.OfType<Student>().ToList();
+}
+
+@if (rows == null || !rows.Any())
+{
+    <tr>
+        <td colspan="4" class="text-center text-muted py-4">
+            Nic k zobrazení.
+        </td>
+    </tr>
+    return;
+}
+
+@foreach (Student student in rows)
+{
+    <tr class="configRow"
+        data-id="@student.StudentId"
+        role="button"
+        tabindex="0">
+        <td class="fw-bold name-cell">@student.FirstName @student.LastName</td>
+        <td class="title-cell d-none d-md-table-cell"><span class="small">@string.Join(", ", student.ClassesStudents.Select(e => e.Classes.Name))</span></td>
+        <td class="d-none d-sm-table-cell text-muted">
+            @if(student.IsActive)
+            {
+                <span class="badge text-bg-success rounded-pill">Aktivní</span>
+            }
+            else
+            {
+                <span class="badge text-bg-danger rounded-pill">Neaktivní</span>
+            }
+        </td>
+        <td class="text-center">
+            <i class="bi bi-pencil-square text-orange iconEdit" aria-hidden="true"></i>
+            <i class="bi bi-trash d-none iconDelete" style="color:#FF7070;" aria-hidden="true"></i>
+        </td>
+    </tr>
+}

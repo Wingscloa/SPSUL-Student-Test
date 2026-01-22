@@ -1,0 +1,26 @@
+﻿@model int
+
+@for(int i = 0; i < Model; i++)
+{
+    <div class="card mb-2 option-card" data-option-index="0">
+        <div class="card-body p-3" style="position:relative">
+            <div class="d-flex align-items-start gap-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="isCorrect_@i" onchange="updatePreview()">
+                    <label class="form-check-label fw-bold text-success" for="isCorrect_@i">
+                        Správná
+                    </label>
+                </div>
+                <div class="flex-grow-1">
+                    <label class="form-label small mb-1">Text odpovědi:</label>
+                    <input type="text" class="form-control option-text" data-index="0" placeholder="Možnost @((char)(65+i))" oninput="updatePreview()" required="">
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="questionRemove" role="button" aria-label="Odstranit">
+                <span class="cross-line"></span>
+            </div>
+        </div>
+    </div>
+}

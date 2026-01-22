@@ -25,7 +25,7 @@ namespace SPSUL.Controllers.API
             try
             {
                 List<Teacher>? teachers = await _ctx.Teachers
-                    .Where(t => t.TeacherId > id)
+                    .Where(t => t.TeacherId == id)
                     .OrderBy(t => t.TeacherId)
                     .ToListAsync();
 

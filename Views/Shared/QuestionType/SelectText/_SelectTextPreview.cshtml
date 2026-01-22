@@ -1,0 +1,29 @@
+﻿@model int
+
+<div id="previewContainer" class="test-preview">
+    <div class="questContainer">
+        <h2 id="previewHeader" class="questionHeader">Nadpis otázky</h2>
+        <h3 id="previewDescription" class="questionName">Popis otázky se zobrazí zde...</h3>
+        <div id="previewOptions" class="mt-4">
+            <div class="radio-note">Vyber správnou odpověď</div>
+            <div class="radio-group">
+
+                @for(int i = 0; i < 4; i++)
+                {
+                    @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/_SelectTextPreviewOption.cshtml", @i)
+                }
+            </div>
+        </div>
+    </div>
+    <div class="mt-4 p-3 bg-white rounded border">
+        <h6 class="fw-bold mb-2"><i class="bi bi-info-circle text-orange"></i> Správné odpovědi:</h6>
+        @if (true)
+        {
+            <span class="text-muted">Zatím nejsou označeny žádné správné odpovědi</span>
+        }
+        else if(true)
+        {
+            <div class="text-success"><i class="bi bi-check-circle-fill me-1"></i>@((char)65)</div>
+        }
+    </div>
+</div>

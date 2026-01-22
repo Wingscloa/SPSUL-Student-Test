@@ -6,47 +6,37 @@
 
 <div class="d-flex flex-column h-100 ct-wrapper" id="ctRoot">
     <div class="p-3 bg-light border-bottom flex-shrink-0">
-        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-            <h5 class="configHeader mb-0">Správa tříd</h5>
-            <div id="configMods">
-                <button class="btn btn-sm" id="btnDelete" type="button">
-                    <i class="bi bi-dash-lg me-1"></i> Smazat
-                </button>
-                <button class="btn btn-sm" id="btnCreate" type="button">
-                    <i class="bi bi-plus-lg me-1"></i> Nový učitel
-                </button>
-            </div>
-            <div id="configOptions" class="d-none">
-                <button class="btn btn-sm" id="configAccept" type="button">
-                    <i class="bi bi-plus-lg me-1"></i> Potvrdit
-                </button>
-                <button class="btn btn-sm" id="configCancel" type="button">
-                    <i class="bi bi-x-lg me-1"></i> Zrušit
-                </button>
-            </div>
-        </div>
+        @await Html.PartialAsync("_ConfigHeader", "Správa třídy")
         <form id="filterForm" novalidate>
-            <div class="row g-2 ct-filters">
-                <div class="col-12">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search" aria-hidden="true"></i></span>
-                        <input type="text" class="form-control configInput border-start-0"
-                               placeholder="Hledej název" aria-label="Hledání názvů" name="SearchFilter">
-                    </div>
-                </div>
-            </div>
+            @await Html.PartialAsync("_ConfigSearch", "Hledej název")
             <div class="row g-2 ct-filters" style="margin-top: 2px">
-                <div class="col-12 col-md-6">
-                    <select class="form-select configInput select2" multiple id="fieldFilter" name="fieldFilterIds" aria-label="Filtr oborů">
+                <div class="col-12 col-md-3">
+                    <select class="form-select configInput select2" multiple id="FieldFilterIds"
+                            name="FieldFilterIds" aria-label="Filtr oborů" data-v-placeholder="Předměty">
                         @foreach (var field in Model.Fields)
                         {
                             <option value="@field.StudentFieldId">@field.Name</option>
                         }
                     </select>
                 </div>
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-3">
+                    <div class="input-container">
+                        <input type="number" maxlength="4" placeholder="Začátek roku (20RR)" class="form-control configInput onlyYear"
+                               id="StartFromFilter" name="StartFromFilter" aria-label="Filtr začátek zahájení" data-v-originvalue="20">
+                        <button type="button" class="btn-clear" aria-label="Vymazat">&times;</button>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="input-container">
+                        <input type="number" maxlength="4" placeholder="Konec roku (20RR)"
+                               class="form-control configInput onlyYear" id="EndToFilter" data-v-originValue="20"
+                               name="EndToFilter" aria-label="Filtr konec studia">
+                        <button type="button" class="btn-clear" aria-label="Vymazat">&times;</button>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
                     <select class="form-select configInput select2" id="activeFilter" name="ActiveFilter" aria-label="Filtr titulů">
-                        <option value="">Všechny aktivní</option>
+                        <option selected disabled>Všechny aktivní/neaktivní</option>
                         <option value="on">Aktivní</option>
                         <option value="off">Neaktivní</option>
                     </select>

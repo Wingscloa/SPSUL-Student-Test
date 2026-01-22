@@ -19,19 +19,7 @@ namespace SPSUL.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            int? teacherId = HttpContext.Session.GetInt32("TeacherId");
-            if (teacherId == null)
-            {
-                return View("Views/Auth/Login");
-            }
-
-            ConfigAboutViewModel model = new();
-
-            return View(model);
+            return View();
         }
-    }
-    public class ConfigAboutViewModel
-    {
-
     }
 }

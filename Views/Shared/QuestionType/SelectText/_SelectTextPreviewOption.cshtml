@@ -1,0 +1,10 @@
+﻿@model int
+
+@* CREATE *@
+@{
+    char optionLetter = (char)(65 + Model);
+}
+<label class="radio-option" data-option-index="@Model">
+    <input type="radio" name="preview_answer" value="0" disabled="">
+    <span class="radio-label">@optionLetter) Možnost @optionLetter</span>
+</label>

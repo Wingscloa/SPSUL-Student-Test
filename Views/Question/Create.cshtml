@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
 }
 <link href="~/css/create.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/css/question.css" rel="stylesheet" asp-append-version="true"/>
 <link href="~/css/test.css" rel="stylesheet" asp-append-version="true" />
 <link href="~/css/createtest.css" rel="stylesheet" asp-append-version="true" />
 <script src="~/js/question.js" asp-append-version="true"></script>
@@ -81,9 +82,11 @@
                             </div>
                             <small class="text-muted">Zadej počet odpovědí (2-10) a stiskni Generovat</small>
                         </div>
-
+                        <h6 class="fw-bold mb-3"><i class="bi bi-ui-checks text-orange"></i> Možnosti odpovědí:</h6>
                         <!-- Možnosti odpovědí (dynamicky) -->
-                        <div id="optionsContainer" class="mb-3"></div>
+                        <div id="optionsContainer" class="mb-3">
+                            @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/_SelectTextAnswerOption.cshtml", 4)
+                        </div>
 
                         <!-- Action buttons -->
                         <div class="d-grid gap-2">
@@ -105,20 +108,7 @@
                     <h5 class="mb-0"><i class="bi bi-eye me-2"></i>Náhled otázky</h5>
                 </div>
                 <div class="card-body" style="overflow-y: auto; background: #f8f9fa;">
-                    <div id="previewContainer" class="test-preview">
-                        <div class="questContainer">
-                            <h2 id="previewHeader" class="questionHeader">Nadpis otázky</h2>
-                            <h3 id="previewDescription" class="questionName">Popis otázky se zobrazí zde...</h3>
-                            <div id="previewOptions" class="mt-4">
-                                <div class="radio-note">Vyber správnou odpověď</div>
-                                <div class="radio-group"></div>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-3 bg-white rounded border">
-                            <h6 class="fw-bold mb-2"><i class="bi bi-info-circle text-orange"></i> Správné odpovědi:</h6>
-                            <div id="correctAnswersList" class="text-muted">Zatím nejsou označeny žádné správné odpovědi</div>
-                        </div>
-                    </div>
+                    @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/_SelectTextPreview.cshtml", 4)
                 </div>
             </div>
         </div>

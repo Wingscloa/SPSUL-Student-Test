@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using SPSUL.Models;
 using SPSUL.Models.Data;
 using SPSUL.Models.Display.Auth;
@@ -8,9 +9,11 @@ namespace SPSUL.Controllers
     public class AuthController : Controller
     {
         private readonly SpsulContext _ctx;
-        public AuthController(SpsulContext ctx)
+        private readonly IMemoryCache _cache;
+        public AuthController(SpsulContext ctx, IMemoryCache cache)
         {
             _ctx = ctx;
+            _cache = cache;
         }
         public IActionResult Login()
         {
@@ -56,6 +59,8 @@ namespace SPSUL.Controllers
         public IActionResult Logout()
         {
             var x = HttpContext.Session.GetInt32("TeacherId");
+            _cache.Remove($"TeacherName");
+
             HttpContext.Session.Clear(); 
             return RedirectToAction("Login");
         }

@@ -41,8 +41,8 @@ namespace SPSUL.ViewComponents
 
     public class ConfigTeacherModel
     {
-        public PaginatedList<Teacher> Teachers { get; set; }
-        public List<Role> Roles { get; set; }
-        public List<Title> Titles { get; set; }
+        public required PaginatedList<Teacher> Teachers { get; set; }
+        public required List<Role> Roles { get; set; }
+        public required List<Title> Titles { get; set; }
     }
 }

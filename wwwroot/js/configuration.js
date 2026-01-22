@@ -1,9 +1,9 @@
 ﻿var onMobile = false;
 
 document.addEventListener('DOMContentLoaded', function () {
-    var el = document.getElementById('configModal');
-    var modal = bootstrap.Modal.getOrCreateInstance(el);
-    modal.show();
+    //var el = document.getElementById('configModal');
+    //var modal = bootstrap.Modal.getOrCreateInstance(el);
+    //modal.show();
 
     if (window.innerWidth > 992) { onMobile = false }
     console.log(onMobile)
@@ -29,11 +29,15 @@ function initTitlesSelect2() {
     $selects.each(function () {
         const $sel = $(this);
         const dropdownParent = $('#configModal').length ? $('#configModal') : $(document.body);
+
+        const placeholder = $(this).data('v-placeholder')
+
         $sel.select2({
             theme: 'bootstrap-5',
             width: '100%',
             dropdownAutoWidth: true,
             dropdownParent: dropdownParent,
+            placeholder: placeholder
         });
     });
 }
@@ -179,6 +183,7 @@ async function loadConfig(componentName) {
         const url = document.getElementById('DeleteUrl').value;
 
         await fetchDataForm(url, obj, 'POST');
+        await filterForm()
 
         cancelDeleteMode()
     })
@@ -259,6 +264,11 @@ async function loadConfig(componentName) {
         const data = new FormData(form);
         const obj = {};
         data.forEach((value, key) => {
+            if (key == 'SearchFilter') {
+                obj[key] = value;
+                return;
+            }
+
             var allValues = data.getAll(key);
 
             if (allValues.length > 1 || key.includes('Ids')) {
@@ -492,10 +502,72 @@ async function loadConfig(componentName) {
         toastr.error(msg, name);
         element.classList.add('is-invalid');
 
-        // FIX PRO SELECT2: Přidá červený rámeček i na Select2 vizuál
         const s2Container = element.nextElementSibling;
         if (s2Container && s2Container.classList.contains('select2-container')) {
             s2Container.classList.add('is-invalid');
         }
     }
+
+    // dynamic events on elements like inputs, focus etc.
+
+        // uzivatel zada vstup
+    document.addEventListener('input', function (event) {
+        const el = event.target
+
+        if (el.classList.contains('onlyYear')) {
+            const value = event.target.value
+            
+            if (value.length > 4) {
+                event.target.value = event.target.value.slice(0, 4);
+            }
+
+           
+        }
+    })
+
+        //uzivatel klikne na input
+    document.addEventListener('focusin', function (event) {
+        const el = event.target;
+        
+        if (el.classList.contains('onlyYear')) {
+            const value = event.target.value
+            const originValue = el.dataset.vOriginvalue;
+            if (value == '') {
+                event.target.value = originValue;
+            }
+        }
+    })
+        // uzivatel zmackne tlacitko
+    document.addEventListener('keydown', function (event) {
+        const el = event.target;
+        const key = event.key;
+
+        if (el.classList.contains('onlyYear')) {
+            const value = event.target.value;
+            const originValue = el.dataset.vOriginvalue;
+
+            const keysToDisable= ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+
+            if (value.length <= 2 && keysToDisable.includes(event.key)) {
+                event.preventDefault();
+            }
+
+            if (event.key == 'ArrowDown' && value == originValue) {
+                event.preventDefault()
+            }
+        }
+    })
+
+    // filter clear
+    document.addEventListener('click', async function (event) {
+        if (event.target.classList.contains('btn-clear')) {
+            const container = event.target.closest('.input-container');
+            const input = container.querySelector('.configInput');
+            if (input) {
+                input.value = '';
+                await filterForm();
+            }
+        }
+    });
+
 })();

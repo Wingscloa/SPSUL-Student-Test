@@ -10,9 +10,9 @@ namespace SPSUL.Controllers.API
     public class ClassesController : Controller
     {
         private readonly SpsulContext _ctx;
-        private readonly ILogger<TeacherController> _logger;
+        private readonly ILogger<ClassesController> _logger;
 
-        public ClassesController(SpsulContext ctx, ILogger<TeacherController> logger)
+        public ClassesController(SpsulContext ctx, ILogger<ClassesController> logger)
         {
             _ctx = ctx;
             _logger = logger;
@@ -56,11 +56,16 @@ namespace SPSUL.Controllers.API
                         (model.SearchFilter != null ?
                         (e.Name.Contains(model.SearchFilter)) : true) &&
                         (model.ActiveFilter.HasValue ? e.IsActive == model.ActiveFilter.Value : true) &&
-                        (model.StartFromFilter.HasValue ? e.StartFrom >= model.StartFromFilter.Value : true) &&
-                        (model.EndToFilter.HasValue ? e.EndTo <= model.EndToFilter.Value : true) &&
-                        (model.FieldFilterId.HasValue ? e.ClassesFields.Any(cf => cf.StudentField.StudentFieldId == model.FieldFilterId.Value) : true))
+                        (model.StartFromFilter.HasValue ? e.StartFrom == model.StartFromFilter.Value : true) &&
+                        (model.EndToFilter.HasValue ? e.EndTo == model.EndToFilter.Value : true))
                         .Include(e => e.ClassesFields).ThenInclude(e => e.StudentField)
                         .ToListAsync();
+
+                    if (model.FieldFilterIds != null && model.FieldFilterIds.Count > 0)
+                    {
+                        query = query.Where(e => e.ClassesFields.Any(t => model.FieldFilterIds.Contains(t.StudentFieldId))).ToList();
+                    }
+
 
                     List<Classes>? rows = query
                         .Skip((model.PageNumber - 1) * model.PageSize)
