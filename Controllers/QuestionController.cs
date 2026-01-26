@@ -4,6 +4,7 @@ using SPSUL.Models.Data;
 using Microsoft.EntityFrameworkCore; 
 using SPSUL.Models.Display.QuestionModels;
 using SPSUL.Models.Display;
+using SPSUL.Models.Display.QuestionConfig;
 
 namespace SPSUL.Controllers
 {
@@ -81,7 +82,14 @@ namespace SPSUL.Controllers
                 QuestCreateVM model = new()
                 {
                     QuestionTypes = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync(),
-                    StudentFields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync()
+                    StudentFields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync(),
+                    OptionBases = new List<OptionBase>
+                    {
+                        new OptionBase { Index = 0, PlaceHolder = "Možnost A" },
+                        new OptionBase { Index = 1, PlaceHolder = "Možnost B" },
+                        new OptionBase { Index = 2, PlaceHolder = "Možnost C" },
+                        new OptionBase { Index = 3, PlaceHolder = "Možnost D" }
+                    }
                 };
 
                 return View(model);

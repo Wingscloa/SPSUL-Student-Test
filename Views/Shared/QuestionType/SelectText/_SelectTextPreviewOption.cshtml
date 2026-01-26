@@ -1,10 +1,13 @@
-﻿@model int
+﻿@using SPSUL.Models.Display.QuestionConfig
+
+@model List<OptionBase>
 
 @* CREATE *@
-@{
-    char optionLetter = (char)(65 + Model);
+
+@foreach(OptionBase opt in Model)
+{
+    <label class="radio-option @(opt.IsCorrect ? "correct" : "incorrect")" data-option-index="@opt.Index">
+        <input type="radio" name="preview_answer" value="0" disabled>
+        <span class="radio-label">@opt.PlaceHolder) Možnost @opt.PlaceHolder</span>
+    </label>
 }
-<label class="radio-option" data-option-index="@Model">
-    <input type="radio" name="preview_answer" value="0" disabled="">
-    <span class="radio-label">@optionLetter) Možnost @optionLetter</span>
-</label>

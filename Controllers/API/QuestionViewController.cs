@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SPSUL.Models;
 using SPSUL.Models.Data;
+using SPSUL.Models.Display.QuestionConfig;
 
 namespace SPSUL.Controllers.API
 {
@@ -43,29 +44,41 @@ namespace SPSUL.Controllers.API
                 return BadRequest("Nastala chyba na serveru. Zkuste to později.");
             }
         }
-        [Route("api/QuestionView/AnswerOption")]
+
         [HttpPost]
-        public async Task<IActionResult> AnswerOption([FromBody] AnswerOptionRequest model)
+        [Route("api/QuestionView/AnswerOption")]
+        public async Task<IActionResult> AnswerOption([FromBody] OptionRequest model)
         {
             if(ModelState.IsValid == false)
             {
                 return BadRequest("Neplatná data.");
             }
 
-            if (model.Count == 0) { return BadRequest("Počet nemůže být nula."); }
+            if (model.QuestionCount == 0) { return BadRequest("Počet nemůže být nula."); }
             try
             {
                 QuestionType? questType = await _ctx.QuestionTypes.FindAsync(model.QuestionTypeId);
 
                 if (questType == null) { return NotFound("Typ otázky nebyl nalezen, nemohu vygenerovat možnosti"); }
 
+                List<OptionBase> opts = new();
+                for(int i = 0; i < model.QuestionCount; i++)
+                {
+                    opts.Add(new()
+                    {
+                        Index = model.CurrentCount + i,
+                        PlaceHolder = $"Možnost {(char)(model.CurrentCount + i + 65)}",
+                        IsCorrect = false
+                    });
+                }
+
                 if (questType.Name == "Uzavřená otázka")
                 {
-                    return PartialView(partialText + "_SelectTextAnswerOption", model.Count);
+                    return PartialView(partialText + "_SelectTextAnswerOption.cshtml", opts);
                 }
                 else if (questType.Name == "Uzavřená otázka s obrázky")
                 {
-                    return PartialView(partialImage + "_SelectImageAnswerOption", model.Count);
+                    return PartialView(partialImage + "_SelectImageAnswerOption.cshtml", opts);
                 }
                 else
                 {
@@ -78,24 +91,38 @@ namespace SPSUL.Controllers.API
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> PreviewOptions(int questionTypeId, int count)
+
+        [HttpPost]
+        [Route("api/QuestionView/PreviewOptions")]
+        public async Task<IActionResult> PreviewOptions([FromBody] OptionRequest model)
         {
-            if(count == 0) { return BadRequest("Počet nemůže být nula."); }
+            if(model.QuestionCount == 0) { return BadRequest("Počet nemůže být nula."); }
             
             try
             {
-                QuestionType? questType = await _ctx.QuestionTypes.FindAsync(questionTypeId);
+                QuestionType? questType = await _ctx.QuestionTypes.FindAsync(model.QuestionTypeId);
 
                 if(questType == null) { return NotFound("Typ otázky nebyl nalezen, nemohu vygenerovat možnosti"); }
 
-                if(questType.Name == "Uzavřená otázka")
+                List<OptionBase> opts = new();
+
+                for (int i = 0; i < model.QuestionCount; i++)
                 {
-                    return PartialView(partialText + "_SelectTextPreviewOption", count);
+                    opts.Add(new()
+                    {
+                        Index = model.CurrentCount + i,
+                        PlaceHolder = $"{(char)(model.CurrentCount + i + 65)}",
+                        IsCorrect = false
+                    });
+                }
+
+                if (questType.Name == "Uzavřená otázka")
+                {
+                    return PartialView(partialText + "_SelectTextPreviewOption.cshtml", opts);
                 }
                 else if(questType.Name == "Uzavřená otázka s obrázky")
                 {
-                    return PartialView(partialImage + "_SelectImagePreviewOption", count);
+                    return PartialView(partialImage + "_SelectImagePreviewOption.cshtml", opts);
                 }
                 else
                 {
@@ -109,9 +136,10 @@ namespace SPSUL.Controllers.API
         }
     }
 
-    public class AnswerOptionRequest
+    public class OptionRequest
     {
         public int QuestionTypeId { get; set; }
-        public int Count { get; set; }
+        public int CurrentCount { get; set; }
+        public int QuestionCount { get; set; }
     }
 }

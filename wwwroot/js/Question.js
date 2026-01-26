@@ -56,30 +56,48 @@ async function generateOptions() {
 
         const data = {
             QuestionTypeId: parseInt(document.getElementById('QuestionTypeId').value),
-            Count: parseInt(toFetch),
+            QuestionCount: parseInt(toFetch),
+            CurrentCount: parseInt(optionsContainer.length)
         };
 
-        const response = await fetch(`/api/QuestionView/AnswerOption/`, {
+        const responseOption = await fetch(`/api/QuestionView/AnswerOption/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
 
-        const result = await response.text();
+        const responsePreview = await fetch(`/api/QuestionView/PreviewOptions/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
 
-        if (result.success) {
-            toastr.success(result.message || 'Možnosti vygenerovány', 'Úspěch');
+        if (responseOption.ok && responsePreview.ok)
+        {
+            const optionContainer = document.getElementById('optionsContainer')
+            const previewContainer = document.getElementById('previewOptions').querySelector('.radio-group')
+
+            const optionResult = await responseOption.text()
+            const previewResult = await responsePreview.text()
+
+            optionContainer.insertAdjacentHTML('beforeend', optionResult);
+            previewContainer.insertAdjacentHTML('beforeend', previewResult)
+
+            toastr.success('Možnosti vygenerovány', 'Úspěch');
         }
-        else {
-            toastr.warning(result.message || 'Chyba při generování možností', 'Chyba');
+        else
+        {
+            toastr.warning('Chyba při generování možností', 'Chyba');
         }
     }
     else // remove last n options
     {
         const toRemove = optionsContainer.length - count;
+        const radioOptionsContainer = document.querySelectorAll('.radio-option');
 
         for (let i = 0; i < toRemove; i++) {
             optionsContainer[optionsContainer.length - 1 - i].remove();
+            radioOptionsContainer[radioOptionsContainer.length - 1 - i].remove();
         }
     }
 }
@@ -104,7 +122,6 @@ document.addEventListener('click', (e) => {
         resetOptionIndexes()
     }
 }); 
-
 
 function resetOptionIndexes() {
     const optionInputs = document.querySelectorAll('.option-card');
@@ -135,6 +152,8 @@ async function CreateQuestion() {
     const isValid = await Validate();
 
     if (!isValid) {
+        disableInputs(false);
+        disableSubmitButton(false);
         return;
     }
 
@@ -185,22 +204,21 @@ async function Validate() {
     }
 
     let hasCorrect = false;
-    let hasUnfilledOption = false;
+    let isValid = true;
     optionInputs.forEach((input, idx) => {
+        if (!isValid) return;
         const text = input.value.trim();
         const isCorrect = document.getElementById(`isCorrect_${idx}`)?.checked || false;
 
         if (!text) {
-            toastr.warning(`Vyplň text pro možnost ${String.fromCharCode(65 + idx)}`, 'Varování');
-            hasUnfilledOption = true;
+            toastr.warning(`Vyplň text pro možnost ${String.fromCharCode(65 + idx)}, zkontroluj vše před uložením`, 'Varování');
+            isValid = false;
             return false;
         }
         if (isCorrect) hasCorrect = true;
     });
 
-    if (hasUnfilledOption) {
-        return false;
-    }
+    if (!isValid) { return false; }
 
     if (!hasCorrect) {
         toastr.warning('Označ alespoň jednu správnou odpověď', 'Varování');
@@ -245,3 +263,85 @@ function resetForm() {
     location.reload()
 }
 
+// Header input listener
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Header
+    const headerInput = document.getElementById('Header');
+
+    headerInput.addEventListener('input', (e) => {
+        const preview = document.getElementById('previewHeader')
+
+        if (preview) {
+            preview.textContent = e.target.value || '';
+        }
+    })
+
+    // Description
+
+    const descriptionInput = document.getElementById('Description');
+
+    descriptionInput.addEventListener('input', (e) => {
+        const preview = document.getElementById('previewDescription')
+
+        if (preview) {
+            preview.textContent = e.target.value || '';
+        }
+    })
+
+    // Generate Button
+
+    const generateBtn = document.getElementById('Generate')
+
+    generateBtn.addEventListener('click', async (e) => {
+        await generateOptions();
+    });
+
+})
+
+// Event delegation for dynamically added option inputs
+
+// CorrectInput
+document.addEventListener('input', (e) => {
+
+    const el = e.target
+    const value = el.value;
+    const name = el.getAttribute('name');
+
+    // Option text input
+    if (name == 'optionText') {
+        const dataIndex = el.dataset.index;
+
+        const previewOption = document.querySelector(`.radio-option[data-option-index="${dataIndex}"] .radio-label`);
+
+        if (previewOption) {
+            previewOption.textContent = `${String.fromCharCode(65 + parseInt(dataIndex))}) ${value || `Možnost ${String.fromCharCode(65 + parseInt(dataIndex))}`}`;
+        }
+    }
+})
+
+document.addEventListener('change', (e) => {
+    const el = e.target;
+    const value = el.value;
+    const name = el.getAttribute('name');
+
+    // Correct answer checkbox
+    if (name == 'CorrectInput') {
+        const id = el.closest('.option-card').getAttribute('data-option-index');
+        const optionInput = document.querySelector(`.radio-option[data-option-index="${id}"]`);
+        const border = el.closest('.option-card');
+        if (el.checked) {
+            border.classList.add('correct')
+            border.classList.remove('incorrect')
+            optionInput.classList.add('correct')
+            optionInput.classList.remove('incorrect')
+        }
+        else {
+            border.classList.remove('correct')
+            border.classList.add('incorrect')
+            optionInput.classList.remove('correct')
+            optionInput.classList.add('incorrect')
+        }
+    }
+})
