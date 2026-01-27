@@ -151,25 +151,25 @@
 }
 
 .bg-students {
-    background-image: url('/Image/StudentsBlur.jpg');
+    background-image: url('/Image/StudentsBlur.webp');
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .bg-tests {
-    background-image: url('/Image/TestsBlur.jpg');
+    background-image: url('/Image/TestsBlur.webp');
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .bg-score {
-    background-image: url('/Image/ScoreBlur.jpg');
+    background-image: url('/Image/ScoreBlur.webp');
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .bg-questions {
-    background-image: url('/Image/QuestionBlur.jpg');
+    background-image: url('/Image/QuestionBlur.webp');
     background-repeat: no-repeat;
     background-size: cover;
 }

@@ -16,21 +16,10 @@
     box-shadow: inset rgb(54 120 54 / 25%) 0px 0px 10px 0px !important;
 }
 
-.radio-option.incorrect {
-    border: 2px solid rgb(254 0 0 / 50%);
-    box-shadow: inset rgb(151 68 68 / 30%) 0px 0px 10px 0px;
-}
-
 .option-card.correct {
     border: 2px solid rgb(173, 217, 173);
     box-shadow: inset rgb(54 120 54 / 25%) 0px 0px 10px 0px;
 }
-
-.option-card.incorrect {
-    border: 2px solid rgb(254 0 0 / 50%);
-    box-shadow: inset rgb(151 68 68 / 30%) 0px 0px 10px 0px;
-}
-
 
 .option-card {
     transition: all 0.2s ease;

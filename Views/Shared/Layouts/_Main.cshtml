@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SPSUL Informační systém pro správu testů, otázek a školní agendy." />
     <title>@ViewData["Title"] - SPSUL</title>
     
     <!-- CSS first -->
@@ -19,7 +20,7 @@
     <!-- JS libraries -->
     <script src="~/js/loading.js" asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-    <script src="~/select2/js/select2.min.js"></script>
+    <script src="~/select2/js/select2.min.js" asp-append-version="true"></script>
     <script src="~/lib/toastr.js/toastr.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/gsap/gsap.min.js" asp-append-version="true"></script>
@@ -47,7 +48,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                 <img src="~/image/logo/spsul.webp" width="32" height="32" alt="SPSUL logo"/>
-                <img src="~/image/logo/spsul-logo-uk.png" class="ms-1" width="120" height="24" alt="SPSUL"/>
+                <img src="~/image/logo/spsul-logo-uk.webp" class="ms-1" width="120" height="24" alt="SPSUL"/>
             </a>
             <!-- Desktop navigation only; on mobile používáme spodní Tab Bar -->
             <div class="collapse navbar-collapse d-none d-lg-block" id="navbarSupportedContent">

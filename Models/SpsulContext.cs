@@ -158,6 +158,7 @@ namespace SPSUL.Models
                 e.HasKey(e => e.QuestionOptionId);
                 e.Property(e => e.Text).HasMaxLength(512);
                 e.Property(e => e.IsCorrect);
+                e.Property(e => e.ImageKey).HasMaxLength(64);
                 e.HasOne(e => e.Question).WithMany(e => e.QuestionOptions).HasForeignKey(e => e.QuestionId);
             });
 

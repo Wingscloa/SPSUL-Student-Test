@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SPSUL.Models;
 using SPSUL.Models.Data;
-using SPSUL.Models.Display.QuestionConfig;
+using SPSUL.Models.Display.QuestionForm;
 
 namespace SPSUL.Controllers.API
 {
     public class QuestionViewController : Controller
     {
         private readonly SpsulContext _ctx;
-        const string partialText = "Views/Shared/QuestionType/SelectText/";
-        const string partialImage = "Views/Shared/QuestionType/SelectImage/";
+        const string partialText = "Views/Shared/QuestionType/SelectText/Create/";
+        const string partialImage = "Views/Shared/QuestionType/SelectImage/Create/";
 
         public QuestionViewController(SpsulContext ctx)
         {

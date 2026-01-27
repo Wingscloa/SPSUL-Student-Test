@@ -45,7 +45,7 @@ async function generateOptions() {
     const el = document.getElementById('optionCount')
     const count = el.value
 
-    const optionsContainer = document.querySelectorAll('.option-card');
+    const optionsContainer = document.querySelectorAll('.option-card')
     if (!el) { return; }
     if (count <= 0) { return; }
 
@@ -80,7 +80,7 @@ async function generateOptions() {
             const optionResult = await responseOption.text()
             const previewResult = await responsePreview.text()
 
-            optionContainer.insertAdjacentHTML('beforeend', optionResult);
+            optionContainer.insertAdjacentHTML('beforeend', optionResult)
             previewContainer.insertAdjacentHTML('beforeend', previewResult)
 
             toastr.success('Možnosti vygenerovány', 'Úspěch');
@@ -333,15 +333,11 @@ document.addEventListener('change', (e) => {
         const border = el.closest('.option-card');
         if (el.checked) {
             border.classList.add('correct')
-            border.classList.remove('incorrect')
             optionInput.classList.add('correct')
-            optionInput.classList.remove('incorrect')
         }
         else {
             border.classList.remove('correct')
-            border.classList.add('incorrect')
             optionInput.classList.remove('correct')
-            optionInput.classList.add('incorrect')
         }
     }
 })

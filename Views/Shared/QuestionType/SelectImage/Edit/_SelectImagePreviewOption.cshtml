@@ -1,0 +1,13 @@
+﻿@using SPSUL.Models.Display.QuestionForm
+
+@model List<OptionEdit>
+
+@foreach(OptionEdit opt in Model)
+{
+    var i = Model.IndexOf(opt);
+    var character = (Convert.ToChar(65 + i));
+    <label class="radio-option @(opt.IsCorrect ? "correct" : "")" data-option-index="@i">
+        <input type="radio" name="preview_answer" value="0" disabled>
+        <span class="radio-label">@character) @opt.Text</span>
+    </label>
+}

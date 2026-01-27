@@ -37,7 +37,6 @@ if(typeof toastr !== 'undefined'){
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
   };
-  console.log('[toastr] configured with options:', toastr.options);
 } else {
   console.error('[toastr] library not loaded - check if toastr.min.js is included before site.js');
 }

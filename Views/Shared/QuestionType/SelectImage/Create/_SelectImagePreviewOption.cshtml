@@ -1,4 +1,4 @@
-﻿@using SPSUL.Models.Display.QuestionConfig
+﻿@using SPSUL.Models.Display.QuestionForm
 
 @model List<OptionBase>
 
@@ -6,7 +6,7 @@
 
 @foreach(OptionBase opt in Model)
 {
-    <label class="radio-option @(opt.IsCorrect ? "correct" : "incorrect")" data-option-index="@opt.Index">
+    <label class="radio-option @(opt.IsCorrect ? "correct" : "")" data-option-index="@opt.Index">
         <input type="radio" name="preview_answer" value="0" disabled>
         <span class="radio-label">@opt.PlaceHolder) Možnost @opt.PlaceHolder</span>
     </label>

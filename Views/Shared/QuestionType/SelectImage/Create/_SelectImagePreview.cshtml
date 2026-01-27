@@ -1,4 +1,4 @@
-﻿@using SPSUL.Models.Display.QuestionConfig
+﻿@using SPSUL.Models.Display.QuestionForm
 
 @model int
 
@@ -18,7 +18,7 @@
                         new(){Index = 3, PlaceHolder = "D"}
                     };
                 }
-                @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/_SelectTextPreviewOption.cshtml", opts)
+                @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Create/_SelectTextPreviewOption.cshtml", opts)
             </div>
         </div>
     </div>

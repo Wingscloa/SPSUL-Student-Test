@@ -4,7 +4,7 @@ using SPSUL.Models.Data;
 using Microsoft.EntityFrameworkCore; 
 using SPSUL.Models.Display.QuestionModels;
 using SPSUL.Models.Display;
-using SPSUL.Models.Display.QuestionConfig;
+using SPSUL.Models.Display.QuestionForm;
 
 namespace SPSUL.Controllers
 {
@@ -89,7 +89,8 @@ namespace SPSUL.Controllers
                         new OptionBase { Index = 1, PlaceHolder = "Možnost B" },
                         new OptionBase { Index = 2, PlaceHolder = "Možnost C" },
                         new OptionBase { Index = 3, PlaceHolder = "Možnost D" }
-                    }
+                    },
+                    SelectedQuestionName = "Uzavřená otázka",
                 };
 
                 return View(model);
@@ -117,7 +118,8 @@ namespace SPSUL.Controllers
             {
                 Question = question,
                 QuestionTypes = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync(),
-                StudentFields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync()
+                StudentFields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync(),
+                Options = question.QuestionOptions.Select(o => new OptionEdit { ImageKey = o.ImageKey, IsCorrect = o.IsCorrect, Text = o.Text }).ToList()
             };
 
             return View(model);
@@ -227,7 +229,7 @@ namespace SPSUL.Controllers
                     QuestionOptions = dto.Options.Select(o => new QuestionOption
                     {
                         Text = o.Text,
-                        ImageBase64 = o.ImageBase64 ?? string.Empty,
+                        ImageKey = o.ImageBase64 ?? string.Empty,
                         IsCorrect = o.IsCorrect
                     }).ToList()
                 };
@@ -287,7 +289,7 @@ namespace SPSUL.Controllers
                 {
                     QuestionId = question.QuestionId,
                     Text = o.Text,
-                    ImageBase64 = o.ImageBase64 ?? string.Empty,
+                    ImageKey = o.ImageBase64 ?? string.Empty,
                     IsCorrect = o.IsCorrect
                 }).ToList();
 

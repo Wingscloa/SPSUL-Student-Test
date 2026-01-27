@@ -155,9 +155,10 @@ namespace SPSUL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionOptionId"));
 
-                    b.Property<string>("ImageBase64")
+                    b.Property<string>("ImageKey")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");

@@ -1,0 +1,25 @@
+﻿@using SPSUL.Models.Display.QuestionForm
+
+@model int
+
+<div id="previewContainer" class="test-preview">
+    <div class="questContainer">
+        <h2 id="previewHeader" class="questionHeader">Nadpis otázky</h2>
+        <h3 id="previewDescription" class="questionName">Popis otázky se zobrazí zde...</h3>
+        <div id="previewOptions" class="mt-4">
+            <div class="radio-note">Vyber správnou odpověď</div>
+            <div class="radio-group">
+                @{
+                    List<OptionBase> opts = new()
+                    {
+                        new(){Index = 0, PlaceHolder = "A"},
+                        new(){Index = 1, PlaceHolder = "B"},
+                        new(){Index = 2, PlaceHolder = "C"},
+                        new(){Index = 3, PlaceHolder = "D"}
+                    };
+                }
+                @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Create/_SelectTextPreviewOption.cshtml", opts)
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Vytvořit otázku";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
 }
+
 <link href="~/css/create.css" rel="stylesheet" asp-append-version="true" />
 <link href="~/css/question.css" rel="stylesheet" asp-append-version="true"/>
 <link href="~/css/test.css" rel="stylesheet" asp-append-version="true" />
@@ -29,7 +30,7 @@
                                 <i class="bi bi-card-heading text-orange"></i> Nadpis otázky
                             </label>
                             <input type="text" class="form-control" id="Header" name="Header" 
-                                   placeholder="Zadej nadpis otázky" required />
+                                   placeholder="Zadej nadpis otázky" required maxlength="128" />
                         </div>
 
                         <!-- Popis -->
@@ -38,7 +39,7 @@
                                 <i class="bi bi-text-paragraph text-orange"></i> Popis/Znění otázky
                             </label>
                             <textarea class="form-control" id="Description" name="Description" 
-                                      rows="4" placeholder="Zadej popis/znění otázky" required></textarea>
+                                      rows="6" placeholder="Zadej popis/znění otázky" required maxlength="512"></textarea>
                         </div>
 
                         <!-- Typ otázky -->
@@ -84,9 +85,15 @@
                         <h6 class="fw-bold mb-3"><i class="bi bi-ui-checks text-orange"></i> Možnosti odpovědí:</h6>
                         <!-- Možnosti odpovědí (dynamicky) -->
                         <div id="optionsContainer" class="mb-3">
-                            @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/_SelectTextAnswerOption.cshtml", Model.OptionBases)
-                        </div>
-
+                            @if (Model.SelectedQuestionName == "Uzavřená otázka")
+                            {
+                                @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Create/_SelectTextAnswerOption.cshtml", Model.OptionBases)
+                            }
+                            else if (Model.SelectedQuestionName == "Uzavřená otázka s obrázky")
+                            {
+                                @await Html.PartialAsync("/Views/Shared/QuestionType/SelectImage/Create/_SelectImageAnswerOption.cshtml", Model.OptionBases)
+                            }
+                            </div>
                         <!-- Action buttons -->
                         <div class="d-grid gap-2">
                             <button type="button" class="btn btn-orange" id="submit" onclick="CreateQuestion()">
@@ -107,7 +114,14 @@
                     <h5 class="mb-0"><i class="bi bi-eye me-2"></i>Náhled otázky</h5>
                 </div>
                 <div class="card-body" style="overflow-y: auto; background: #f8f9fa;">
-                    @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/_SelectTextPreview.cshtml", 4)
+                    @if(Model.SelectedQuestionName == "Uzavřená otázka")
+                    {
+                        @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Create/_SelectTextPreview.cshtml", Model.OptionBases.Count)
+                    }
+                    else if (Model.SelectedQuestionName == "Uzavřená otázka s obrázky")
+                    {
+                        @await Html.PartialAsync("/Views/Shared/QuestionType/SelectImage/Create/_SelectImagePreview.cshtml", Model.OptionBases.Count)
+                    }
                 </div>
             </div>
         </div>

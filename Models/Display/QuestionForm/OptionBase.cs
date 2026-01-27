@@ -1,4 +1,4 @@
-﻿namespace SPSUL.Models.Display.QuestionConfig
+﻿namespace SPSUL.Models.Display.QuestionForm
 {
     public class OptionBase
     {
