@@ -35,7 +35,7 @@ namespace SPSUL
             // Azurit
             builder.Services.AddSingleton(x =>
             {
-                return new BlobServiceClient(builder.Configuration.GetConnectionString("AzureBlobStorage")!);
+                return new BlobServiceClient(builder.Configuration.GetConnectionString("Azurit")!);
             });
 
             builder.Services.AddScoped<AzureBlobService>();

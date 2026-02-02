@@ -55,3 +55,72 @@
     transform: scale(0.92); 
     background-color: #e03026; 
 }
+
+/* Image Option */
+
+.imageGrid {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.imageBorder {
+    border: 3px solid var(--solid-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+    .imageBorder:hover {
+        transition-timing-function: ease;
+        border-color: var(--primary-color);
+        background-color: rgb(250,250,250);
+    }
+
+    .imageBorder.selected {
+        border-color: var(--primary-color);
+    }
+
+    .imageBorder img {
+        width: 100%; /* Vyplní celou šířku buňky */
+        height: 250px;
+        object-fit: cover; /* DŮLEŽITÉ: Ořízne fotku tak, aby se nedeformovala */
+        display: block;
+    }
+
+    .imageContainer {
+        overflow: hidden;
+        border-radius: 8px !important;
+        padding: 2px;
+    }
+
+.imageOption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1 1 250px;
+}
+
+.imageLabel {
+    font-size: 16px;
+    font-weight: 500;
+    display: block;
+    text-align: center;
+    width: 100%; /* Aby mohl využít prostor své buňky */
+    overflow-wrap: anywhere;
+}
+
+.optionItem-3 {
+    flex-basis: calc(33.333% - 10px);
+}
+
+.optionItem-2 {
+    flex-basis: calc(50% - 10px);
+}
+
+.optionItem-1 {
+    flex-basis: 100%;
+}

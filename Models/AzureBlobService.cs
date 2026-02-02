@@ -45,5 +45,28 @@ namespace SPSUL.Models
             await blobClient.UploadAsync(outputStream, true);
             return fileName;
         }
+
+        public IFormFile ConvertBase64ToIFormFile(string base64String, string fileName)
+        {
+            // 1. Očištění Base64 od hlavičky (pokud ji obsahuje)
+            var base64Parts = base64String.Split(',');
+            var pureBase64 = base64Parts.Length > 1 ? base64Parts[1] : base64Parts[0];
+
+            // 2. Převod na byte array
+            byte[] fileBytes = Convert.FromBase64String(pureBase64);
+
+            // 3. Vytvoření streamu
+            var stream = new MemoryStream(fileBytes);
+
+            // 4. Vytvoření instance FormFile
+            // Parametry: stream, offset, délka, název v poli, název souboru
+            var formFile = new FormFile(stream, 0, stream.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/jpeg" // Můžete detekovat podle přípony
+            };
+
+            return formFile;
+        }
     }
 }

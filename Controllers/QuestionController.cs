@@ -12,9 +12,11 @@ namespace SPSUL.Controllers
     {
 
         private readonly SpsulContext _ctx;
-        public QuestionController(SpsulContext ctx)
+        private readonly AzureBlobService _blobService;
+        public QuestionController(SpsulContext ctx, AzureBlobService blobService)
         {
             _ctx = ctx;
+            _blobService = blobService;
         }
         
         public async Task<IActionResult> Index(string? Name,bool? IsActive, int? FieldId, int? QuestionTypeId, int? CreatorId, int pageNumber = 1, int pageSize = 13)
@@ -87,10 +89,10 @@ namespace SPSUL.Controllers
                     {
                         new OptionBase { Index = 0, PlaceHolder = "Možnost A" },
                         new OptionBase { Index = 1, PlaceHolder = "Možnost B" },
-                        new OptionBase { Index = 2, PlaceHolder = "Možnost C" },
-                        new OptionBase { Index = 3, PlaceHolder = "Možnost D" }
+                        //new OptionBase { Index = 2, PlaceHolder = "Možnost C" },
+                        //new OptionBase { Index = 3, PlaceHolder = "Možnost D" }
                     },
-                    SelectedQuestionName = "Uzavřená otázka",
+                    SelectedQuestionName = "Uzavřená otázka s obrázky",
                 };
 
                 return View(model);
@@ -201,47 +203,46 @@ namespace SPSUL.Controllers
 
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateQuestion([FromBody] QuestionCreateDto dto)
         {
-            try
+            if(ModelState.IsValid )
             {
-                if (!ModelState.IsValid)
+                try
                 {
-                    return BadRequest(ModelState);
-                }
-
-                int? currentTeacherId = HttpContext.Session.GetInt32("TeacherId");
-
-                if(currentTeacherId == null)
-                {
-                    return Unauthorized(new { message = "Uživatel není přihlášen." });
-                }
-
-                var question = new Question
-                {
-                    Header = dto.Header,
-                    Description = dto.Description,
-                    QuestionTypeId = dto.QuestionTypeId,
-                    CreatorId = currentTeacherId.Value,
-                    IsActive = true,
-                    FieldId = dto.FieldId,
-                    QuestionOptions = dto.Options.Select(o => new QuestionOption
+                    Question question = new Question
                     {
-                        Text = o.Text,
-                        ImageKey = o.ImageBase64 ?? string.Empty,
-                        IsCorrect = o.IsCorrect
-                    }).ToList()
-                };
+                        Header = dto.Header,
+                        Description = dto.Description,
+                        QuestionTypeId = dto.QuestionTypeId,
+                        FieldId = dto.FieldId,
+                        IsActive = true,
+                        CreatorId = 1 // TODO: Replace with actual creator ID
+                    };
 
-                _ctx.Questions.Add(question);
-                await _ctx.SaveChangesAsync();
+                    List<QuestionOption> options = new();
+                    foreach (QuestionOptionDto value in dto.Options)
+                    {
+                        int index = dto.Options.IndexOf(value);
+                        if (value.ImageBase64 != null)
+                        {
+                            string imageKey = $"{dto.Header}{index}";
+                            IFormFile imageFile = _blobService.ConvertBase64ToIFormFile(value.ImageBase64, imageKey);
 
-                return Ok(new { questionId = question.QuestionId, message = "Otázka byla úspěšně vytvořena!" });
+                        }
+                    }
+
+                    return Ok(new { message = "Otázka byla úspěšně vytvořena!" });
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(new { message = "Chyba při vytváření otázky: " + ex.Message });
+                }
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(new { message = "Chyba při vytváření otázky: " + ex.Message });
+                return BadRequest(new { message = "Neplatná data." });
             }
         }
 

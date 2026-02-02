@@ -4,7 +4,7 @@
 
 @foreach(OptionBase opt in Model)
 {
-    <div class="card mb-2 option-card @(opt.IsCorrect ? "correct" : "")" data-option-index="@opt.Index">
+    <div class="card mb-2 option-card option @(opt.IsCorrect ? "correct" : "")" data-option-index="@opt.Index">
         <div class="card-body p-3" style="position:relative">
             <div class="d-flex align-items-start gap-2">
                 <div class="form-check">

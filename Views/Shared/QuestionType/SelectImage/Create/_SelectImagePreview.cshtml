@@ -2,23 +2,45 @@
 
 @model int
 
+@{
+    var className = 3 / 3;
+}
+
+
 <div id="previewContainer" class="test-preview">
     <div class="questContainer">
         <h2 id="previewHeader" class="questionHeader">Nadpis otázky</h2>
         <h3 id="previewDescription" class="questionName">Popis otázky se zobrazí zde...</h3>
         <div id="previewOptions" class="mt-4">
             <div class="radio-note">Vyber správnou odpověď</div>
-            <div class="radio-group">
-                @{
-                    List<OptionBase> opts = new()
+            <div class="imageGrid">
+                @for (int i = 0; i < @Model; i++)
                     {
-                        new(){Index = 0, PlaceHolder = "A"},
-                        new(){Index = 1, PlaceHolder = "B"},
-                        new(){Index = 2, PlaceHolder = "C"},
-                        new(){Index = 3, PlaceHolder = "D"}
-                    };
+                    @if (3 - i <= className & !(3 <= 3))
+                        {
+                        <div class="imageOption optionItem-@className option" data-index="@(i)">
+                            <span class="imageLabel optionPreviewLabel">Nadpis @(i+1)</span>
+                            <div class="imageBorder optionPreviewBorder">
+                                <div class="imageContainer">
+                                    @* <img src="http://127.0.0.1:10000/devstoreaccount1/questionimage/092fd01fcefd06552e5549e43a552eb6.jpg" /> *@
+                                    <img src="http://127.0.0.1:10000/devstoreaccount1/questionimage/092fd01fcefd06552e5549e43a552eb6.jpg" />
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    else
+                    {
+                        <div class="imageOption optionItem-3 option" data-index="@(i)">
+                            <span class="imageLabel optionPreviewLabel">Nadpis @(i+1)</span>
+                            <div class="imageBorder optionPreviewBorder">
+                                <div class="imageContainer">
+                                    <img src="http://127.0.0.1:10000/devstoreaccount1/questionimage/092fd01fcefd06552e5549e43a552eb6.jpg" />
+                                    @* <img src="http://127.0.0.1:10000/devstoreaccount1/questionimage/092fd01fcefd06552e5549e43a552eb6.jpg" /> *@
+                                </div>
+                            </div>
+                        </div>
+                    }
                 }
-                @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Create/_SelectTextPreviewOption.cshtml", opts)
             </div>
         </div>
     </div>

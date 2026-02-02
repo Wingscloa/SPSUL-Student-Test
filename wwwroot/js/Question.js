@@ -1,4 +1,14 @@
-﻿async function EditQuestion() {
+﻿const readAsBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+    });
+};
+
+
+async function EditQuestion() {
     disableInputs(true);
     disableSubmitButton(true);
     const isValid = await Validate();
@@ -7,7 +17,7 @@
     }
     try {
         loadingScreen(true);
-        const data = GatherData();
+        const data = await GatherData();
         const myData = {
             header: data.header,
             description: data.description,
@@ -43,9 +53,9 @@
 
 async function generateOptions() {
     const el = document.getElementById('optionCount')
-    const count = el.value
+    const count = el.value ?? 0
 
-    const optionsContainer = document.querySelectorAll('.option-card')
+    const optionsContainer = document.querySelectorAll('.option')
     if (!el) { return; }
     if (count <= 0) { return; }
 
@@ -72,16 +82,22 @@ async function generateOptions() {
             body: JSON.stringify(data)
         })
 
+        const val = await responseOption.headers.get('X-Question-Type')
+        const typeName = decodeURIComponent(val);
         if (responseOption.ok && responsePreview.ok)
         {
-            const optionContainer = document.getElementById('optionsContainer')
-            const previewContainer = document.getElementById('previewOptions').querySelector('.radio-group')
-
+            // Select Text Container
             const optionResult = await responseOption.text()
             const previewResult = await responsePreview.text()
 
-            optionContainer.insertAdjacentHTML('beforeend', optionResult)
-            previewContainer.insertAdjacentHTML('beforeend', previewResult)
+            if (typeName == 'Uzavřená+otázka') {
+                const optionContainer = document.getElementById('optionsContainer')
+                const previewContainer = document.getElementById('previewOptions').querySelector('.radio-group')
+                optionContainer.insertAdjacentHTML('beforeend', optionResult)
+                previewContainer.insertAdjacentHTML('beforeend', previewResult)
+            }
+            else if (typeName == 'Uzavřená+otázka+s+obrázky') {
+            }
 
             toastr.success('Možnosti vygenerovány', 'Úspěch');
         }
@@ -98,6 +114,26 @@ async function generateOptions() {
         for (let i = 0; i < toRemove; i++) {
             optionsContainer[optionsContainer.length - 1 - i].remove();
             radioOptionsContainer[radioOptionsContainer.length - 1 - i].remove();
+        }
+    }
+}
+function setUpFlex(rowCount) {
+    const elements = document.querySelectorAll('.imageOption');
+    const count = elements.length;
+    var lastCount = elements / rowCount;
+
+    for (let i = 0; i < elements.length; i++) {
+        const el = elements[i];
+        const arr = el.classList.toString().split(' ');
+        filtered = arr.filter(c => c.startsWith('optionItem-'))
+        el.classList.remove(...filtered);
+
+
+        if (count - rowCount <= lastCount & !(count <= rowCount)) {
+            el.classList.add(`optionItem-${count - lastCount}`);
+        }
+        else {
+            el.classList.add(`optionItem-${rowCount}`);
         }
     }
 }
@@ -159,7 +195,7 @@ async function CreateQuestion() {
 
     try {
         loadingScreen(true); 
-        const data = GatherData();
+        const data = await GatherData();
         const response = await fetch('/Question/CreateQuestion', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -226,20 +262,36 @@ async function Validate() {
     }
     return true;
 }
-function GatherData() {
+
+
+async function GatherData() {
     const header = document.getElementById('Header').value.trim();
     const description = document.getElementById('Description').value.trim();
     const questionTypeId = parseInt(document.getElementById('QuestionTypeId').value);
     const fieldId = parseInt(document.getElementById('FieldId').value);
     const options = [];
-    const optionInputs = document.querySelectorAll('.option-text');
-    optionInputs.forEach((input, idx) => {
-        options.push({
-            text: input.value.trim(),
-            imageBase64: null,
-            isCorrect: document.getElementById(`isCorrect_${idx}`)?.checked || false
-        });
-    });
+    const optionInputs = document.querySelectorAll('.option-card');
+
+    for (const [idx, input] of optionInputs.entries()) {
+        var base64 = null;
+        const imageInput = input.querySelectorAll('input[name="imageQuestion"]');
+
+        if (imageInput.length > 0) { 
+            const file = imageInput[0].files[0];
+            if (file) {
+                base64 = await readAsBase64(file);
+            }
+        }
+
+        var optionData = {
+            text: input.querySelector('input[name="optionText"]').value.trim(),
+            isCorrect: input.querySelector('input[name="CorrectInput"]').checked || false,
+            ImageBase64: base64
+        };
+
+        options.push(optionData);
+    }
+
     const data = {
         header: header,
         description: description,
@@ -247,6 +299,7 @@ function GatherData() {
         FieldId: fieldId,
         options: options
     };
+
     return data;
 }
 
@@ -265,8 +318,8 @@ function resetForm() {
 
 // Header input listener
 
-
 document.addEventListener('DOMContentLoaded', () => {
+    setUpFlex(3);
     // Header
     const headerInput = document.getElementById('Header');
 
@@ -298,46 +351,114 @@ document.addEventListener('DOMContentLoaded', () => {
         await generateOptions();
     });
 
-})
 
-// Event delegation for dynamically added option inputs
+    // QuestionTypeId change listener
+
+    const questionTypeSelect = document.getElementById('QuestionTypeId');
+
+    $(questionTypeSelect).on('change', async (e) => {
+
+        // clear
+        $("#previewContainer").remove()
+        var optionsAnswer = $(".option-card").toArray();
+        optionsAnswer.forEach((option) => {
+            option.remove()
+        })
+
+        var questionTypeId = parseInt(e.target.value);
+        var count = parseInt($("#optionCount").val());
+
+        // Preview
+        var optionsPreviewFetch = await fetch('/questionview/preview',{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ QuestionTypeId: questionTypeId, OptionCount: count }),
+        });
+
+        if (optionsPreviewFetch.ok) {
+            $("#previewBody").append(await optionsPreviewFetch.text())
+        }
+
+        // Options
+
+        const responseOption = await fetch(`/api/QuestionView/AnswerOption/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ QuestionTypeId: questionTypeId, QuestionCount: count, CurrentCount: 0})
+        })
+
+        if (responseOption.ok) {
+            const optionContainer = document.getElementById('optionsContainer')
+            const optionResult = await responseOption.text()
+            optionContainer.insertAdjacentHTML('beforeend', optionResult)
+        }
+    });
+})
 
 // CorrectInput
 document.addEventListener('input', (e) => {
 
     const el = e.target
     const value = el.value;
+    const defaultValue = el.dataset.default
     const name = el.getAttribute('name');
 
     // Option text input
     if (name == 'optionText') {
         const dataIndex = el.dataset.index;
+        const option = document.querySelector(`.imageOption[data-index="${dataIndex}"]`);
 
-        const previewOption = document.querySelector(`.radio-option[data-option-index="${dataIndex}"] .radio-label`);
+        if (!option) { toastr.error('interní problém webové aplikace') }
 
-        if (previewOption) {
-            previewOption.textContent = `${String.fromCharCode(65 + parseInt(dataIndex))}) ${value || `Možnost ${String.fromCharCode(65 + parseInt(dataIndex))}`}`;
+        const label = option.querySelector('.optionPreviewLabel');
+
+        if (label) {
+            label.textContent = `${value || defaultValue}`;
         }
     }
 })
 
 document.addEventListener('change', (e) => {
     const el = e.target;
-    const value = el.value;
     const name = el.getAttribute('name');
 
     // Correct answer checkbox
     if (name == 'CorrectInput') {
-        const id = el.closest('.option-card').getAttribute('data-option-index');
-        const optionInput = document.querySelector(`.radio-option[data-option-index="${id}"]`);
-        const border = el.closest('.option-card');
+        const optionCard = el.closest('.option-card');
+        const id = optionCard.getAttribute('data-option-index');
+        const optionInput = document.querySelector(`.option[data-index="${id}"]`);
+        const optionBorder = optionInput.querySelector('.optionPreviewBorder');
+
         if (el.checked) {
-            border.classList.add('correct')
-            optionInput.classList.add('correct')
+            optionCard.classList.add('correct')
+            optionBorder.classList.add('correct')
         }
         else {
-            border.classList.remove('correct')
-            optionInput.classList.remove('correct')
+            optionCard.classList.remove('correct')
+            optionBorder.classList.remove('correct')
+        }
+    }
+
+    // Image Input
+    
+    if (name == 'imageQuestion') {
+        const id = e.target.dataset.index;
+        const file = e.target.files[0];
+
+        const previewOption = document.querySelector(`.imageOption[data-index="${id}"]`);
+        const previewImage = previewOption.querySelector('.imageContainer>img');
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                previewImage.src = event.target.result;
+                previewContainer.style.display = 'block';
+            }
+
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.style.display = 'none';
         }
     }
 })
