@@ -1,0 +1,130 @@
+@* Detail/History - Historie odpovìdí studenta *@
+@{
+    ViewData["Title"] = "Historie odpovìdí";
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
+
+<div class="container-fluid py-3">
+    <div class="card shadow-sm">
+        <div class="card-header brandText d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="bi bi-clock-history me-2"></i>
+                Historie odpovìdí
+            </h5>
+            <a href="/Detail/Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>
+                Zpìt na výsledky
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6 class="text-muted">Test:</h6>
+                    <p class="mb-1"><strong>Základy programování</strong></p>
+                    <p class="text-muted small">ID testu: #12345</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-muted">Student:</h6>
+                    <p class="mb-1"><strong>Jan Novák</strong></p>
+                    <p class="text-muted small">Login: jnovak123</p>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                Historie zobrazuje odpovìdi studenta na jednotlivé otázky testu.
+            </div>
+
+            <!-- Timeline odpovìdí -->
+            <div class="timeline">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    var isCorrect = i % 2 == 0;
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-@(isCorrect ? "success" : "danger")">
+                            <i class="bi bi-@(isCorrect ? "check" : "x")"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">Otázka @i: Co je pole v programování?</h6>
+                                    <p class="text-muted small mb-2">Èas odpovìdi: 45 sekund</p>
+                                </div>
+                                <span class="badge bg-@(isCorrect ? "success" : "danger")">
+                                    @(isCorrect ? "Správnì" : "Špatnì")
+                                </span>
+                            </div>
+                            <div class="border-start border-3 border-@(isCorrect ? "success" : "danger") ps-3 mt-2">
+                                <p class="mb-1"><strong>Odpovìï studenta:</strong> Datová struktura pro uložení prvkù</p>
+                                @if (!isCorrect)
+                                {
+                                    <p class="mb-0 text-success"><strong>Správná odpovìï:</strong> Kolekce prvkù stejného typu</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding: 1rem 0;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 3rem;
+    padding-bottom: 2rem;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 2rem;
+    bottom: -1rem;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item:last-child::before {
+    display: none;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: 0.5rem;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+</style>
+
+@section Scripts {
+    <script>
+        console.log('Detail History page loaded');
+    </script>
+}

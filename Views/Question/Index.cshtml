@@ -11,9 +11,22 @@
   <div class="row g-3">
     <div class="col-lg-9 order-2 order-lg-1">
             <div class="card shadow-sm cardTable">
-                <div class="card-header brandText d-flex justify-content-between">
-                    <span>Seznam otázek</span>
-                    <div class="tools d-flex justify-content-center align-items-center gap-4">
+                <div class="card-header brandText d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list-ul me-2"></i>
+                        Seznam otázek
+                    </h5>
+                    <div class="tools d-flex justify-content-center align-items-center gap-2">
+                        <!--Export-->
+                        <a class="iconLink cursor" title="Exportovat statistiky" id="exportBtn">
+                            <i class="bi bi-file-earmark-spreadsheet"></i>
+                            Export
+                        </a>
+                        <!--Statistiky-->
+                        <a class="iconLink cursor" title="Zobrazit statistiky" id="statsBtn">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            Statistiky
+                        </a>
                         <!--Cancel-->
                         <a class="iconLink cursor option" id="cancelOption" style="display: none">
                             <i class="bi bi-dash-circle"></i>
@@ -120,7 +133,8 @@
     </div>
     <aside class="col-lg-3 order-1 order-lg-2">
       <div class="card shadow-sm sticky-top" style="top: 1rem;">
-        <div class="card-header brandText fw-bold">Filtrace</div>
+        <div class="card-header brandText fw-bold">
+                    <i class="bi bi-funnel me-2"></i>Filtrace</div>
         <div class="card-body">
           <form method="get" class="vstack gap-2">
               <!--Nazev-->
@@ -206,11 +220,58 @@
                 }
             }
             </select>
-            <button class="btn brandText">Filtrovat</button>
+            <button class="btn btn-orange w-100">
+                <i class="bi bi-funnel-fill me-2"></i>
+                Filtrovat
+            </button>
+            <a href="@Url.Action("Index", "Question")" class="btn btn-outline-secondary w-100">
+                <i class="bi bi-x-circle me-2"></i>
+                Resetovat
+            </a>
           </form>
+        </div>
+      </div>
+      
+      <!-- Rychlé statistiky -->
+      <div class="card shadow-sm mt-3">
+        <div class="card-header bg-light fw-bold">
+            <i class="bi bi-clipboard-data me-2"></i>
+            Rychlé statistiky
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Celkem otázek:</span>
+                <strong>@Model.Questions.TotalItems</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Aktivní:</span>
+                <strong class="text-success">@Model.Questions.Items.Count(x => x.IsActive)</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Neaktivní:</span>
+                <strong class="text-secondary">@Model.Questions.Items.Count(x => !x.IsActive)</strong>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span class="text-muted">Na stránce:</span>
+                <strong class="text-primary">@Model.Questions.Items.Count</strong>
+            </div>
         </div>
       </div>
     </aside>
   </div>
 </div>
 <input type="hidden" id="Ids" name="Ids" value="" />
+
+@section Scripts {
+    <script>
+        // Export funkcionalita
+        document.getElementById('exportBtn')?.addEventListener('click', function() {
+            toastr.info('Export statistik bude dostupný brzy');
+        });
+        
+        // Statistiky modal
+        document.getElementById('statsBtn')?.addEventListener('click', function() {
+            toastr.info('Detailní statistiky budou dostupné brzy');
+        });
+    </script>
+}

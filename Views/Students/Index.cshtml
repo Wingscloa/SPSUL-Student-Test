@@ -5,96 +5,201 @@
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
     ViewData["Title"] = "Studenti";
 }
-<link rel="stylesheet" href="~/css/chartpage.css" />
+<link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
 
 <div class="container-fluid py-3">
-  <div class="row g-3">
+    <div class="row g-3">
         <div class="col-lg-9 order-2 order-lg-1">
-      <div class="card shadow-sm cardTable">
-                <div class="card-header fw-bold brandText">Seznam studentů</div>
-                <div class="table-responsive tableContent">
-          <table class="table align-middle mb-0">
-            <thead>
-              <tr>
-                <th>Jméno</th>
-                <th class="d-none d-md-table-cell">Třída</th>
-                <th class="d-none d-md-table-cell">Obor</th>
-                <th class="d-none d-md-table-cell">Úspěšné testy</th>
-                <th class="text-center">Archiv</th>
-                <th class="text-center">Graf</th>
-                <th class="text-center">Edit</th>
-              </tr>
-            </thead>
-            <tbody>
-            @foreach (var s in Model)
-            {
-              <tr id="@s.StudentId">
-                <td>@s.FirstName @s.LastName <span class="badge bg-@(s.IsActive?"success":"secondary") ms-2">@(s.IsActive?"Aktivní":"Neaktivní")</span></td>
-                <td class="d-none d-md-table-cell">4ITA</td>
-                <td class="d-none d-md-table-cell">IT</td>
-                <td class="d-none d-md-table-cell">4/20</td>
-                <td class="text-center"><button class="icon-btn" data-toggle="@s.StudentId" title="Archiv"><i class="bi bi-archive"></i></button></td>
-                <td class="text-center"><button class="icon-btn" data-toggle="@s.StudentId" title="Graf"><i class="bi bi-graph-up"></i></button></td>
-                <td class="text-center"><button class="icon-btn" data-toggle="@s.StudentId" title="Edit"><i class="bi bi-pencil-square"></i></button></td>
-              </tr>
-                    <tr class="details-row" id="@s.StudentId" aria-hidden="true">
-                <td colspan="7">
-                  <div class="details">
-                    <div class="row g-3">
-                      <div class="col-md-6">
-                        <h6 class="fw-bold">Editace</h6>
-                        <label class="form-label">Křestní jméno</label>
-                        <input class="form-control" value="@s.FirstName" />
-                      </div>
-                      <div class="col-md-6 d-flex align-items-end justify-content-end">
-                        <button class="btn btn-outline-danger">Smazat žáka</button>
-                      </div>
+            <div class="card shadow-sm cardTable">
+                <div class="card-header brandText d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-people-fill me-2"></i>
+                        Seznam studentů
+                    </h5>
+                    <div class="tools d-flex justify-content-center align-items-center gap-2">
+                        <!--Export-->
+                        <a class="iconLink cursor" title="Exportovat statistiky" id="exportBtn">
+                            <i class="bi bi-file-earmark-spreadsheet"></i>
+                            Export
+                        </a>
+                        <!--Statistiky-->
+                        <a class="iconLink cursor" title="Zobrazit statistiky" id="statsBtn">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            Statistiky
+                        </a>
+                        <!--Activate-->
+                        <a class="iconLink cursor mode" title="Aktivovat studenty" id="activate" data-endpoint="Students/Activate/">
+                            <i class="bi bi-arrow-up-circle-fill"></i>
+                            Aktivace
+                        </a>
+                        <!--Deactivate-->
+                        <a class="iconLink cursor mode" title="Deaktivovat studenty" id="deactivateMode" data-endpoint="Students/Deactivate/">
+                            <i class="bi bi-arrow-down-circle-fill"></i>
+                            Deaktivace
+                        </a>
+                        <!--Delete Mode-->
+                        <a class="iconLink cursor mode" title="Smazat studenty" id="deleteMode" data-endpoint="Students/Delete/">
+                            <i class="bi bi-dash-circle"></i>
+                            Smazat
+                        </a>
+                        <!--Create-->
+                        <a class="iconLink mode" asp-action="Create" asp-controller="Students" title="Vytvořit studenta">
+                            <i class="bi bi-plus-circle"></i>
+                            Vytvořit
+                        </a>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            }
-            </tbody>
-          </table>
-        </div>
-        <div class="card-footer d-flex justify-content-between align-items-center">
-            <div>Strana 1 / 1 (30 položek)</div>
-            <div class="btn-group">
-                <a class="btn btn-outline-secondary disabled" href="/Question/Index?page=0&amp;pageSize=40">Předchozí</a>
-                <a class="btn btn-outline-secondary disabled" href="/Question/Index?page=2&amp;pageSize=40">Další</a>
+                </div>
+                <div class="table-responsive tableContent">
+                    <table class="table align-middle mb-0" style="min-width: 1000px">
+                        <thead>
+                            <tr>
+                                <th class="col-2">Jméno</th>
+                                <th class="col-2">Příjmení</th>
+                                <th class="col-2">Třída</th>
+                                <th class="col-2">Obor</th>
+                                <th class="col-1">Dokončené testy</th>
+                                <th class="col-1">Průměr úspěšnosti</th>
+                                <th class="col-1">Aktivní</th>
+                                <th class="col-1 text-center" id="editHeader" style="display:table-cell">Edit</th>
+                                <!--Delete-->
+                                <th class="col-1 d-none" id="deleteHeader">Smazat</th>
+                                <!--Deaktivace-->
+                                <th class="col-1 d-none" id="deactivateHeader">Deaktivace</th>
+                                <!--Aktivace-->
+                                <th class="col-1 d-none" id="activateHeader">Aktivace</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in Model)
+                            {
+                                <tr data-id="@s.StudentId">
+                                    <td>@s.FirstName</td>
+                                    <td>@s.LastName</td>
+                                    <td>@* TODO: @s.ClassName *@ -</td>
+                                    <td>@* TODO: @s.FieldName *@ -</td>
+                                    <td>@* TODO: @s.CompletedTests *@ -</td>
+                                    <td>@* TODO: @s.AvgSuccess % *@ -</td>
+                                    <td><span class="badge bg-@(s.IsActive ? "success" : "secondary")">@(s.IsActive ? "Aktivní" : "Neaktivní")</span></td>
+                                    <td class="text-center editButton"><a class="icon-btn" title="Edit" href="/Students/Edit?id=@s.StudentId"><i class="bi bi-pencil-square"></i></a></td>
+                                    <!-- Delete Button --> 
+                                    <td class="text-center deleteButton d-none">
+                                        <div class="btn-delete">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </div>
+                                    </td>
+                                    <!-- Deactivate Button -->
+                                    <td class="text-center deactivateButton d-none">
+                                        <div class="btn-deactivate">
+                                            <i class="bi bi-archive-fill"></i>
+                                        </div>
+                                    </td>
+                                    <!-- Activate Button -->
+                                    <td class="text-center activateButton d-none">
+                                        <div class="btn-activate">
+                                            <i class="bi bi-archive-fill"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div>Strana 1 / 1 (@Model.Count položek)</div>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-secondary disabled">Předchozí</a>
+                        <a class="btn btn-outline-secondary disabled">Další</a>
+                    </div>
+                </div>
             </div>
         </div>
-      </div>
+
+        <aside class="col-lg-3 order-1 order-lg-2">
+            <div class="card shadow-sm sticky-top" style="top: 1rem;">
+                <div class="card-header brandText fw-bold"><i class="bi bi-funnel me-2"></i>Filtrace</div>
+                <div class="card-body">
+                    <form method="get" class="vstack gap-2">
+                        <!--Jméno-->
+                        <input class="form-control" name="name" value="@Context.Request.Query["name"]" placeholder="Jméno nebo příjmení" />
+                        
+                        <!--Třída-->
+                        <select class="form-select select2" name="classId">
+                            <option disabled selected>Vyber třídu</option>
+                            @* @foreach (var class in Model.Classes) {
+                                <option value="@class.ClassId">@class.Name</option>
+                            } *@
+                        </select>
+                        
+                        <!--Obor-->
+                        <select class="form-select select2" name="fieldId">
+                            <option disabled selected>Vyber obor</option>
+                            @* @foreach (var field in Model.Fields) {
+                                <option value="@field.StudentFieldId">@field.Name</option>
+                            } *@
+                        </select>
+                        
+                        <!--Aktivní-->
+                        <select class="form-select select2" name="active">
+                            <option value="">Aktivní/Neaktivní</option>
+                            <option value="true" selected="@(Context.Request.Query["active"] == "true")">Aktivní</option>
+                            <option value="false" selected="@(Context.Request.Query["active"] == "false")">Neaktivní</option>
+                        </select>
+                        
+                        
+                        <button class="btn btn-orange w-100">
+                            <i class="bi bi-funnel-fill me-2"></i>
+                            Filtrovat
+                        </button>
+                        
+                        <a href="@Url.Action("Index", "Students")" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-x-circle me-2"></i>
+                            Resetovat
+                        </a>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Rychlé statistiky -->
+            <div class="card shadow-sm mt-3">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-clipboard-data me-2"></i>
+                    Rychlé statistiky
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Celkem studentů:</span>
+                        <strong>@Model.Count</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Aktivní:</span>
+                        <strong class="text-success">@Model.Count(x => x.IsActive)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Neaktivní:</span>
+                        <strong class="text-secondary">@Model.Count(x => !x.IsActive)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Zobrazeno:</span>
+                        <strong class="text-primary">@Model.Count</strong>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </div>
-    <aside class="col-lg-3 order-1 order-lg-2">
-      <div class="card shadow-sm sticky-top" style="top: 1rem;">
-                <div class="card-header fw-bold brandText">Filtrace</div>
-        <div class="card-body">
-          <form method="get" class="vstack gap-2">
-            <input class="form-control" name="q" value="@Context.Request.Query["q"]" placeholder="Jméno nebo příjmení" />
-            <select class="form-select" name="active">
-              <option value="">Aktivní/Neaktivní</option>
-              <option value="true" selected>Aktivní</option>
-              <option value="false">Neaktivní</option>
-            </select>
-                <button class="btn brandText">Filtrovat</button>
-          </form>
-        </div>
-      </div>
-    </aside>
-  </div>
 </div>
 
-@section Scripts{
-<script>
-  document.querySelectorAll('.icon-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const id = btn.getAttribute('data-toggle');
-      const row = document.getElementById(id);
-      const hidden = row.getAttribute('aria-hidden') === 'true';
-      row.setAttribute('aria-hidden', hidden ? 'false' : 'true');
-      row.classList.toggle('open', hidden);
-    });
-  });
-</script>
+<input type="hidden" id="Ids" name="Ids" value="" />
+
+@section Scripts {
+    <script>
+        // Export funkcionalita
+        document.getElementById('exportBtn')?.addEventListener('click', function() {
+            toastr.info('Export statistik bude dostupný brzy');
+        });
+        
+        // Statistiky modal
+        document.getElementById('statsBtn')?.addEventListener('click', function() {
+            toastr.info('Detailní statistiky budou dostupné brzy');
+        });
+    </script>
 }

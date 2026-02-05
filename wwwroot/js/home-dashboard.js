@@ -1,4 +1,4 @@
-// ============================================
+ï»¿// ============================================
 // TEACHER DASHBOARD - CHART.JS INITIALIZATION
 // ============================================
 
@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Leden', 'Únor', 'Bøezen', 'Duben', 'Kvìten', 'Èerven', 'Èervenec'],
+                labels: ['Leden', 'Ãšnor', 'BÅ™ezen', 'Duben', 'KvÄ›ten', 'ÄŒerven', 'ÄŒervenec'],
                 datasets: [
                     {
-                        label: 'Prùmìrná úspìšnost (%)',
+                        label: 'PrÅ¯mÄ›rnÃ¡ ÃºspÄ›Å¡nost (%)',
                         data: [72, 75, 78, 76, 82, 80, 85],
                         borderColor: '#ff8a00',
                         backgroundColor: 'rgba(255, 138, 0, 0.1)',
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         pointBorderWidth: 2
                     },
                     {
-                        label: 'Cílová hodnota',
+                        label: 'CÃ­lovÃ¡ hodnota',
                         data: [75, 75, 75, 75, 75, 75, 75],
                         borderColor: '#198754',
                         backgroundColor: 'transparent',

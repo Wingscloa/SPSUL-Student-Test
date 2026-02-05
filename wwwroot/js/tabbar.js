@@ -1,4 +1,4 @@
-(function(){
+﻿(function(){
   const items=[...document.querySelectorAll('.tabbar-item')];
   if(items.length===0) return;
 

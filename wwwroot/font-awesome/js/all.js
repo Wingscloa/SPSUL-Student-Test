@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * Font Awesome Free 7.0.1 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  * Copyright 2025 Fonticons, Inc.
@@ -5469,7 +5469,7 @@
   /**
    * Return hexadecimal string for a unicode character
    * Returns `null` when more than one character (not bytes!) are passed
-   * For example: 'K' → '7B'
+   * For example: 'K' â†’ '7B'
    */
   function toHex(unicode) {
     if (_toConsumableArray(unicode).length !== 1) return null;

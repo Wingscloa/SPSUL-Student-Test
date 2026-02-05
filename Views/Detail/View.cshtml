@@ -1,0 +1,219 @@
+﻿@* Detail/View - Zobrazení dokončeného testu *@
+@{
+    ViewData["Title"] = "Detail testu";
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
+
+<div class="container-fluid py-3">
+    <div class="card shadow-sm">
+        <div class="card-header brandText d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="bi bi-file-text me-2"></i>
+                Detail dokončeného testu
+            </h5>
+            <div class="d-flex gap-2">
+                <button class="btn btn-light btn-sm" onclick="window.print()">
+                    <i class="bi bi-printer me-1"></i>
+                    Tisk
+                </button>
+                <a href="/Detail/Index" class="btn btn-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Zpět
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- Informace o testu -->
+            <div class="row mb-4 pb-4 border-bottom">
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <i class="bi bi-journal-text text-orange fs-4"></i>
+                        <div class="ms-3">
+                            <h6 class="text-muted mb-1">Název testu</h6>
+                            <p class="mb-0 fw-bold">Základy programování</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <i class="bi bi-person-circle text-primary fs-4"></i>
+                        <div class="ms-3">
+                            <h6 class="text-muted mb-1">Student</h6>
+                            <p class="mb-0 fw-bold">Jan Novák (jnovak123)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <i class="bi bi-calendar-check text-success fs-4"></i>
+                        <div class="ms-3">
+                            <h6 class="text-muted mb-1">Dokončeno</h6>
+                            <p class="mb-0 fw-bold">15.12.2024 14:35</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Výsledky -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="stat-card bg-success bg-opacity-10 border-success">
+                        <div class="stat-icon bg-success">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="text-success mb-1">85%</h3>
+                            <p class="text-muted mb-0">Úspěšnost</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-primary bg-opacity-10 border-primary">
+                        <div class="stat-icon bg-primary">
+                            <i class="bi bi-list-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="text-primary mb-1">17/20</h3>
+                            <p class="text-muted mb-0">Správně</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-warning bg-opacity-10 border-warning">
+                        <div class="stat-icon bg-warning">
+                            <i class="bi bi-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="text-warning mb-1">25 min</h3>
+                            <p class="text-muted mb-0">Čas řešení</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card bg-info bg-opacity-10 border-info">
+                        <div class="stat-icon bg-info">
+                            <i class="bi bi-award"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="text-info mb-1">B</h3>
+                            <p class="text-muted mb-0">Známka</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Otázky a odpovědi -->
+            <h5 class="mb-3">
+                <i class="bi bi-list-ol me-2"></i>
+                Odpovědi na otázky
+            </h5>
+
+            @for (int i = 1; i <= 5; i++)
+            {
+                var isCorrect = i % 3 != 0; // 2 z 3 správně
+                <div class="question-card mb-3 border-start border-4 border-@(isCorrect ? "success" : "danger")">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="mb-0">
+                            <span class="badge bg-secondary me-2">@i</span>
+                            Co je to proměnná v programování?
+                        </h6>
+                        <span class="badge bg-@(isCorrect ? "success" : "danger")">
+                            @(isCorrect ? "✓ Správně" : "✗ Špatně")
+                        </span>
+                    </div>
+                    <div class="mt-3">
+                        <div class="answer-option @(isCorrect ? "correct" : "wrong") mb-2">
+                            <strong>A)</strong> Místo v paměti pro uložení hodnoty
+                            <i class="bi bi-@(isCorrect ? "check-circle-fill text-success" : "x-circle-fill text-danger") ms-2"></i>
+                        </div>
+                        @if (!isCorrect)
+                        {
+                            <div class="answer-option correct mb-2">
+                                <strong>B)</strong> Konstanta v programu
+                                <i class="bi bi-check-circle-fill text-success ms-2"></i>
+                                <small class="text-success ms-2">(Správná odpověď)</small>
+                            </div>
+                        }
+                        <div class="answer-option mb-2">
+                            <strong>C)</strong> Funkce pro výpočet
+                        </div>
+                        <div class="answer-option">
+                            <strong>D)</strong> Datový typ
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+.info-box {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.stat-card {
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.question-card {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.answer-option {
+    padding: 0.75rem 1rem;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.answer-option.correct {
+    border-color: #198754;
+    background: rgba(25, 135, 84, 0.05);
+}
+
+.answer-option.wrong {
+    border-color: #dc3545;
+    background: rgba(220, 53, 69, 0.05);
+}
+
+</style>
+
+@section Scripts {
+    <script>
+        console.log('Detail View page loaded');
+    </script>
+}

@@ -1,8 +1,250 @@
 ﻿@using SPSUL.Models.Display.TestModels
 @model CreateViewModel
 @{
-    ViewData["Title"] = "Vytvoření testu";
-    Layout = "~/Views/Shared/Layouts/_Main.cshtml"; ;
+    ViewData["Title"] = "Vytvořit test";
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
 }
-<link href="~/css/create.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="~/css/test-create.css" asp-append-version="true" />
+
+@section Scripts {
+    <script src="~/js/test-create.js" asp-append-version="true"></script>
+}
+
+<div class="test-create-container">
+    
+    <!-- PROGRESS STEPPER -->
+    <div class="stepper-wrapper">
+        <div class="stepper-item active" data-step="1">
+            <div class="stepper-circle">1</div>
+            <div class="stepper-label">Základní údaje</div>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-item" data-step="2">
+            <div class="stepper-circle">2</div>
+            <div class="stepper-label">Výběr otázek</div>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-item" data-step="3">
+            <div class="stepper-circle">3</div>
+            <div class="stepper-label">Kontrola a náhled</div>
+        </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="create-grid">
+        
+        <!-- LEFT: FORM -->
+        <div class="form-section">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil-square text-orange me-2"></i>
+                        <span id="sectionTitle">Základní údaje testu</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    
+                    <!-- STEP 1: Základní údaje -->
+                    <div class="form-step active" id="step1">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold" for="testName">
+                                <i class="bi bi-card-heading text-orange"></i> Název testu
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="testName" 
+                                   placeholder="např. Matematika - Derivace" maxlength="128" required>
+                            <small class="text-muted">Zadejte výstižný název testu</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold" for="studentField">
+                                <i class="bi bi-book text-orange"></i> Předmět
+                            </label>
+                            <select class="form-select form-select-lg" id="studentField" required>
+                                <option value="">-- Vyberte předmět --</option>
+                                @foreach (var field in Model.Fields)
+                                {
+                                    <option value="@field.StudentFieldId">@field.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold" for="description">
+                                <i class="bi bi-text-paragraph text-orange"></i> Popis (volitelné)
+                            </label>
+                            <textarea class="form-control" id="description" rows="4" 
+                                      placeholder="Stručný popis obsahu testu..."></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-clock text-orange"></i> Časový limit
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="timeLimit" 
+                                       value="45" min="1" max="180">
+                                <span class="input-group-text">minut</span>
+                                <button class="btn btn-outline-secondary" type="button" id="noTimeLimit">
+                                    <i class="bi bi-infinity"></i> Bez limitu
+                                </button>
+                            </div>
+                            <small class="text-muted">Doporučený čas: 45 minut</small>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: Výběr otázek -->
+                    <div class="form-step" id="step2">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-funnel text-orange"></i> Filtrovat otázky
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="questionSearch" 
+                                           placeholder="Hledat podle názvu...">
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-select" id="questionTypeFilter">
+                                        <option value="">Všechny typy</option>
+                                        @foreach (var type in Model.Types)
+                                        {
+                                            <option value="@type.QuestionTypeId">@type.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-bank">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">Dostupné otázky</h6>
+                                <span class="badge bg-secondary" id="availableCount">@Model.Questions.Count otázek</span>
+                            </div>
+                            
+                            <div class="question-list" id="availableQuestions">
+                                @foreach (var question in Model.Questions)
+                                {
+                                    <div class="question-card" data-question-id="@question.QuestionId" 
+                                         data-question-name="@question.Header.ToLower()"
+                                         data-question-type="@question.QuestionTypeId">
+                                        <div class="question-card-header">
+                                            <div class="form-check">
+                                                <input class="form-check-input question-checkbox" type="checkbox" 
+                                                       value="@question.QuestionId" id="q@(question.QuestionId)">
+                                                <label class="form-check-label fw-bold" for="q@(question.QuestionId)">
+                                                    @question.Header
+                                                </label>
+                                            </div>
+                                            <span class="badge bg-info">@question.QuestionType.Name</span>
+                                        </div>
+                                        <div class="question-card-body">
+                                            <small class="text-muted">@question.Description</small>
+                                            <div class="question-meta mt-2">
+                                                <small>
+                                                    <i class="bi bi-list-ol me-1"></i>@question.QuestionOptions.Count možností
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="selected-summary">
+                            <div class="alert alert-info d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                                <div>
+                                    <strong id="selectedCount">0</strong> otázek vybráno
+                                    <button class="btn btn-sm btn-link" id="clearSelection">Zrušit výběr</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Náhled a kontrola -->
+                    <div class="form-step" id="step3">
+                        <div class="alert alert-success">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-check-circle me-2"></i>Test je připraven k vytvoření!
+                            </h6>
+                            <p class="mb-0">Zkontrolujte náhled testu vpravo a klikněte na "Vytvořit test".</p>
+                        </div>
+
+                        <div class="test-summary">
+                            <h6 class="border-bottom pb-2 mb-3">Shrnutí testu</h6>
+                            
+                            <div class="summary-item">
+                                <i class="bi bi-card-heading text-orange"></i>
+                                <div>
+                                    <small class="text-muted">Název</small>
+                                    <div class="fw-bold" id="summaryName">-</div>
+                                </div>
+                            </div>
+
+                            <div class="summary-item">
+                                <i class="bi bi-book text-orange"></i>
+                                <div>
+                                    <small class="text-muted">Předmět</small>
+                                    <div class="fw-bold" id="summaryField">-</div>
+                                </div>
+                            </div>
+
+                            <div class="summary-item">
+                                <i class="bi bi-clock text-orange"></i>
+                                <div>
+                                    <small class="text-muted">Časový limit</small>
+                                    <div class="fw-bold" id="summaryTime">-</div>
+                                </div>
+                            </div>
+
+                            <div class="summary-item">
+                                <i class="bi bi-list-check text-orange"></i>
+                                <div>
+                                    <small class="text-muted">Počet otázek</small>
+                                    <div class="fw-bold" id="summaryQuestions">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- NAVIGATION FOOTER -->
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-outline-secondary" id="prevBtn" disabled>
+                            <i class="bi bi-arrow-left me-2"></i>Zpět
+                        </button>
+                        <button class="btn btn-orange" id="nextBtn">
+                            Další<i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                        <button class="btn btn-success d-none" id="submitBtn">
+                            <i class="bi bi-check-circle me-2"></i>Vytvořit test
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: PREVIEW -->
+        <div class="preview-section">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-orange text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-eye me-2"></i>Náhled testu
+                    </h5>
+                </div>
+                <div class="card-body" style="overflow-y: auto;">
+                    <div id="previewContent">
+                        <div class="text-center text-muted py-5">
+                            <i class="bi bi-file-earmark-text display-1 opacity-25"></i>
+                            <p class="mt-3">Vyplňte formulář pro zobrazení náhledu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

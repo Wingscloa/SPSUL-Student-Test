@@ -56,56 +56,122 @@
     background-color: #e03026; 
 }
 
-/* Image Option */
+/* ============================================
+   MODERN OPTION PREVIEW STYLES
+   ============================================ */
 
+/* Image Grid - Modernější layout */
 .imageGrid {
     display: flex;
     align-items: flex-end;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 1rem;
+    margin-top: 1.5rem;
     width: 100%;
 }
 
+/* Image Option Item - Modernější card style */
+.imageOption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1 1 250px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+    .imageOption:hover {
+        transform: translateY(-4px);
+    }
+
+/* Image Border - Modernější s gradientním borderem */
 .imageBorder {
-    border: 3px solid var(--solid-border);
-    border-radius: 4px;
+    position: relative;
+    border: 3px solid #e9ecef;
+    border-radius: 12px;
     cursor: pointer;
     width: 100%;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
+
+    .imageBorder::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 12px;
+        padding: 3px;
+        background: linear-gradient(135deg, #ff8a00, #ff6b00);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
     .imageBorder:hover {
-        transition-timing-function: ease;
-        border-color: var(--primary-color);
-        background-color: rgb(250,250,250);
+        border-color: transparent;
+        background-color: #fafafa;
+        box-shadow: 0 8px 20px rgba(255, 138, 0, 0.15);
+    }
+
+    .imageBorder:hover::before {
+        opacity: 1;
     }
 
     .imageBorder.selected {
-        border-color: var(--primary-color);
+        border-color: transparent;
+        box-shadow: 0 8px 20px rgba(255, 138, 0, 0.25);
     }
 
+    .imageBorder.selected::before {
+        opacity: 1;
+    }
+
+    /* Obrázek uvnitř */
     .imageBorder img {
         width: 100%;
         height: 250px;
         object-fit: cover;
         display: block;
+        transition: transform 0.4s ease;
     }
 
-    .imageContainer {
-        overflow: hidden;
-        border-radius: 8px !important;
-        padding: 2px;
+    .imageBorder:hover img {
+        transform: scale(1.05);
     }
 
-.imageOption {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    flex: 1 1 250px;
+/* Image Container - Pro smooth fade-in */
+.imageContainer {
+    overflow: hidden;
+    border-radius: 10px !important;
+    padding: 2px;
+    position: relative;
 }
 
-.noImage{
+    .imageContainer::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.3));
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .imageBorder:hover .imageContainer::after {
+        opacity: 1;
+    }
+
+/* No Image Placeholder - Modernější */
+.noImage {
     width: 100%;
     height: 250px;
     object-fit: cover;
@@ -113,26 +179,121 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
 }
 
+    .noImage::before {
+        content: '📷';
+        position: absolute;
+        font-size: 4rem;
+        opacity: 0.1;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .noImage .noImageTxt {
+        position: relative;
+        z-index: 1;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #adb5bd;
+        transition: color 0.3s ease;
+    }
+
+    .imageBorder:hover .noImage .noImageTxt {
+        color: #ff8a00;
+    }
+
+/* Image Label - Modernější typografie */
 .imageLabel {
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
     display: block;
     text-align: center;
-    width: 100%; /* Aby mohl využít prostor své buňky */
+    width: 100%;
     overflow-wrap: anywhere;
+    color: #2c3e50;
+    transition: color 0.3s ease;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
+    .imageOption:hover .imageLabel {
+        color: #ff8a00;
+    }
+
+/* Responsive Grid Items */
 .optionItem-3 {
-    flex-basis: calc(33.333% - 10px);
+    flex-basis: calc(33.333% - 1rem);
 }
 
 .optionItem-2 {
-    flex-basis: calc(50% - 10px);
+    flex-basis: calc(50% - 1rem);
 }
 
 .optionItem-1 {
     flex-basis: 100%;
 }
+
+/* Mobile Responsive */
+@media (max-width: 991px) {
+    .optionItem-3 {
+        flex-basis: calc(50% - 1rem);
+    }
+}
+
+@media (max-width: 576px) {
+    .imageGrid {
+        gap: 0.75rem;
+    }
+
+    .optionItem-3,
+    .optionItem-2 {
+        flex-basis: 100%;
+    }
+
+    .imageBorder img,
+    .noImage {
+        height: 200px;
+    }
+
+    .imageLabel {
+        font-size: 0.9rem;
+    }
+}
+
+/* ============================================
+   OPTION CARD (EDITOR) STYLES
+   ============================================ */
+
+.option-card {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    background: white;
+}
+
+    .option-card:hover {
+        border-color: #ff8a00;
+        box-shadow: 0 4px 12px rgba(255, 138, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .option-card .form-check-input:checked ~ label {
+        color: #198754 !important;
+        font-weight: 700;
+    }
+
+/* ============================================
+   REMOVE BUTTON STYLES
+   ============================================ */
 

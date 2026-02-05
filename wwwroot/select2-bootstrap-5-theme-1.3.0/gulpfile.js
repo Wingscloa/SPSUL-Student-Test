@@ -1,4 +1,4 @@
-// Core dependencies
+﻿// Core dependencies
 const gulp = require( "gulp" )
 
 // External dependencies

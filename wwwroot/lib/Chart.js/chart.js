@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * Chart.js v4.5.0
  * https://www.chartjs.org
  * (c) 2025 Chart.js Contributors
@@ -6522,7 +6522,7 @@ function toRadiusCorners(value) {
     };
 }
 /**
- * Convert (r, 𝜃) to (x, y)
+ * Convert (r, đťś) to (x, y)
  */ function rThetaToXY(r, theta, x, y) {
     return {
         x: x + r * Math.cos(theta),
