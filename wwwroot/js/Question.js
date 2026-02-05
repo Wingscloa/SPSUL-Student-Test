@@ -55,7 +55,7 @@ async function generateOptions() {
     const el = document.getElementById('optionCount')
     const count = el.value ?? 0
 
-    const optionsContainer = document.querySelectorAll('.option')
+    const optionsContainer = document.querySelectorAll('.previewOption')
     if (!el) { return; }
     if (count <= 0) { return; }
 
@@ -90,14 +90,10 @@ async function generateOptions() {
             const optionResult = await responseOption.text()
             const previewResult = await responsePreview.text()
 
-            if (typeName == 'Uzavřená+otázka') {
-                const optionContainer = document.getElementById('optionsContainer')
-                const previewContainer = document.getElementById('previewOptions').querySelector('.radio-group')
-                optionContainer.insertAdjacentHTML('beforeend', optionResult)
-                previewContainer.insertAdjacentHTML('beforeend', previewResult)
-            }
-            else if (typeName == 'Uzavřená+otázka+s+obrázky') {
-            }
+            const optionContainer = document.getElementById('optionsContainer')
+            const previewContainer = document.getElementById('previewOptionContainer')
+            optionContainer.insertAdjacentHTML('beforeend', optionResult)
+            previewContainer.insertAdjacentHTML('beforeend', previewResult)
 
             toastr.success('Možnosti vygenerovány', 'Úspěch');
         }
@@ -109,7 +105,7 @@ async function generateOptions() {
     else // remove last n options
     {
         const toRemove = optionsContainer.length - count;
-        const radioOptionsContainer = document.querySelectorAll('.radio-option');
+        const radioOptionsContainer = document.querySelectorAll('.option-card');
 
         for (let i = 0; i < toRemove; i++) {
             optionsContainer[optionsContainer.length - 1 - i].remove();
@@ -141,44 +137,74 @@ function setUpFlex(rowCount) {
 document.addEventListener('click', (e) => {
     const el = e.target;
 
-    const optionCards = document.querySelectorAll('.option-card');
-
-    if (optionCards.length <= 2) {
-        toastr.error('Musí být alespoň dvě možnosti odpovědí', 'Chyba');
-        return;
-    }
-
+    // Dynamic Remove Event Delegation
     if (el.classList.contains('questionRemove') || el.classList.contains('cross-line')) {
+        const optionCards = document.querySelectorAll('.option-card');
+
+        if (optionCards.length <= 2) {
+            toastr.error('Musí být alespoň dvě možnosti odpovědí', 'Chyba');
+            return;
+        }
         const optionCard = el.closest('.option-card') 
-        const id = optionCard.getAttribute('data-option-index');
-        const optionPreview = document.querySelector(`.radio-option[data-option-index="${id}"]`);
+        const id = optionCard.getAttribute('data-index');
+        const optionPreview = document.querySelector(`.previewOption[data-index="${id}"]`);
 
         optionPreview.remove()
         optionCard.remove();
         resetOptionIndexes()
     }
+
+    // image file input (.noImage)
+
+    if (el.classList.contains('noImage') || el.classList.contains('noImageTxt')) {
+        const option = el.closest('.previewOption')
+        const idx = option.dataset.index;
+        const optionCard = document.querySelector(`.option-card[data-index="${idx}"]`);
+        const fileInput = optionCard.querySelector('input[name="imageQuestion"]');
+        fileInput.click();
+    }
 }); 
 
 function resetOptionIndexes() {
     const optionInputs = document.querySelectorAll('.option-card');
-    const optionPreviews = document.querySelectorAll('.radio-option');
+    const optionPreviews = document.querySelectorAll('.previewOption');
 
     optionInputs.forEach((card, idx) => {
-        card.setAttribute('data-option-index', idx);
+        card.setAttribute('data-index', idx);
         var label = card.querySelector('.option-text');
-        if (label.value == "") {
-            label.placeholder = `Možnost ${String.fromCharCode(65 + idx)}`;
+        const defaultText = label.dataset.default
+        var newText = ''
+
+        if (defaultText.lastIndexOf(') Možnost ') != -1) {
+            newText = `Možnost ${String.fromCharCode(65 + idx)}`;
         }
+        else if (defaultText.lastIndexOf('Nadpis ') != -1) {
+            newText = `Nadpis ${idx + 1}`;
+        }
+
+        label.placeholder = newText;
     })
 
     optionPreviews.forEach((preview, idx) => {
-        preview.setAttribute('data-option-index', idx);
-        var label = preview.querySelector('.radio-label');
-        const abcChar = `${String.fromCharCode(65 + idx)}`;
+        preview.setAttribute('data-index', idx);
+        var label = preview.querySelector('.optionPreviewLabel');
 
-        if (label.textContent.length == 12 && label.textContent.lastIndexOf(") Možnost ") != -1) {
-            label.textContent = `${abcChar}) Možnost ${abcChar}`;
+        const defaultText = preview.dataset.default;
+        var newDefaultText = '';
+
+        // Moznosti ve formatu "A) Možnost A"
+        if (defaultText.lastIndexOf(") Možnost ") != -1) {
+            const abcChar = `${String.fromCharCode(65 + idx)}`;
+            newDefaultText = `${abcChar}) Možnost ${abcChar}`
         }
+        else if (defaultText.lastIndexOf("Nadpis ") != -1) {
+            newDefaultText = 'Nadpis ' + (idx + 1);
+        }
+
+        if (label.textContent == defaultText) {
+            label.textContent = newDefaultText;
+        }
+        preview.dataset.default = newDefaultText;
     });
 }
 
@@ -221,6 +247,44 @@ async function CreateQuestion() {
     }
 }
 
+async function UpdateQuestion() {
+    disableInputs(true);
+    disableSubmitButton(true);
+    const isValid = await Validate();
+
+    if (!isValid) {
+        disableInputs(false);
+        disableSubmitButton(false);
+        return;
+    }
+
+    try {
+        loadingScreen(true);
+        const data = await GatherData();
+        const response = await fetch('/Question/Update', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+
+        const result = await response.json();
+
+        if (response.ok) {
+            toastr.success(result.message || 'Otázka aktualizovaná!', 'Úspěch');
+            setTimeout(() => {
+                window.location.href = '/Question/Index';
+            }, 1500);
+        } else {
+            loadingScreen(false)
+            toastr.error(result.message || 'Chyba při aktualizaci otázky', 'Chyba');
+        }
+    } catch (err) {
+        loadingScreen(false)
+        toastr.error('Chyba při komunikaci se serverem', 'Chyba');
+        console.error(err);
+    }
+}
+
 async function Validate() {
     const header = document.getElementById('Header').value.trim();
     const description = document.getElementById('Description').value.trim();
@@ -247,7 +311,7 @@ async function Validate() {
         const isCorrect = document.getElementById(`isCorrect_${idx}`)?.checked || false;
 
         if (!text) {
-            toastr.warning(`Vyplň text pro možnost ${String.fromCharCode(65 + idx)}, zkontroluj vše před uložením`, 'Varování');
+            toastr.warning(`Vyplň text pro možnosti, zkontroluj vše před uložením`, 'Varování');
             isValid = false;
             return false;
         }
@@ -260,6 +324,19 @@ async function Validate() {
         toastr.warning('Označ alespoň jednu správnou odpověď', 'Varování');
         return false;
     }
+
+    const fileInputs = document.querySelectorAll('input[type="file"][required="true"]');
+    var hasFileInputs = true;
+    fileInputs.forEach((input, idx) => {
+        const file = input.files[0];
+        if (!file && hasFileInputs) {
+            toastr.warning(`Vyber obrázek pro ${idx + 1}. možnost`, 'Varování');
+            hasFileInputs = false;
+        }
+    })
+
+    if (!hasFileInputs) { return false; }
+
     return true;
 }
 
@@ -300,6 +377,9 @@ async function GatherData() {
         options: options
     };
 
+    // Edit 
+    data.QuestionId = parseInt(document.getElementById('QuestionId')?.value || 0);
+
     return data;
 }
 
@@ -320,6 +400,7 @@ function resetForm() {
 
 document.addEventListener('DOMContentLoaded', () => {
     setUpFlex(3);
+    updatePreview();
     // Header
     const headerInput = document.getElementById('Header');
 
@@ -392,6 +473,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const optionResult = await responseOption.text()
             optionContainer.insertAdjacentHTML('beforeend', optionResult)
         }
+
+        updatePreview();
     });
 })
 
@@ -399,17 +482,18 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('input', (e) => {
 
     const el = e.target
-    const value = el.value;
-    const defaultValue = el.dataset.default
+    const value = el.value
     const name = el.getAttribute('name');
 
     // Option text input
     if (name == 'optionText') {
-        const dataIndex = el.dataset.index;
-        const option = document.querySelector(`.imageOption[data-index="${dataIndex}"]`);
+        const dataIndex = el.closest('.option-card').dataset.index;
+        const option = document.querySelector(`.previewOption[data-index="${dataIndex}"]`);
+
+        const defaultValue = option.dataset.default
 
         if (!option) { toastr.error('interní problém webové aplikace') }
-
+         
         const label = option.querySelector('.optionPreviewLabel');
 
         if (label) {
@@ -425,27 +509,39 @@ document.addEventListener('change', (e) => {
     // Correct answer checkbox
     if (name == 'CorrectInput') {
         const optionCard = el.closest('.option-card');
-        const id = optionCard.getAttribute('data-option-index');
-        const optionInput = document.querySelector(`.option[data-index="${id}"]`);
-        const optionBorder = optionInput.querySelector('.optionPreviewBorder');
+        const id = optionCard.getAttribute('data-index');
+
+        let previewBorder;
+
+        const optionInput = document.querySelector(`.previewOption[data-index="${id}"]`);
+        if (optionInput.classList.contains('optionPreviewBorder')) {
+            previewBorder = optionInput;
+        }
+        else {
+            previewBorder = optionInput.querySelector('.optionPreviewBorder');
+
+        }
 
         if (el.checked) {
             optionCard.classList.add('correct')
-            optionBorder.classList.add('correct')
+            previewBorder.classList.add('correct')
         }
         else {
             optionCard.classList.remove('correct')
-            optionBorder.classList.remove('correct')
+            previewBorder.classList.remove('correct')
         }
     }
 
     // Image Input
     
     if (name == 'imageQuestion') {
-        const id = e.target.dataset.index;
+        const optionCard = el.closest('.option-card');
+        const id = optionCard.getAttribute('data-index');
         const file = e.target.files[0];
 
-        const previewOption = document.querySelector(`.imageOption[data-index="${id}"]`);
+        const previewOption = document.querySelector(`.previewOption[data-index="${id}"]`);
+        const imageContainer = previewOption.querySelector('.imageContainer');
+        const noImageHolder = previewOption.querySelector('.noImage'); 
         const previewImage = previewOption.querySelector('.imageContainer>img');
 
         if (file) {
@@ -453,12 +549,25 @@ document.addEventListener('change', (e) => {
 
             reader.onload = function (event) {
                 previewImage.src = event.target.result;
-                previewContainer.style.display = 'block';
+                imageContainer.classList.remove('d-none');
+                noImageHolder.classList.add('d-none');
             }
 
             reader.readAsDataURL(file);
         } else {
-            previewContainer.style.display = 'none';
+            noImageHolder.classList.remove('d-none');
+            imageContainer.classList.add('d-none');
         }
     }
 })
+
+function updatePreview() {
+    const header = document.getElementById('Header').value.trim();
+    const description = document.getElementById('Description').value.trim();
+
+    const previewHeader = document.getElementById('previewHeader');
+    const previewDescription = document.getElementById('previewDescription');
+
+    previewHeader.textContent = header.length <= 0 ? 'Nadpis otázky' : header;
+    previewDescription.textContent = description.length <= 0 ? 'Popis/znění otázky' : description;
+}

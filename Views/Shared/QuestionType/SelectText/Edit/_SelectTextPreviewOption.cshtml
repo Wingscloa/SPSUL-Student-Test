@@ -1,13 +1,16 @@
-﻿@using SPSUL.Models.Display.QuestionForm
+﻿@using SPSUL.Models.Data;
 
-@model List<OptionEdit>
+@model List<QuestionOption>
 
-@foreach(OptionEdit opt in Model)
+@foreach (QuestionOption opt in Model)
 {
-    var i = Model.IndexOf(opt);
-    var character = (Convert.ToChar(65 + i));
-    <label class="radio-option @(opt.IsCorrect ? "correct" : "")" data-option-index="@i">
+    var idx = Model.IndexOf(opt);
+    var character = (Convert.ToChar(65 + idx));
+    var placeHolder = $"{character}) Možnost {character}";
+
+    <label class="radio-option previewOption optionPreviewBorder @(opt.IsCorrect ? "correct" : "")" 
+           data-index="@idx" data-default="@placeHolder">
         <input type="radio" name="preview_answer" value="0" disabled>
-        <span class="radio-label">@character) @opt.Text</span>
+        <span class="radio-label optionPreviewLabel">@opt.Text</span>
     </label>
 }

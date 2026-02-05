@@ -32,10 +32,23 @@ namespace SPSUL
             builder.Services.AddScoped<CacheService>();
             builder.Services.AddScoped<SharedService>();
 
-            // Azurit
+            // Azurit - s nastavením kompatibilní API verze
             builder.Services.AddSingleton(x =>
             {
-                return new BlobServiceClient(builder.Configuration.GetConnectionString("Azurit")!);
+                var options = new BlobClientOptions()
+                {
+                    // Použít starší API verzi kompatibilní s Azurite
+                    Retry = 
+                    {
+                        MaxRetries = 3,
+                        Mode = Azure.Core.RetryMode.Exponential
+                    }
+                };
+                
+                return new BlobServiceClient(
+                    builder.Configuration.GetConnectionString("Azurit")!, 
+                    options
+                );
             });
 
             builder.Services.AddScoped<AzureBlobService>();

@@ -28,7 +28,7 @@ namespace SPSUL.Controllers.API
                 opts.Add(new()
                 {
                     Index = startIndex + i,
-                    PlaceHolder = $"Možnost {(char)(startIndex + i + 65)}",
+                    PlaceHolder = $"{(char)(startIndex + i + 65)}",
                     IsCorrect = false
                 });
             }

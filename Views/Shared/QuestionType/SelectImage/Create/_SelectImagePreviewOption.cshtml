@@ -6,8 +6,15 @@
 
 @foreach(OptionBase opt in Model)
 {
-    <label class="radio-option @(opt.IsCorrect ? "correct" : "")" data-option-index="@opt.Index">
-        <input type="radio" name="preview_answer" value="0" disabled>
-        <span class="radio-label">@opt.PlaceHolder) Možnost @opt.PlaceHolder</span>
-    </label>
+    <div class="imageOption optionItem-3 previewOption" data-index="@(opt.Index)" data-default="Nadpis @(opt.Index + 1)">
+        <span class="imageLabel optionPreviewLabel">Nadpis @(opt.Index + 1)</span>
+        <div class="imageBorder optionPreviewBorder">
+            <div class="imageContainer d-none">
+                <img src="" />
+            </div>
+            <div class="noImage">
+                <h3 class="text-muted noImageTxt">Vlož obrázek</h3>
+            </div>
+        </div>
+    </div>
 }

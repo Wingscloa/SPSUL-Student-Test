@@ -71,6 +71,7 @@
     border: 3px solid var(--solid-border);
     border-radius: 4px;
     cursor: pointer;
+    width: 100%;
     transition: all 0.2s ease;
 }
     .imageBorder:hover {
@@ -84,9 +85,9 @@
     }
 
     .imageBorder img {
-        width: 100%; /* Vyplní celou šířku buňky */
+        width: 100%;
         height: 250px;
-        object-fit: cover; /* DŮLEŽITÉ: Ořízne fotku tak, aby se nedeformovala */
+        object-fit: cover;
         display: block;
     }
 
@@ -102,6 +103,16 @@
     align-items: center;
     gap: 4px;
     flex: 1 1 250px;
+}
+
+.noImage{
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .imageLabel {
@@ -124,3 +135,4 @@
 .optionItem-1 {
     flex-basis: 100%;
 }
+

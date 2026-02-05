@@ -1,0 +1,19 @@
+﻿@using SPSUL.Models.Display.QuestionForm;
+
+@model PreviewEdit
+
+@* EDIT *@
+
+
+<div id="previewContainer" class="test-preview">
+    <div class="questContainer">
+        <h2 id="previewHeader" class="questionHeader">@Model.Header</h2>
+        <h3 id="previewDescription" class="questionName">@Model.Description</h3>
+        <div id="previewOptions" class="mt-4">
+            <div class="radio-note">Vyber správnou odpověď</div>
+            <div class="imageGrid" id="previewOptionContainer">
+                @await Html.PartialAsync("/Views/Shared/QuestionType/SelectImage/Edit/_SelectImagePreviewOption.cshtml", Model.Options)
+            </div>
+        </div>
+    </div>
+</div>

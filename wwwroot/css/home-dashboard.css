@@ -1,0 +1,363 @@
+/* ============================================
+   TEACHER DASHBOARD - MODERN CLEAN DESIGN
+   ============================================ */
+
+/* Container */
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* ============================================
+   HERO WELCOME SECTION
+   ============================================ */
+.hero-welcome {
+    margin-bottom: 2rem;
+}
+
+.welcome-content {
+    margin-bottom: 1.5rem;
+}
+
+.welcome-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #2c3e50;
+}
+
+.welcome-subtitle {
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+/* Quick Stats Cards */
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.stat-card--primary { border-left-color: #0d6efd; }
+.stat-card--success { border-left-color: #198754; }
+.stat-card--info { border-left-color: #0dcaf0; }
+.stat-card--warning { border-left-color: #ffc107; }
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.stat-card--primary .stat-icon { background: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+.stat-card--success .stat-icon { background: rgba(25, 135, 84, 0.1); color: #198754; }
+.stat-card--info .stat-icon { background: rgba(13, 202, 240, 0.1); color: #0dcaf0; }
+.stat-card--warning .stat-icon { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+    color: #2c3e50;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* ============================================
+   DASHBOARD GRID LAYOUT
+   ============================================ */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 1.5rem;
+}
+
+.dashboard-main {
+    min-width: 0;
+}
+
+.dashboard-sidebar {
+    min-width: 0;
+}
+
+/* ============================================
+   ACTIVITY LIST
+   ============================================ */
+.activity-list {
+    padding: 0;
+}
+
+.activity-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-item:hover {
+    background: #f8f9fa;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.activity-title {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+}
+
+.activity-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8125rem;
+    color: #6c757d;
+}
+
+.activity-time,
+.activity-user {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* ============================================
+   UPCOMING TESTS
+   ============================================ */
+.upcoming-list {
+    padding: 0;
+}
+
+.upcoming-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+
+.upcoming-item:last-child {
+    border-bottom: none;
+}
+
+.upcoming-item:hover {
+    background: #f8f9fa;
+}
+
+.upcoming-date {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ff8a00 0%, #ff6b00 100%);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(255, 138, 0, 0.3);
+}
+
+.date-day {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.date-month {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.upcoming-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.upcoming-title {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+}
+
+.upcoming-meta {
+    font-size: 0.8125rem;
+}
+
+/* ============================================
+   QUICK ACTIONS BUTTONS
+   ============================================ */
+.btn-outline-orange {
+    color: #ff8a00;
+    border-color: #ff8a00;
+}
+
+.btn-outline-orange:hover {
+    background: #ff8a00;
+    border-color: #ff8a00;
+    color: white;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.card-header {
+    border-bottom: 1px solid #f0f0f0;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1rem 1.5rem;
+}
+
+.card-header h5,
+.card-header h6 {
+    font-weight: 600;
+}
+
+.card-footer {
+    border-top: 1px solid #f0f0f0;
+    border-radius: 0 0 12px 12px !important;
+    padding: 0.75rem 1.5rem;
+}
+
+.bg-orange {
+    background: linear-gradient(135deg, #ff8a00 0%, #ff6b00 100%);
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+@media (max-width: 991px) {
+    .dashboard-container {
+        padding: 1rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .welcome-title {
+        font-size: 1.5rem;
+    }
+
+    .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-item,
+    .upcoming-item {
+        padding: 0.75rem 1rem;
+    }
+
+    .activity-icon,
+    .upcoming-date {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+
+    .upcoming-date {
+        width: 50px;
+        height: 50px;
+    }
+
+    .date-day {
+        font-size: 1.25rem;
+    }
+}
+
+/* ============================================
+   CHART CONTAINER
+   ============================================ */
+#successRateChart {
+    max-height: 300px;
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+.text-orange {
+    color: #ff8a00 !important;
+}
+
+.border-orange {
+    border-color: #ff8a00 !important;
+}

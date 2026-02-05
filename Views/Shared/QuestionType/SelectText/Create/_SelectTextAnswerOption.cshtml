@@ -4,7 +4,7 @@
 
 @foreach(OptionBase opt in Model)
 {
-    <div class="card mb-2 option-card option @(opt.IsCorrect ? "correct" : "")" data-option-index="@opt.Index">
+    <div class="card mb-2 option-card option" data-index="@opt.Index" >
         <div class="card-body p-3" style="position:relative">
             <div class="d-flex align-items-start gap-2">
                 <div class="form-check">
@@ -15,7 +15,8 @@
                 </div>
                 <div class="flex-grow-1">
                     <label class="form-label small mb-1">Text odpovědi:</label>
-                    <input type="text" name="optionText" class="form-control option-text" maxlength="512" data-index="@opt.Index" placeholder="@opt.PlaceHolder" required>
+                    <input type="text" name="optionText" class="form-control option-text" maxlength="512" placeholder="@opt.PlaceHolder" 
+                    data-default="@opt.PlaceHolder) Možnost @opt.PlaceHolder" required>
                 </div>
             </div>
         </div>

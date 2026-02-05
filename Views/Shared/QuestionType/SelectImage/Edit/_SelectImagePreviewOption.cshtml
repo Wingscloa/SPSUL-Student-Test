@@ -1,13 +1,20 @@
-﻿@using SPSUL.Models.Display.QuestionForm
+﻿@using SPSUL.Models.Data
+@model List<QuestionOption>
 
-@model List<OptionEdit>
+@* EDIT *@
 
-@foreach(OptionEdit opt in Model)
+@foreach (QuestionOption option in Model)
 {
-    var i = Model.IndexOf(opt);
-    var character = (Convert.ToChar(65 + i));
-    <label class="radio-option @(opt.IsCorrect ? "correct" : "")" data-option-index="@i">
-        <input type="radio" name="preview_answer" value="0" disabled>
-        <span class="radio-label">@character) @opt.Text</span>
-    </label>
+    var idx = Model.IndexOf(option);
+    <div class="imageOption optionItem-3 previewOption" data-index="@idx" data-default="Nadpis @(idx + 1)">
+        <span class="imageLabel optionPreviewLabel">@option.Text</span>
+        <div class="imageBorder optionPreviewBorder @(option.IsCorrect ? "correct" : "")">
+            <div class="imageContainer @(option.ImageKey != null ? "" : "d-none")">
+                <img src="@($"http://127.0.0.1:10000/devstoreaccount1/questionimage/{option.ImageKey}.webp")" />
+            </div>
+            <div class="noImage @(string.IsNullOrEmpty(option.ImageKey) ? "" : "d-none")">
+                <h3 class="text-muted noImageTxt">Vlož obrázek</h3>
+            </div>
+        </div>
+    </div>
 }

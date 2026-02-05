@@ -46,6 +46,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
+    width: 100%;
 }
 
     .radio-option input[type="radio"] {
@@ -55,7 +56,10 @@
     }
 
 .radio-label {
+    width: inherit;
     font-size: 1rem;
+    text-overflow: ellipsis !important;
+    overflow-wrap: break-word;
 }
 
 .radio-note {

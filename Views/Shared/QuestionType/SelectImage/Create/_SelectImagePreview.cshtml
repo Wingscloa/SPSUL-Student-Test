@@ -13,29 +13,33 @@
         <h3 id="previewDescription" class="questionName">Popis otázky se zobrazí zde...</h3>
         <div id="previewOptions" class="mt-4">
             <div class="radio-note">Vyber správnou odpověď</div>
-            <div class="imageGrid">
+            <div class="imageGrid" id="previewOptionContainer">
                 @for (int i = 0; i < @Model; i++)
                     {
                     @if (3 - i <= className & !(3 <= 3))
                         {
-                        <div class="imageOption optionItem-@className option" data-index="@(i)">
+                        <div class="imageOption optionItem-@className previewOption" data-index="@(i)" data-default="Nadpis @(i + 1)">
                             <span class="imageLabel optionPreviewLabel">Nadpis @(i+1)</span>
                             <div class="imageBorder optionPreviewBorder">
-                                <div class="imageContainer">
-                                    @* <img src="http://127.0.0.1:10000/devstoreaccount1/questionimage/092fd01fcefd06552e5549e43a552eb6.jpg" /> *@
-                                    <img src="http://127.0.0.1:10000/devstoreaccount1/questionimage/092fd01fcefd06552e5549e43a552eb6.jpg" />
+                                <div class="imageContainer d-none">
+                                    <img src="" />
+                                </div>
+                                <div class="noImage">
+                                    <h1 class="text-muted noImageTxt">Vlož obrázek</h1>
                                 </div>
                             </div>
                         </div>
                         }
                     else
                     {
-                        <div class="imageOption optionItem-3 option" data-index="@(i)">
+                        <div class="imageOption optionItem-3 previewOption" data-index="@(i)" data-default="Nadpis @(i + 1)">
                             <span class="imageLabel optionPreviewLabel">Nadpis @(i+1)</span>
                             <div class="imageBorder optionPreviewBorder">
-                                <div class="imageContainer">
-                                    <img src="http://127.0.0.1:10000/devstoreaccount1/questionimage/092fd01fcefd06552e5549e43a552eb6.jpg" />
-                                    @* <img src="http://127.0.0.1:10000/devstoreaccount1/questionimage/092fd01fcefd06552e5549e43a552eb6.jpg" /> *@
+                                <div class="imageContainer d-none">
+                                    <img src="" />
+                                </div>
+                                <div class="noImage">
+                                    <h3 class="text-muted noImageTxt">Vlož obrázek</h3>
                                 </div>
                             </div>
                         </div>

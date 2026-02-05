@@ -98,11 +98,18 @@
                         <h6 class="fw-bold mb-3"><i class="bi bi-ui-checks text-orange"></i> Možnosti odpovědí:</h6>
                         <!-- Možnosti odpovědí (dynamicky) -->
                         <div id="optionsContainer" class="mb-3">
-                            @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Edit/_SelectTextAnswerOption.cshtml", Model.Options)
-                        </div>
+                                @if (Model.Question.QuestionType.Name == "Uzavřená otázka")
+                                {
+                                    @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Edit/_SelectTextAnswerOption.cshtml", Model.Question.QuestionOptions.Select(e => e).ToList() )
+                                }
+                                else if (Model.Question.QuestionType.Name == "Uzavřená otázka s obrázky")
+                                {
+                                @await Html.PartialAsync("/Views/Shared/QuestionType/SelectImage/Edit/_SelectImageAnswerOption.cshtml", Model.Question.QuestionOptions.Select(e => e).ToList())
+                                }
+                            </div>
                         <!-- Action buttons -->
                         <div class="d-grid gap-2">
-                            <button type="button" class="btn btn-orange" id="submit" onclick="CreateQuestion()">
+                            <button type="button" class="btn btn-orange" id="submit" onclick="UpdateQuestion()">
                                 <i class="bi bi-check2-circle me-1"></i> Uložit otázku
                             </button>
                             <a href="@Url.Action("Index", "Question")" class="btn btn-outline-secondary">
@@ -120,20 +127,18 @@
                     <h5 class="mb-0"><i class="bi bi-eye me-2"></i>Náhled otázky</h5>
                 </div>
                 <div class="card-body" id="previewBody" style="overflow-y: auto; background: #f8f9fa;">
-                    <div id="previewContainer" class="test-preview">
-                        <div class="questContainer">
-                            <h2 id="previewHeader" class="questionHeader">Nadpis otázky</h2>
-                            <h3 id="previewDescription" class="questionName">Popis otázky se zobrazí zde...</h3>
-                            <div id="previewOptions" class="mt-4">
-                                <div class="radio-note">Vyber správnou odpověď</div>
-                                <div class="radio-group">
-                                    @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Edit/_SelectTextPreviewOption.cshtml", Model.Options)
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @if (Model.Question.QuestionType.Name == "Uzavřená otázka")
+                    {
+                        @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Edit/_SelectTextPreview.cshtml", Model.PreviewEdit)
+                    }
+                    else if (Model.Question.QuestionType.Name == "Uzavřená otázka s obrázky")
+                    {
+                        @await Html.PartialAsync("/Views/Shared/QuestionType/SelectImage/Edit/_SelectImagePreview.cshtml", Model.PreviewEdit)
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<input type="hidden" id="QuestionId" name="QuestionId" value="@Model.Question.QuestionId" />

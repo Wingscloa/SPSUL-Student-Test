@@ -75,7 +75,7 @@ body {
 .questionName {
     font-size: 20px;
     font-family: Myfont;
-    max-height: 200px;
+    height: max-content;
 }
 
 .radioInput{

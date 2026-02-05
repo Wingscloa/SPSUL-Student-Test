@@ -8,6 +8,6 @@ namespace SPSUL.Models.Display.QuestionModels
         public required Question Question { get; set; }
         public required List<QuestionType> QuestionTypes { get; set; }
         public required List<StudentField> StudentFields { get; set; }
-        public required List<OptionEdit> Options { get; set; }
+        public required PreviewEdit PreviewEdit { get; set; }
     }
 }

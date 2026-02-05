@@ -11,6 +11,11 @@ public class LoginRequiredAttribute : ActionFilterAttribute
         {
             context.Result = new RedirectToActionResult("Login", "Auth", null);
         }
+        else
+        {
+            // Uložení userId do HttpContext.Items pro pozdější použití
+            context.HttpContext.Items["CurrentUserId"] = userId.Value;
+        }
 
         base.OnActionExecuting(context);
     }
