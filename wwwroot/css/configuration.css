@@ -78,13 +78,7 @@
     --bs-gutter-y: .5rem;
 }
 
-#configModal .offcanvas{ 
-    z-index: 11060; 
-}
-
-#configModal .offcanvas-backdrop{ 
-    z-index: 11050; 
-}
+/* Edit offcanvas z-index handled via JS */
 
 #ctRoot .select2-container--bootstrap-5{
     width:100% !important;
@@ -263,4 +257,255 @@
     border-right: none;
     border-radius: 0.5rem 0px 0px 0.5rem;
     padding: 0.375rem 0.5rem 0.375rem 0.5rem;
+}
+
+/* ============================================
+   MODERN CONFIG SIDEBAR
+   ============================================ */
+.config-sidebar {
+    width: 220px;
+    background: #fafafa;
+    border-right: 1px solid #eee;
+    border-radius: 12px 0 0 12px;
+    flex-shrink: 0;
+    justify-content: flex-start;
+}
+
+.config-sidebar-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.25rem 1rem .75rem;
+    border-bottom: 1px solid #eee;
+}
+
+.config-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff8a00, #ff6b00);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: .5rem;
+}
+
+.config-sidebar-name {
+    font-weight: 700;
+    font-size: .95rem;
+    color: #2c3e50;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.config-sidebar-nick {
+    font-size: .8rem;
+    color: #999;
+}
+
+.config-close-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: #fff;
+    color: #6c757d;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    flex-shrink: 0;
+}
+.config-close-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+    transform: none;
+}
+
+.config-nav {
+    list-style: none;
+    margin: 0;
+    padding: .5rem 0;
+    flex: 1;
+}
+
+.config-nav-item {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .6rem 1.1rem;
+    cursor: pointer;
+    font-size: .875rem;
+    font-weight: 500;
+    color: #555;
+    border-left: 3px solid transparent;
+    transition: all .2s;
+    text-decoration: none;
+}
+
+.config-nav-item:hover {
+    background: #f0f0f0;
+    color: #333;
+    border-left-color: #ffc480;
+}
+
+.config-nav-item.active {
+    background: #fff4e6;
+    color: #ff8a00;
+    border-left-color: #ff8a00;
+    font-weight: 600;
+}
+
+.config-nav-item i {
+    font-size: 1.1rem;
+    width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.config-sidebar-footer {
+    border-top: 1px solid #eee;
+    padding: .25rem 0;
+}
+
+.config-logout {
+    color: #dc3545 !important;
+}
+.config-logout:hover {
+    background: #fff5f5 !important;
+    border-left-color: #dc3545 !important;
+}
+
+.config-mobile-header {
+    background: #fafafa;
+}
+
+/* ============================================
+   CONFIG MODAL — centered on desktop, fullscreen on mobile
+   ============================================ */
+#configModal .modal-content {
+    height: 85vh;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.config-content-area {
+    background: #fff;
+    min-height: 0;
+}
+
+#modalContainer {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: auto;
+}
+
+#modalContainer > .ct-wrapper {
+    height: 100%;
+}
+
+/* On mobile the modal is fullscreen-lg-down, so fill the whole screen */
+@media (max-width: 991.98px) {
+    #configModal .modal-content {
+        height: 100vh;
+        height: 100dvh;
+        border-radius: 0;
+    }
+    .config-content-area {
+        flex: 1 1 0;
+        min-height: 0;
+        overflow: hidden;
+    }
+}
+
+/* Mobile top bar inside fullscreen modal */
+.config-mobile-topbar {
+    background: #fafafa;
+}
+
+.config-avatar-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff8a00, #ff6b00);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.config-mobile-tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.config-mobile-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.config-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: .5rem .75rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #777;
+    font-size: .7rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all .2s;
+    flex-shrink: 0;
+}
+
+.config-tab i {
+    font-size: 1.1rem;
+}
+
+.config-tab:hover {
+    color: #333;
+    transform: none;
+}
+
+.config-tab.active {
+    color: #ff8a00;
+    border-bottom-color: #ff8a00;
+    font-weight: 600;
+    background: none;
+}
+
+/* Edit offcanvas — no slide animation */
+#ctEditor {
+    transition: none !important;
+}
+#ctEditor.offcanvas.showing,
+#ctEditor.offcanvas.show:not(.hiding) {
+    transform: none;
+}
+
+/* Edit offcanvas on top of fullscreen modal */
+#ctEditor {
+    width: 420px;
+    max-width: 90vw;
+}
+
+@media (max-width: 575.98px) {
+    #ctEditor {
+        width: 100vw;
+        max-width: 100vw;
+    }
 }

@@ -1,130 +1,105 @@
-@* Detail/History - Historie odpovìdí studenta *@
+@using SPSUL.Models.Data
+@using SPSUL.Models.Display.TestModels
 @{
-    ViewData["Title"] = "Historie odpovìdí";
+    ViewData["Title"] = "Historie odpovedi";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+
+    var assignment = ViewBag.Assignment as StudentTest;
+    var questions = ViewBag.Questions as List<QuestionSnapshotItem> ?? new();
+    var answers = ViewBag.Answers as List<AnswerSnapshot> ?? new();
 }
 
-<link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true" />
 
 <div class="container-fluid py-3">
     <div class="card shadow-sm">
         <div class="card-header brandText d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
                 <i class="bi bi-clock-history me-2"></i>
-                Historie odpovìdí
+                Historie odpovedi
             </h5>
             <a href="/Detail/Index" class="btn btn-light btn-sm">
                 <i class="bi bi-arrow-left me-1"></i>
-                Zpìt na výsledky
+                Zpet na vysledky
             </a>
         </div>
         <div class="card-body">
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <h6 class="text-muted">Test:</h6>
-                    <p class="mb-1"><strong>Základy programování</strong></p>
-                    <p class="text-muted small">ID testu: #12345</p>
+            @if (assignment != null)
+            {
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Test:</h6>
+                        <p class="mb-1"><strong>@assignment.Test.Name</strong></p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Student:</h6>
+                        <p class="mb-1"><strong>@assignment.Student.FirstName @assignment.Student.LastName</strong></p>
+                        <p class="text-muted small">Login: @assignment.LoginId</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Cas:</h6>
+                        <p class="mb-1">Zacal: <strong>@assignment.StartedAt.ToString("dd.MM.yyyy HH:mm")</strong></p>
+                        <p class="mb-0">Dokoncil: <strong>@assignment.FinishedAt.ToString("dd.MM.yyyy HH:mm")</strong></p>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h6 class="text-muted">Student:</h6>
-                    <p class="mb-1"><strong>Jan Novák</strong></p>
-                    <p class="text-muted small">Login: jnovak123</p>
-                </div>
-            </div>
 
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>
-                Historie zobrazuje odpovìdi studenta na jednotlivé otázky testu.
-            </div>
+                <hr />
 
-            <!-- Timeline odpovìdí -->
-            <div class="timeline">
-                @for (int i = 1; i <= 5; i++)
+                @for (int i = 0; i < questions.Count; i++)
                 {
-                    var isCorrect = i % 2 == 0;
-                    <div class="timeline-item">
-                        <div class="timeline-marker bg-@(isCorrect ? "success" : "danger")">
-                            <i class="bi bi-@(isCorrect ? "check" : "x")"></i>
+                    var q = questions[i];
+                    var answer = answers.FirstOrDefault(a => a.QuestionId == q.QuestionId);
+                    var correctOptions = q.Options.Where(o => o.IsCorrect).Select(o => o.Text).OrderBy(t => t).ToList();
+                    var selectedOptions = answer?.SelectedOptions?.OrderBy(t => t).ToList() ?? new List<string>();
+                    var isCorrect = correctOptions.SequenceEqual(selectedOptions);
+
+                    <div class="mb-4 p-3 rounded border-start border-4 border-@(isCorrect ? "success" : "danger")"
+                         style="background: #f8f9fa;">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0">
+                                <span class="badge bg-secondary me-2">@(i + 1)</span>
+                                @q.Header
+                            </h6>
+                            <span class="badge bg-@(isCorrect ? "success" : "danger")">
+                                @(isCorrect ? "Spravne" : "Spatne")
+                            </span>
                         </div>
-                        <div class="timeline-content">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="mb-1">Otázka @i: Co je pole v programování?</h6>
-                                    <p class="text-muted small mb-2">Èas odpovìdi: 45 sekund</p>
-                                </div>
-                                <span class="badge bg-@(isCorrect ? "success" : "danger")">
-                                    @(isCorrect ? "Správnì" : "Špatnì")
-                                </span>
-                            </div>
-                            <div class="border-start border-3 border-@(isCorrect ? "success" : "danger") ps-3 mt-2">
-                                <p class="mb-1"><strong>Odpovìï studenta:</strong> Datová struktura pro uložení prvkù</p>
-                                @if (!isCorrect)
+                        <p class="text-muted small mb-3">@q.Description</p>
+
+                        @foreach (var opt in q.Options)
+                        {
+                            var wasSelected = selectedOptions.Contains(opt.Text);
+                            var isCorrectOpt = opt.IsCorrect;
+
+                            var borderClass = "";
+                            if (wasSelected && isCorrectOpt) borderClass = "border-success bg-success bg-opacity-10";
+                            else if (wasSelected && !isCorrectOpt) borderClass = "border-danger bg-danger bg-opacity-10";
+                            else if (!wasSelected && isCorrectOpt) borderClass = "border-success bg-success bg-opacity-10";
+
+                            <div class="p-2 mb-2 rounded border @borderClass">
+                                @opt.Text
+                                @if (wasSelected)
                                 {
-                                    <p class="mb-0 text-success"><strong>Správná odpovìï:</strong> Kolekce prvkù stejného typu</p>
+                                    <i class="bi bi-@(isCorrectOpt ? "check-circle-fill text-success" : "x-circle-fill text-danger") ms-2"></i>
+                                    <small class="ms-1">@(isCorrectOpt ? "(Vase odpoved - spravne)" : "(Vase odpoved - spatne)")</small>
+                                }
+                                else if (isCorrectOpt)
+                                {
+                                    <i class="bi bi-check-circle text-success ms-2"></i>
+                                    <small class="text-success ms-1">(Spravna odpoved)</small>
                                 }
                             </div>
-                        </div>
+                        }
                     </div>
                 }
-            </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
+                    <p class="text-muted mt-3">Zaznam nebyl nalezen.</p>
+                </div>
+            }
         </div>
     </div>
 </div>
-
-<style>
-.timeline {
-    position: relative;
-    padding: 1rem 0;
-}
-
-.timeline-item {
-    position: relative;
-    padding-left: 3rem;
-    padding-bottom: 2rem;
-}
-
-.timeline-item:last-child {
-    padding-bottom: 0;
-}
-
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    left: 1rem;
-    top: 2rem;
-    bottom: -1rem;
-    width: 2px;
-    background: #dee2e6;
-}
-
-.timeline-item:last-child::before {
-    display: none;
-}
-
-.timeline-marker {
-    position: absolute;
-    left: 0.5rem;
-    top: 0;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-}
-
-.timeline-content {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 10px;
-    border: 1px solid #dee2e6;
-}
-</style>
-
-@section Scripts {
-    <script>
-        console.log('Detail History page loaded');
-    </script>
-}

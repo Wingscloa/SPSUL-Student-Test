@@ -6,6 +6,7 @@ namespace SPSUL.Models.ViewModels
     public class AssignedTestVm
     {
         public int Id { get; set; }
+        public int StudentId { get; set; }
         public string Nazev { get; set; } = string.Empty;
         public string LoginId { get; set; } = string.Empty;
         public string Jmeno { get; set; } = string.Empty;

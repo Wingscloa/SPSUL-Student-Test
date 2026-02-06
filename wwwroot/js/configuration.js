@@ -1,34 +1,38 @@
 ﻿var onMobile = false;
 
 document.addEventListener('DOMContentLoaded', function () {
-    //var el = document.getElementById('configModal');
-    //var modal = bootstrap.Modal.getOrCreateInstance(el);
-    //modal.show();
-
-    if (window.innerWidth > 992) { onMobile = false }
-    console.log(onMobile)
+    onMobile = window.innerWidth < 992;
 })
 
 window.addEventListener('resize', () => {
-    const width = window.innerWidth;
-    if (width < 992) {
-        console.log("Mobile view active");
-    }
+    onMobile = window.innerWidth < 992;
 });
 
-$(document).on('click', '.menuItem', function () {
-    console.log("kliknuto");
-    $(".menuItem").each(function () {
-        $(this).removeClass("active");
-    });
-    $(this).addClass("active");
+// Sidebar nav: highlight active
+$(document).on('click', '#configModal .config-nav-item:not(.config-logout)', function () {
+    $('#configModal .config-nav-item').removeClass('active');
+    $(this).addClass('active');
 });
+
+// Mobile tab: highlight active
+$(document).on('click', '.config-tab', function () {
+    $('.config-tab').removeClass('active');
+    $(this).addClass('active');
+});
+
+
+
+
+
+
 
 function initTitlesSelect2() {
     $selects = $(".select2")
     $selects.each(function () {
         const $sel = $(this);
-        const dropdownParent = $('#configModal').length ? $('#configModal') : $(document.body);
+        const dropdownParent = $sel.closest('.offcanvas').length
+            ? $sel.closest('.offcanvas')
+            : ($('#configModal').length ? $('#configModal') : $(document.body));
 
         const placeholder = $(this).data('v-placeholder')
 
@@ -42,7 +46,7 @@ function initTitlesSelect2() {
     });
 }
 
-async function loadConfig(componentName) {
+async function loadConfig(componentName, clickedEl) {
     const container = document.getElementById("modalContainer")
     container.innerHTML = "Načítám...";
     const response = await fetch(`/api/config/section/${componentName}`);
@@ -52,31 +56,30 @@ async function loadConfig(componentName) {
 }
 
 (function () {
-    function showCanvas() {
-        if (!window.matchMedia('(max-width: 991.98px)').matches) {
-            return;
-        }
-
-        const offcanvasEl = document.getElementById('ctEditor');
-        offcanvasEl.style.zIndex = '11060';
-
-        const instance = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
-        instance.show();
-
-        setTimeout(() => {
-            document.querySelectorAll('.offcanvas-backdrop.show').forEach(b => b.style.zIndex = '11050');
-            document.body.classList.add('modal-open');
-        }, 0);
-    }
+function showEditorOffcanvas() {
+    const offcanvasEl = document.getElementById('ctEditor');
+    // Ensure offcanvas renders above the fullscreen modal (z-index 1055)
+    offcanvasEl.style.zIndex = '1075';
+    const instance = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+    instance.show();
+    // Push backdrop above the modal too
+    setTimeout(() => {
+        document.querySelectorAll('.offcanvas-backdrop').forEach(b => {
+            b.style.zIndex = '1070';
+        });
+    }, 10);
+}
 
 
-    // Handle clicks 
+// Handle clicks 
 
-    document.addEventListener('click', function (e) {
-        const cancel = e.target.closest('#btnCancelDesktop');
-        if (!cancel) return;
-        hideDesktopEdit();
-    })
+document.addEventListener('click', function (e) {
+    const cancel = e.target.closest('#btnCancelDesktop');
+    if (!cancel) return;
+    const offcanvasEl = document.getElementById('ctEditor');
+    const instance = bootstrap.Offcanvas.getInstance(offcanvasEl);
+    if (instance) instance.hide();
+})
 
     document.addEventListener('click', async function (e) {
         const submit = e.target.closest(".configSubmit")
@@ -111,12 +114,7 @@ async function loadConfig(componentName) {
             const url = document.getElementById('EditForm').value;
             const id = row.getAttribute('data-id');
             await fetchForm(url, id);
-            if (!window.matchMedia('(max-width: 991.98px)').matches) {
-                showDesktopForm();
-            }
-            else {
-                showCanvas();
-            }
+            showEditorOffcanvas();
 
             initTitlesSelect2();
         }
@@ -230,12 +228,7 @@ async function loadConfig(componentName) {
         createMode();
         const url = document.getElementById('CreateForm').value;
         await fetchForm(url);
-        if (!window.matchMedia('(max-width: 991.98px)').matches) {
-            showDesktopForm();
-        }
-        else {
-            showCanvas();
-        }
+        showEditorOffcanvas();
         initTitlesSelect2()
     })
 
@@ -244,19 +237,15 @@ async function loadConfig(componentName) {
         if (editModeOn === false) return;
         editModeOn = false;
 
-        const elHeader = document.getElementById('formTitleTextDesktop');
-        const elHeaderMobile = document.getElementById('ctEditorLabel');
-
-        elHeader.textContent = 'Vytvořit nového učitele';
-        elHeaderMobile.textContent = 'Vytvořit nového učitele';
+        const elHeader = document.getElementById('ctEditorLabel');
+        if (elHeader) elHeader.textContent = 'Vytvořit nový záznam';
     }
     function editMode() {
         if (editModeOn === true) return;
-        editModeOn = true
-        const elHeader = document.getElementById('formTitleTextDesktop');
-        const elHeaderMobile = document.getElementById('ctEditorLabel');
-        elHeader.textContent = 'Editace učitele';
-        elHeaderMobile.textContent = 'Editace učitele';
+        editModeOn = true;
+
+        const elHeader = document.getElementById('ctEditorLabel');
+        if (elHeader) elHeader.textContent = 'Editace záznamu';
     }
 
     function getDataFromForm(formId) {
@@ -306,13 +295,20 @@ async function loadConfig(componentName) {
             });
 
             const text = await response.text();
+            inputDisable(false);
+            loadingScreen(false);
+
             if (!response.ok) {
-                toastr.error(text)
+                toastr.error(text);
+                return;
             }
 
             toastr.success(text);
-            inputDisable(false);
-            loadingScreen(false);
+
+            // Zavřít offcanvas po úspěšném uložení
+            const offcanvasEl = document.getElementById('ctEditor');
+            const instance = bootstrap.Offcanvas.getInstance(offcanvasEl);
+            if (instance) instance.hide();
         }
         catch (error) {
             inputDisable(false);
@@ -331,10 +327,8 @@ async function loadConfig(componentName) {
             const data = await response.text();
 
             const editBody = document.getElementById('formDesktop');
-            const editCanvas = document.getElementById('ConfigFormMobile');
 
             editBody.innerHTML = data;
-            editCanvas.innerHTML = data;
             toastr.success('Podařilo se načíst formulář.');
         }
         catch (error) {
@@ -342,30 +336,13 @@ async function loadConfig(componentName) {
             console.error('Error fetching edit form:', error);
         }
     }
-    
-    function showDesktopForm() {
-        var list = document.getElementById("list");
-        var edit = document.getElementById("editDesktop");
-        list.classList.remove("col-12");
-        list.classList.add("col-7");
-        edit.style.display = 'block';
-    }
-    function hideDesktopEdit() {
-        var list = document.getElementById("list");
-        var edit = document.getElementById("editDesktop");
-
-        list.classList.remove("col-7");
-        list.classList.add("col-12");
-        edit.style.display = 'none';
-    }
 
     function inputDisable(state) {
         inputs = getInputs();
         inputs.forEach(input => { input.disabled = state });
     }
     function getInputs() {
-        const inputs = document.querySelectorAll('#formDesktop input, #formDesktop select, #formDesktop textarea,' +
-            '#ConfigFormMobile input, #ConfigFormMobile select, #ConfigFormMobile textarea');
+        const inputs = document.querySelectorAll('#formDesktop input, #formDesktop select, #formDesktop textarea');
         return inputs;
     }
 

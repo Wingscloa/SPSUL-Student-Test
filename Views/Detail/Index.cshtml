@@ -18,12 +18,12 @@
                     </h5>
                     <div class="tools d-flex justify-content-center align-items-center gap-2">
                         <!--Export-->
-                        <a class="iconLink cursor" title="Exportovat do Excel" id="exportBtn">
+                        <a class="iconLink cursor" title="Exportovat do CSV" href="/Detail/Export">
                             <i class="bi bi-file-earmark-spreadsheet"></i>
                             Export
                         </a>
                         <!--Statistiky-->
-                        <a class="iconLink cursor" title="Zobrazit statistiky" id="statsBtn">
+                        <a class="iconLink cursor" title="Zobrazit statistiky" href="/Detail/Stats">
                             <i class="bi bi-graph-up-arrow"></i>
                             Statistiky
                         </a>
@@ -101,13 +101,13 @@
                                     </td>
                                     <td class="text-center">
                                         <a class="icon-btn" title="Zobrazit historii odpovědí" 
-                                           href="/Detail/History?id=@t.Id">
+                                           href="/Detail/History?studentId=@t.StudentId&testId=@t.Id">
                                             <i class="bi bi-clock-history"></i>
                                         </a>
                                     </td>
                                     <td class="text-center">
                                         <a class="icon-btn" title="Zobrazit detail testu" 
-                                           href="/Detail/View?id=@t.Id">
+                                           href="/Detail/View?studentId=@t.StudentId&testId=@t.Id">
                                             <i class="bi bi-file-text"></i>
                                         </a>
                                     </td>
@@ -253,17 +253,6 @@
 
 @section Scripts {
     <script>
-        // Export funkcionalita
-        document.getElementById('exportBtn')?.addEventListener('click', function() {
-            toastr.info('Export do Excel bude dostupný brzy');
-        });
-        
-        // Statistiky modal
-        document.getElementById('statsBtn')?.addEventListener('click', function() {
-            toastr.info('Detailní statistiky budou dostupné brzy');
-        });
-        
-        // Initialize Select2
         $(document).ready(function() {
             $('.select2').select2({
                 theme: 'bootstrap-5',

@@ -7,6 +7,8 @@
         public int CreatorId { get; set; }
         public int StudentFieldId { get; set; }
         public required string QuestionSnapshot { get; set; }
+        public int? TimeLimitMinutes { get; set; }
+        public bool ShuffleQuestions { get; set; }
         public bool IsActive { get; set; }
         public virtual StudentField StudentField { get; set; }
         public virtual Teacher Creator { get; set; }

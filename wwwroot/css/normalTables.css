@@ -205,6 +205,34 @@
         transform: scale(0.95);
     }
 
+/* ============================================
+   ICON BUTTONS (in-table actions)
+   ============================================ */
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #6c757d;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background .2s, color .2s, transform .15s;
+    text-decoration: none;
+}
+.icon-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+    transform: scale(1.05);
+}
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
 .myTruncate {
     display: block;
     max-height: 100px;

@@ -60,7 +60,7 @@
                             <label class="form-label fw-bold" for="studentField">
                                 <i class="bi bi-book text-orange"></i> Předmět
                             </label>
-                            <select class="form-select form-select-lg" id="studentField" required>
+                            <select class="form-select form-select-lg select2-field" id="studentField" required>
                                 <option value="">-- Vyberte předmět --</option>
                                 @foreach (var field in Model.Fields)
                                 {
@@ -105,7 +105,7 @@
                                            placeholder="Hledat podle názvu...">
                                 </div>
                                 <div class="col-md-6">
-                                    <select class="form-select" id="questionTypeFilter">
+                                    <select class="form-select select2-field" id="questionTypeFilter">
                                         <option value="">Všechny typy</option>
                                         @foreach (var type in Model.Types)
                                         {

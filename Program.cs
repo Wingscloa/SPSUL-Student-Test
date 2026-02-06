@@ -91,6 +91,13 @@ namespace SPSUL
                 name: "default",
                 pattern: "{controller=Auth}/{action=Login}");
 
+            // Seed demo test data (kód: DEMO2025)
+            using (var scope = app.Services.CreateScope())
+            {
+                var ctx = scope.ServiceProvider.GetRequiredService<SpsulContext>();
+                DemoDataSeeder.SeedAsync(ctx).GetAwaiter().GetResult();
+            }
+
             app.Run();
         }
     }

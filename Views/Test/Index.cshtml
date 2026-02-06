@@ -1,7 +1,10 @@
-Ôªø@using SPSUL.Controllers
+@using SPSUL.Models.Data
+@model List<Test>
 @{
     ViewData["Title"] = "Testy";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+    var students = ViewBag.Students as List<Student> ?? new();
+    var classes = ViewBag.Classes as List<Classes> ?? new();
 }
 <link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
 
@@ -11,159 +14,156 @@
             <div class="card shadow-sm cardTable">
                 <div class="card-header brandText d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="bi bi-journal-text me-2"></i>
-                        Seznam test≈Ø
+                        <i class="bi bi-journal-text me-2"></i>Seznam test˘
                     </h5>
                     <div class="tools d-flex justify-content-center align-items-center gap-2">
-                        <!--Export-->
-                        <a class="iconLink cursor" title="Exportovat statistiky" id="exportBtn">
-                            <i class="bi bi-file-earmark-spreadsheet"></i>
-                            Export
-                        </a>
-                        <!--Statistiky-->
-                        <a class="iconLink cursor" title="Zobrazit statistiky" id="statsBtn">
-                            <i class="bi bi-graph-up-arrow"></i>
-                            Statistiky
-                        </a>
-                        <!--Activate-->
-                        <a class="iconLink cursor mode" title="Aktivovat testy" id="activate" data-endpoint="Test/Activate/">
-                            <i class="bi bi-arrow-up-circle-fill"></i>
-                            Aktivace
-                        </a>
-                        <!--Deactivate-->
-                        <a class="iconLink cursor mode" title="Deaktivovat testy" id="deactivateMode" data-endpoint="Test/Deactivate/">
-                            <i class="bi bi-arrow-down-circle-fill"></i>
-                            Deaktivace
-                        </a>
-                        <!--Delete Mode-->
-                        <a class="iconLink cursor mode" title="Smazat testy" id="deleteMode" data-endpoint="Test/Delete/">
-                            <i class="bi bi-dash-circle"></i>
-                            Smazat
-                        </a>
-                        <!--Create-->
-                        <a class="iconLink mode" asp-action="Create" asp-controller="Test" title="Vytvo≈ôit test">
+                        <a class="iconLink mode" asp-action="Create" asp-controller="Test" title="Vytvo¯it test">
                             <i class="bi bi-plus-circle"></i>
-                            Vytvo≈ôit
+                            Vytvo¯it
                         </a>
                     </div>
                 </div>
                 <div class="table-responsive tableContent">
-                    <table class="table align-middle mb-0" style="min-width: 1200px">
+                    <table class="table align-middle mb-0" style="min-width: 1000px">
                         <thead>
                             <tr>
-                                <th class="col-1">ID</th>
-                                <th class="col-3">N√°zev</th>
-                                <th class="col-2">Tv≈Ørce</th>
-                                <th class="col-2">P≈ôedmƒõt</th>
-                                <th class="col-1">Poƒçet ot√°zek</th>
-                                <th class="col-1">P≈ôi≈ôazen√≠</th>
-                                <th class="col-1">√öspƒõ≈°nost</th>
-                                <th class="col-1">Aktivn√≠</th>
-                                <th class="col-1 text-center" id="editHeader" style="display:table-cell">Edit</th>
+                                <th>ID</th>
+                                <th>N·zev</th>
+                                <th>Tv˘rce</th>
+                                <th>P¯edmÏt</th>
+                                <th>Ot·zek</th>
+                                <th>P¯i¯azeno</th>
+                                <th>AktivnÌ</th>
+                                <th class="text-center">P¯i¯adit</th>
+                                <th class="text-center">P¯i¯azenÌ</th>
+                                <th class="text-center">Edit</th>
+                                <th class="text-center">Stav</th>
+                                <th class="text-center">Smazat</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @* Sem p≈ôijdou data z controlleru - loop p≈ôes Model *@
-                            @* P≈ô√≠klad: *@
-                            @* @foreach (var test in Model.Tests.Items) {
-                                <tr data-id="@test.TestId">
-                                    <td>@test.TestId</td>
-                                    <td>@test.Name</td>
-                                    <td>@test.CreatorName</td>
-                                    <td>@test.FieldName</td>
-                                    <td>@test.QuestionCount</td>
-                                    <td>@test.AssignmentCount</td>
-                                    <td>@test.AvgSuccess %</td>
-                                    <td><span class="badge bg-@(test.IsActive ? "success" : "secondary")">@(test.IsActive ? "Aktivn√≠" : "Neaktivn√≠")</span></td>
-                                    <td class="text-center editButton"><a class="icon-btn" title="Edit" href="/Test/Edit?id=@test.TestId"><i class="bi bi-pencil-square"></i></a></td>
+                            @foreach (var t in Model)
+                            {
+                                var snapshot = t.QuestionSnapshot ?? "[]";
+                                int qCount = 0;
+                                try { qCount = System.Text.Json.JsonSerializer.Deserialize<List<object>>(snapshot)?.Count ?? 0; } catch { }
+
+                                <tr data-id="@t.TestId">
+                                    <td>@t.TestId</td>
+                                    <td><strong>@t.Name</strong></td>
+                                    <td>@t.Creator?.FirstName @t.Creator?.LastName</td>
+                                    <td><span class="badge bg-info">@t.StudentField?.Name</span></td>
+                                    <td>@qCount</td>
+                                    <td><span class="badge bg-secondary">@(t.StudentTests?.Count ?? 0)</span></td>
+                                    <td>
+                                        <span class="badge bg-@(t.IsActive ? "success" : "secondary")">
+                                            @(t.IsActive ? "AktivnÌ" : "NeaktivnÌ")
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        @if (t.IsActive)
+                                        {
+                                            <button class="icon-btn btn-assign" title="P¯i¯adit student˘m"
+                                                    data-test-id="@t.TestId" data-test-name="@t.Name"
+                                                    data-bs-toggle="modal" data-bs-target="#assignModal">
+                                                <i class="bi bi-person-plus-fill"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if ((t.StudentTests?.Count ?? 0) > 0)
+                                        {
+                                            <a class="icon-btn" title="Zobrazit p¯i¯azenÌ"
+                                               href="/Test/Assignments?id=@t.TestId">
+                                                <i class="bi bi-people-fill"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="icon-btn" title="Editovat" href="/Test/Edit?id=@t.TestId">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="icon-btn btn-toggle-active" title="@(t.IsActive ? "Deaktivovat" : "Aktivovat")"
+                                                data-test-id="@t.TestId" data-active="@t.IsActive.ToString().ToLower()">
+                                            <i class="bi @(t.IsActive ? "bi-toggle-on text-success" : "bi-toggle-off text-secondary")" style="font-size:1.3rem"></i>
+                                        </button>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="icon-btn btn-delete-test" title="Smazat test"
+                                                data-test-id="@t.TestId" data-test-name="@t.Name"
+                                                data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            <i class="bi bi-trash text-danger"></i>
+                                        </button>
+                                    </td>
                                 </tr>
-                            } *@
+                            }
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="12" class="text-center py-5">
+                                        <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
+                                        <p class="text-muted mt-3">ZatÌm û·dnÈ testy</p>
+                                        <a asp-action="Create" class="btn btn-orange">
+                                            <i class="bi bi-plus-circle me-2"></i>Vytvo¯it prvnÌ test
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
                 <div class="card-footer d-flex justify-content-between align-items-center">
-                    <div>Strana @ViewBag.Page / @ViewBag.TotalPages (@ViewBag.Total polo≈æek)</div>
-                    <div class="btn-group">
-                        <a class="btn btn-outline-secondary @(ViewBag.Page == 1 ? "disabled" : null)" 
-                           href="@Url.Action("Index", new { q = ViewBag.Query, active = ViewBag.Active, author = ViewBag.Author, page = ViewBag.Page - 1, pageSize = ViewBag.PageSize })">
-                            P≈ôedchoz√≠
-                        </a>
-                        <a class="btn btn-outline-secondary @(ViewBag.Page >= ViewBag.TotalPages ? "disabled" : null)" 
-                           href="@Url.Action("Index", new { q = ViewBag.Query, active = ViewBag.Active, author = ViewBag.Author, page = ViewBag.Page + 1, pageSize = ViewBag.PageSize })">
-                            Dal≈°√≠
-                        </a>
-                    </div>
+                    <div>Celkem @Model.Count test˘</div>
                 </div>
             </div>
         </div>
 
         <aside class="col-lg-3 order-1 order-lg-2">
             <div class="card shadow-sm sticky-top" style="top: 1rem;">
-                <div class="card-header brandText fw-bold"><i class="bi bi-funnel me-2"></i>Filtrace</div>
+                <div class="card-header brandText fw-bold">Filtrace</div>
                 <div class="card-body">
                     <form method="get" class="vstack gap-2">
-                        <!--N√°zev-->
-                        <input class="form-control" name="q" value="@ViewBag.Query" placeholder="Hledat n√°zev testu" />
-                        
-                        <!--Tv≈Ørce-->
-                        <select class="form-select select2" name="creatorId">
-                            <option disabled selected>Vyber tv≈Ørce</option>
-                            @* @foreach (var teacher in Model.Teachers) {
-                                <option value="@teacher.TeacherId">@teacher.FirstName @teacher.LastName</option>
-                            } *@
+                        <input class="form-control" name="q" placeholder="Hledat n·zev testu" />
+                        <select class="form-select" name="active">
+                            <option value="">AktivnÌ/NeaktivnÌ</option>
+                            <option value="true">AktivnÌ</option>
+                            <option value="false">NeaktivnÌ</option>
                         </select>
-                        
-                        <!--P≈ôedmƒõt-->
-                        <select class="form-select select2" name="fieldId">
-                            <option disabled selected>Vyber p≈ôedmƒõt</option>
-                            @* @foreach (var field in Model.Fields) {
-                                <option value="@field.StudentFieldId">@field.Name</option>
-                            } *@
-                        </select>
-                        
-                        <!--Aktivn√≠-->
-                        <select class="form-select select2" name="active">
-                            <option value="">Aktivn√≠/Neaktivn√≠</option>
-                            <option value="true" selected="@(ViewBag.Active == "true")">Aktivn√≠</option>
-                            <option value="false" selected="@(ViewBag.Active == "false")">Neaktivn√≠</option>
-                        </select>
-                        
-                        
                         <button class="btn btn-orange w-100">
-                            <i class="bi bi-funnel-fill me-2"></i>
-                            Filtrovat
+                            <i class="bi bi-funnel-fill me-2"></i>Filtrovat
                         </button>
-                        
                         <a href="@Url.Action("Index", "Test")" class="btn btn-outline-secondary w-100">
-                            <i class="bi bi-x-circle me-2"></i>
-                            Resetovat
+                            <i class="bi bi-x-circle me-2"></i>Resetovat
                         </a>
                     </form>
                 </div>
             </div>
-            
-            <!-- Rychl√© statistiky -->
             <div class="card shadow-sm mt-3">
                 <div class="card-header bg-light fw-bold">
-                    <i class="bi bi-clipboard-data me-2"></i>
-                    Rychl√© statistiky
+                    <i class="bi bi-clipboard-data me-2"></i>RychlÈ statistiky
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Celkem test≈Ø:</span>
-                        <strong>@* TODO: @Model.Tests.Total *@ 0</strong>
+                        <span class="text-muted">Celkem test˘:</span>
+                        <strong>@Model.Count</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Aktivn√≠:</span>
-                        <strong class="text-success">@* TODO: @Model.Tests.Items.Count(x => x.IsActive) *@ 0</strong>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Neaktivn√≠:</span>
-                        <strong class="text-secondary">@* TODO: @Model.Tests.Items.Count(x => !x.IsActive) *@ 0</strong>
+                        <span class="text-muted">AktivnÌ:</span>
+                        <strong class="text-success">@Model.Count(t => t.IsActive)</strong>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="text-muted">Na str√°nce:</span>
-                        <strong class="text-primary">@* TODO: @Model.Tests.Items.Count *@ 0</strong>
+                        <span class="text-muted">NeaktivnÌ:</span>
+                        <strong class="text-secondary">@Model.Count(t => !t.IsActive)</strong>
                     </div>
                 </div>
             </div>
@@ -171,18 +171,265 @@
     </div>
 </div>
 
-<input type="hidden" id="Ids" name="Ids" value="" />
+<!-- ASSIGN MODAL -->
+<div class="modal fade" id="assignModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #ff8a00, #ff6b00); color: white;">
+                <h5 class="modal-title">
+                    <i class="bi bi-person-plus-fill me-2"></i>
+                    P¯i¯adit test: <span id="assignTestName"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="assignTestId" />
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Filtrovat podle t¯Ìdy:</label>
+                    <select class="form-select" id="classFilter">
+                        <option value="">Vöechny t¯Ìdy</option>
+                        @foreach (var c in classes)
+                        {
+                            <option value="@c.ClassesId">@c.Name (@c.ClassesStudents.Count student˘)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="selectAllStudents">
+                        <label class="form-check-label fw-bold" for="selectAllStudents">Vybrat vöechny</label>
+                    </div>
+                    <span class="badge bg-warning text-dark" id="selectedStudentCount">0 vybr·no</span>
+                </div>
+
+                <div class="student-list" style="max-height: 400px; overflow-y: auto;">
+                    @foreach (var s in students)
+                    {
+                        var classNames = string.Join(", ", s.ClassesStudents?.Select(cs => cs.Classes?.Name ?? "") ?? Array.Empty<string>());
+                        var classIds = string.Join(",", s.ClassesStudents?.Select(cs => cs.ClassesId) ?? Array.Empty<int>());
+
+                        <div class="form-check student-item p-2 rounded mb-1" data-classes="@classIds"
+                             style="border: 1px solid #e9ecef; transition: all 0.2s;">
+                            <input class="form-check-input student-checkbox" type="checkbox"
+                                   value="@s.StudentId" id="student_@s.StudentId">
+                            <label class="form-check-label w-100" for="student_@s.StudentId">
+                                <strong>@s.FirstName @s.LastName</strong>
+                                @if (!string.IsNullOrEmpty(classNames))
+                                {
+                                    <span class="badge bg-secondary ms-2">@classNames</span>
+                                }
+                            </label>
+                        </div>
+                    }
+                </div>
+
+                <div id="assignResults" class="mt-3" style="display: none;">
+                    <div class="alert alert-success">
+                        <h6 class="alert-heading"><i class="bi bi-check-circle me-2"></i>Test p¯i¯azen!</h6>
+                        <p class="mb-2">P¯ihlaöovacÌ kÛdy pro studenty:</p>
+                        <div id="loginIdList"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="assignFooter">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zav¯Ìt</button>
+                <button type="button" class="btn btn-orange" id="assignBtn">
+                    <i class="bi bi-check-circle me-2"></i>P¯i¯adit vybran˝m
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Smazat test
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Opravdu chcete smazat test <strong id="deleteTestName"></strong>?</p>
+                <p class="text-danger small mb-0">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Budou smaz·na i vöechna p¯i¯azenÌ student˘ k tomuto testu. Tuto akci nelze vr·tit.
+                </p>
+                <input type="hidden" id="deleteTestId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zruöit</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="bi bi-trash me-2"></i>Smazat
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
-    <script>
-        // Export funkcionalita
-        document.getElementById('exportBtn')?.addEventListener('click', function() {
-            toastr.info('Export statistik bude dostupn√Ω brzy');
+<script>
+    // Open modal: set test info
+    document.querySelectorAll('.btn-assign').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.getElementById('assignTestId').value = this.dataset.testId;
+            document.getElementById('assignTestName').textContent = this.dataset.testName;
+            document.getElementById('assignResults').style.display = 'none';
+            document.getElementById('assignFooter').style.display = '';
+            document.querySelectorAll('.student-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('selectAllStudents').checked = false;
+            updateCount();
         });
-        
-        // Statistiky modal
-        document.getElementById('statsBtn')?.addEventListener('click', function() {
-            toastr.info('Detailn√≠ statistiky budou dostupn√© brzy');
+    });
+
+    // Class filter
+    document.getElementById('classFilter').addEventListener('change', function () {
+        const id = this.value;
+        document.querySelectorAll('.student-item').forEach(item => {
+            item.style.display = (!id || item.dataset.classes.split(',').includes(id)) ? '' : 'none';
         });
-    </script>
+    });
+
+    // Select all
+    document.getElementById('selectAllStudents').addEventListener('change', function () {
+        document.querySelectorAll('.student-item:not([style*="display: none"]) .student-checkbox')
+            .forEach(cb => cb.checked = this.checked);
+        updateCount();
+    });
+
+    document.querySelectorAll('.student-checkbox').forEach(cb => cb.addEventListener('change', updateCount));
+
+    function updateCount() {
+        document.getElementById('selectedStudentCount').textContent =
+            document.querySelectorAll('.student-checkbox:checked').length + ' vybr·no';
+    }
+
+    // Assign
+    document.getElementById('assignBtn').addEventListener('click', async function () {
+        const testId = parseInt(document.getElementById('assignTestId').value);
+        const studentIds = [...document.querySelectorAll('.student-checkbox:checked')].map(cb => parseInt(cb.value));
+
+        if (!studentIds.length) { toastr.error('Vyberte alespoÚ jednoho studenta.'); return; }
+
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>P¯i¯azuji...';
+
+        try {
+            const res = await fetch('/Test/Assign', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ testId, studentIds })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                toastr.success(data.message);
+                let html = '<table class="table table-sm mb-0"><thead><tr><th>Student</th><th>P¯ihlaöovacÌ kÛd</th></tr></thead><tbody>';
+                data.assignments.forEach(a => {
+                    html += `<tr><td>${a.studentName}</td><td><code class="fs-5 user-select-all">${a.loginId}</code></td></tr>`;
+                });
+                html += '</tbody></table>';
+                document.getElementById('loginIdList').innerHTML = html;
+                document.getElementById('assignResults').style.display = '';
+                document.getElementById('assignFooter').style.display = 'none';
+            } else {
+                toastr.error(data.message);
+                this.disabled = false;
+                this.innerHTML = '<i class="bi bi-check-circle me-2"></i>P¯i¯adit vybran˝m';
+            }
+        } catch {
+            toastr.error('Chyba p¯i komunikaci se serverem.');
+            this.disabled = false;
+            this.innerHTML = '<i class="bi bi-check-circle me-2"></i>P¯i¯adit vybran˝m';
+        }
+    });
+
+    // ============================================
+    // DELETE
+    // ============================================
+    document.querySelectorAll('.btn-delete-test').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.getElementById('deleteTestId').value = this.dataset.testId;
+            document.getElementById('deleteTestName').textContent = this.dataset.testName;
+        });
+    });
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
+        const id = parseInt(document.getElementById('deleteTestId').value);
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Maûu...';
+
+        try {
+            const res = await fetch('/Test/Delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify([id])
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                toastr.success(data.message);
+                const row = document.querySelector(`tr[data-id="${id}"]`);
+                if (row) {
+                    row.style.transition = 'opacity 0.4s';
+                    row.style.opacity = '0';
+                    setTimeout(() => row.remove(), 400);
+                }
+                bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+            } else {
+                toastr.error(data.message || 'Chyba p¯i maz·nÌ.');
+            }
+        } catch {
+            toastr.error('Chyba p¯i komunikaci se serverem.');
+        }
+
+        this.disabled = false;
+        this.innerHTML = '<i class="bi bi-trash me-2"></i>Smazat';
+    });
+
+    // ============================================
+    // TOGGLE ACTIVE
+    // ============================================
+    document.querySelectorAll('.btn-toggle-active').forEach(btn => {
+        btn.addEventListener('click', async function () {
+            const id = parseInt(this.dataset.testId);
+            const icon = this.querySelector('i');
+
+            try {
+                const res = await fetch('/Test/ToggleActive', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(id)
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    toastr.success(data.message);
+                    const row = this.closest('tr');
+                    const badge = row.querySelector('td:nth-child(7) .badge');
+
+                    if (data.isActive) {
+                        icon.className = 'bi bi-toggle-on text-success';
+                        badge.className = 'badge bg-success';
+                        badge.textContent = 'AktivnÌ';
+                        this.title = 'Deaktivovat';
+                    } else {
+                        icon.className = 'bi bi-toggle-off text-secondary';
+                        badge.className = 'badge bg-secondary';
+                        badge.textContent = 'NeaktivnÌ';
+                        this.title = 'Aktivovat';
+                    }
+                } else {
+                    toastr.error(data.message || 'Chyba.');
+                }
+            } catch {
+                toastr.error('Chyba p¯i komunikaci se serverem.');
+            }
+        });
+    });
+</script>
 }

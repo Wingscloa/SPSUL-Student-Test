@@ -3,35 +3,65 @@
 
 <div class="ConfigContent">
     <p class="ContentHeader">Údaje o profilu</p>
-    <div class="row ms-1">
-        <div class=col-6>
-            <label class="configLabel" for="FirstName">
-                <span class="bi bi-person-circle me-1"></span>Křestní jméno
-            </label>
-            <input class="configInput" autocomplete="off" disabled value="@Model.Teacher.FirstName" name="FirstName" id="FirstName" />
+    <form id="profileForm">
+        <div class="row ms-1">
+            <div class="col-12 col-md-6">
+                <label class="configLabel" for="profileFirstName">
+                    <span class="bi bi-person-circle me-1"></span>Křestní jméno
+                </label>
+                <input class="configInput" autocomplete="off" value="@Model.Teacher.FirstName"
+                       name="FirstName" id="profileFirstName"
+                       data-v-name="Křestní jméno" data-v-required="true"
+                       data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
+                       data-v-msg="Jméno musí obsahovat pouze písmena." />
+            </div>
         </div>
-    </div>
-    <div class="row ms-1 mt-3">
-        <div class=col-6>
-            <label class="configLabel" for="LastName">
-                <span class="bi bi-person-circle me-1"></span>Příjmení
-            </label>
-            <input class="configInput" autocomplete="off" disabled value="@Model.Teacher.LastName" name="LastName" id="LastName" />
+        <div class="row ms-1 mt-3">
+            <div class="col-12 col-md-6">
+                <label class="configLabel" for="profileLastName">
+                    <span class="bi bi-person-circle me-1"></span>Příjmení
+                </label>
+                <input class="configInput" autocomplete="off" value="@Model.Teacher.LastName"
+                       name="LastName" id="profileLastName"
+                       data-v-name="Příjmení" data-v-required="true"
+                       data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
+                       data-v-msg="Příjmení musí obsahovat pouze písmena." />
+            </div>
         </div>
-    </div>
-    <div class="row ms-1 mt-3">
-        <div class=col-6>
-            <label class="configLabel" for="NickName">
-                <span class="bi bi-person-circle me-1"></span>Přezdívka
-            </label>
-            <input class="configInput" autocomplete="off" disabled value="@Model.Teacher.NickName" name="NickName" id="NickName" />
+        <div class="row ms-1 mt-3">
+            <div class="col-12 col-md-6">
+                <label class="configLabel" for="profileNickName">
+                    <span class="bi bi-at me-1"></span>Přezdívka
+                </label>
+                <input class="configInput" autocomplete="off" value="@Model.Teacher.NickName"
+                       name="NickName" id="profileNickName"
+                       data-v-name="Přezdívka" data-v-required="true"
+                       data-v-msg="Přezdívka je povinná." />
+            </div>
         </div>
-    </div>
-    <div class="row ms-1 mt-4">
-        <div class="col-12">
-            <div class="col-2 text-center configButton">Změnit údaje</div>
+        <div class="row ms-1 mt-4">
+            <div class="col-12">
+                <p class="ContentHeader" style="font-size:1rem;">Změna hesla <small class="text-muted fw-normal">(volitelné)</small></p>
+            </div>
         </div>
-    </div>
+        <div class="row ms-1">
+            <div class="col-12 col-md-6">
+                <label class="configLabel" for="profileNewPassword">
+                    <span class="bi bi-lock me-1"></span>Nové heslo
+                </label>
+                <input class="configInput" type="password" autocomplete="new-password"
+                       name="NewPassword" id="profileNewPassword"
+                       placeholder="Ponechte prázdné pokud nechcete měnit" />
+            </div>
+        </div>
+        <div class="row ms-1 mt-3 mb-3">
+            <div class="col-12 col-md-6">
+                <button class="configButton w-100" type="button" id="btnSaveProfile">
+                    <i class="bi bi-check2-circle me-1"></i> Uložit změny
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 <div class="modalBreakGrey mt-2"></div>
 <div class="ConfigContent">
@@ -58,3 +88,51 @@
         }
     </table>
 </div>
+
+<script>
+document.getElementById('btnSaveProfile')?.addEventListener('click', async function () {
+    const btn = this;
+    const form = document.getElementById('profileForm');
+
+    const firstName = form.querySelector('#profileFirstName').value.trim();
+    const lastName = form.querySelector('#profileLastName').value.trim();
+    const nickName = form.querySelector('#profileNickName').value.trim();
+    const newPassword = form.querySelector('#profileNewPassword').value;
+
+    if (!firstName || !lastName || !nickName) {
+        toastr.error('Jméno, příjmení a přezdívka jsou povinné.');
+        return;
+    }
+
+    btn.disabled = true;
+    loadingScreen(true);
+    try {
+        const response = await fetch('/api/config/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                firstName: firstName,
+                lastName: lastName,
+                nickName: nickName,
+                newPassword: newPassword || null
+            })
+        });
+
+        const text = await response.text();
+
+        if (!response.ok) {
+            toastr.error(text);
+            return;
+        }
+
+        toastr.success(text);
+        form.querySelector('#profileNewPassword').value = '';
+    } catch (error) {
+        console.error(error);
+        toastr.error('Nastala chyba při ukládání profilu.');
+    } finally {
+        btn.disabled = false;
+        loadingScreen(false);
+    }
+});
+</script>

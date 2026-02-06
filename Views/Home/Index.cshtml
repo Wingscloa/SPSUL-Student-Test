@@ -1,64 +1,162 @@
-Ôªø@{
+@using SPSUL.Models.Data
+@{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+
+    string teacherName = ViewBag.TeacherName;
+    int activeTests = ViewBag.ActiveTests;
+    int totalStudents = ViewBag.TotalStudents;
+    int totalQuestions = ViewBag.TotalQuestions;
+    double avgSuccess = ViewBag.AvgSuccess;
+    int pendingCount = ViewBag.PendingCount;
+    var recentFinished = ViewBag.RecentFinished as List<StudentTest> ?? new();
+    var upcomingTests = ViewBag.UpcomingTests as List<Test> ?? new();
+    string monthlyLabels = ViewBag.MonthlyLabels;
+    string monthlyValues = ViewBag.MonthlyValues;
+
+    var hour = DateTime.Now.Hour;
+    string greeting;
+    string greetIcon;
+    if (hour < 12)
+    {
+        greeting = "DobrÈ r·no";
+        greetIcon = "bi-sunrise text-warning";
+    }
+    else if (hour < 18)
+    {
+        greeting = "Dobr˝ den";
+        greetIcon = "bi-sun text-warning";
+    }
+    else
+    {
+        greeting = "Dobr˝ veËer";
+        greetIcon = "bi-moon-stars text-info";
+    }
 }
+
 <link rel="stylesheet" href="~/css/home-dashboard.css" asp-append-version="true" />
 
 @section Scripts {
     <script src="~/lib/chart.js/chart.umd.js"></script>
-    <script src="~/js/home-dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Animate stat numbers
+            document.querySelectorAll('.stat-value[data-target]').forEach(el => {
+                const target = parseFloat(el.dataset.target);
+                const suffix = el.dataset.suffix || '';
+                const duration = 1200;
+                const steps = 50;
+                const increment = target / steps;
+                let current = 0;
+                let step = 0;
+                const interval = setInterval(() => {
+                    current += increment;
+                    step++;
+                    if (step >= steps) {
+                        clearInterval(interval);
+                        el.textContent = (Number.isInteger(target) ? target : target.toFixed(1)) + suffix;
+                    } else {
+                        el.textContent = Math.floor(current) + suffix;
+                    }
+                }, duration / steps);
+            });
+
+            // Success rate chart
+            const ctx = document.getElementById('successRateChart');
+            if (ctx) {
+                const labels = @Html.Raw(monthlyLabels);
+                const values = @Html.Raw(monthlyValues);
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels.length ? labels : ['é·dn· data'],
+                        datasets: [
+                            {
+                                label: 'Pr˘mÏrn· ˙spÏönost (%)',
+                                data: values.length ? values : [0],
+                                borderColor: '#ff8a00',
+                                backgroundColor: 'rgba(255, 138, 0, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#ff8a00',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: 'CÌlov· hodnota',
+                                data: Array(Math.max(labels.length, 1)).fill(75),
+                                borderColor: '#198754',
+                                backgroundColor: 'transparent',
+                                borderDash: [5, 5],
+                                tension: 0,
+                                fill: false,
+                                pointRadius: 0
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true } },
+                            tooltip: {
+                                mode: 'index', intersect: false,
+                                backgroundColor: 'rgba(0,0,0,.8)', padding: 12, cornerRadius: 8,
+                                callbacks: { label: ctx => (ctx.dataset.label || '') + ': ' + ctx.parsed.y + '%' }
+                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(0,0,0,.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 }
 
 <div class="dashboard-container">
-    
-    <!-- HERO SECTION WITH WELCOME -->
+
+    <!-- HERO SECTION -->
     <section class="hero-welcome">
         <div class="welcome-content">
             <h1 class="welcome-title">
-                <i class="bi bi-sun text-warning"></i> Dobr√Ω den, <span class="text-orange">Uƒçiteli</span>!
+                <i class="bi @greetIcon"></i> @greeting, <span class="text-orange">@teacherName</span>!
             </h1>
-            <p class="welcome-subtitle text-muted">P≈ôehled va≈°√≠ v√Ωuky</p>
+            <p class="welcome-subtitle text-muted">P¯ehled vaöÌ v˝uky</p>
         </div>
-        
-        <!-- QUICK STATS CARDS -->
+
         <div class="quick-stats">
             <div class="stat-card stat-card--primary">
-                <div class="stat-icon">
-                    <i class="bi bi-clipboard-check"></i>
-                </div>
+                <div class="stat-icon"><i class="bi bi-clipboard-check"></i></div>
                 <div class="stat-content">
-                    <div class="stat-value">24</div>
-                    <div class="stat-label">Aktivn√≠ch test≈Ø</div>
+                    <div class="stat-value" data-target="@activeTests">0</div>
+                    <div class="stat-label">AktivnÌch test˘</div>
                 </div>
             </div>
-            
             <div class="stat-card stat-card--success">
-                <div class="stat-icon">
-                    <i class="bi bi-people"></i>
-                </div>
+                <div class="stat-icon"><i class="bi bi-people"></i></div>
                 <div class="stat-content">
-                    <div class="stat-value">156</div>
-                    <div class="stat-label">Student≈Ø</div>
+                    <div class="stat-value" data-target="@totalStudents">0</div>
+                    <div class="stat-label">Student˘</div>
                 </div>
             </div>
-            
             <div class="stat-card stat-card--info">
-                <div class="stat-icon">
-                    <i class="bi bi-graph-up"></i>
-                </div>
+                <div class="stat-icon"><i class="bi bi-graph-up"></i></div>
                 <div class="stat-content">
-                    <div class="stat-value">78%</div>
-                    <div class="stat-label">Pr≈Ømƒõrn√° √∫spƒõ≈°nost</div>
+                    <div class="stat-value" data-target="@avgSuccess.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)" data-suffix="%">0%</div>
+                    <div class="stat-label">Pr˘mÏrn· ˙spÏönost</div>
                 </div>
             </div>
-            
             <div class="stat-card stat-card--warning">
-                <div class="stat-icon">
-                    <i class="bi bi-clock-history"></i>
-                </div>
+                <div class="stat-icon"><i class="bi bi-clock-history"></i></div>
                 <div class="stat-content">
-                    <div class="stat-value">12</div>
-                    <div class="stat-label">ƒåek√° na opravu</div>
+                    <div class="stat-value" data-target="@pendingCount">0</div>
+                    <div class="stat-label">»ek· na zah·jenÌ</div>
                 </div>
             </div>
         </div>
@@ -66,94 +164,67 @@
 
     <!-- MAIN DASHBOARD GRID -->
     <div class="dashboard-grid">
-        
-        <!-- LEFT COLUMN: Recent Activity -->
+
+        <!-- LEFT COLUMN -->
         <div class="dashboard-main">
-            
-            <!-- RECENT ACTIVITY CARD -->
+
+            <!-- RECENT ACTIVITY -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="bi bi-activity text-orange me-2"></i>
-                        Posledn√≠ aktivita
+                        PoslednÌ aktivita
                     </h5>
-                    <a href="/Detail/Index" class="btn btn-sm btn-outline-secondary">
-                        Zobrazit v≈°e
-                    </a>
+                    <a href="/Detail/Index" class="btn btn-sm btn-outline-secondary">Zobrazit vöe</a>
                 </div>
                 <div class="card-body p-0">
                     <div class="activity-list">
-                        <div class="activity-item">
-                            <div class="activity-icon bg-success-subtle">
-                                <i class="bi bi-check-circle text-success"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Test "Matematika - Funkce" byl dokonƒçen</div>
-                                <div class="activity-meta">
-                                    <span class="activity-time">
-                                        <i class="bi bi-clock me-1"></i>P≈ôed 5 minutami
-                                    </span>
-                                    <span class="activity-user">
-                                        <i class="bi bi-person me-1"></i>3 studenti
-                                    </span>
+                        @if (recentFinished.Any())
+                        {
+                            @foreach (var st in recentFinished)
+                            {
+                                var ago = DateTime.Now - st.FinishedAt;
+                                var agoText = ago.TotalMinutes < 60 ? $"P¯ed {(int)ago.TotalMinutes} min"
+                                    : ago.TotalHours < 24 ? $"P¯ed {(int)ago.TotalHours} hod"
+                                    : $"P¯ed {(int)ago.TotalDays} dny";
+
+                                <div class="activity-item">
+                                    <div class="activity-icon bg-success-subtle">
+                                        <i class="bi bi-check-circle text-success"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">
+                                            @st.Student.FirstName @st.Student.LastName dokonËil/a Ñ@st.Test.Name"
+                                        </div>
+                                        <div class="activity-meta">
+                                            <span class="activity-time">
+                                                <i class="bi bi-clock me-1"></i>@agoText
+                                            </span>
+                                            <span class="activity-user">
+                                                <i class="bi bi-key me-1"></i>@st.LoginId
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-2 opacity-25"></i>
+                                <p class="mt-2 mb-0">ZatÌm û·dn· aktivita</p>
                             </div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon bg-primary-subtle">
-                                <i class="bi bi-file-earmark-plus text-primary"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Nov√° ot√°zka p≈ôid√°na do banky</div>
-                                <div class="activity-meta">
-                                    <span class="activity-time">
-                                        <i class="bi bi-clock me-1"></i>P≈ôed 1 hodinou
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon bg-warning-subtle">
-                                <i class="bi bi-exclamation-triangle text-warning"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Test "ƒåesk√Ω jazyk" ƒçek√° na opravu</div>
-                                <div class="activity-meta">
-                                    <span class="activity-time">
-                                        <i class="bi bi-clock me-1"></i>P≈ôed 3 hodinami
-                                    </span>
-                                    <span class="activity-user">
-                                        <i class="bi bi-person me-1"></i>8 student≈Ø
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon bg-info-subtle">
-                                <i class="bi bi-bar-chart text-info"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">T√Ωdenn√≠ statistiky aktualizov√°ny</div>
-                                <div class="activity-meta">
-                                    <span class="activity-time">
-                                        <i class="bi bi-clock me-1"></i>Vƒçera
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
 
-            <!-- CHARTS SECTION -->
+            <!-- CHART -->
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">
                         <i class="bi bi-graph-up text-orange me-2"></i>
-                        Statistiky √∫spƒõ≈°nosti
+                        Statistiky ˙spÏönosti
                     </h5>
                 </div>
                 <div class="card-body">
@@ -162,108 +233,103 @@
             </div>
         </div>
 
-        <!-- RIGHT SIDEBAR: Quick Actions & Upcoming -->
+        <!-- RIGHT SIDEBAR -->
         <aside class="dashboard-sidebar">
-            
+
             <!-- QUICK ACTIONS -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-orange text-white">
                     <h6 class="mb-0">
                         <i class="bi bi-lightning-charge me-2"></i>
-                        Rychl√© akce
+                        RychlÈ akce
                     </h6>
                 </div>
                 <div class="card-body p-2">
                     <div class="d-grid gap-2">
                         <a href="/Test/Create" class="btn btn-outline-orange btn-sm">
-                            <i class="bi bi-plus-circle me-2"></i>Vytvo≈ôit test
+                            <i class="bi bi-plus-circle me-2"></i>Vytvo¯it test
                         </a>
                         <a href="/Question/Create" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-patch-question me-2"></i>P≈ôidat ot√°zku
+                            <i class="bi bi-patch-question me-2"></i>P¯idat ot·zku
                         </a>
                         <a href="/Students/Index" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-people me-2"></i>Spr√°va student≈Ø
+                            <i class="bi bi-people me-2"></i>Spr·va student˘
                         </a>
                         <a href="/Detail/Index" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-clipboard-data me-2"></i>Zobrazit v√Ωsledky
+                            <i class="bi bi-clipboard-data me-2"></i>Zobrazit v˝sledky
+                        </a>
+                        <a href="/Detail/Stats" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-graph-up-arrow me-2"></i>Statistiky
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- UPCOMING TESTS -->
+            <!-- UPCOMING TESTS (active with pending students) -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
                     <h6 class="mb-0">
                         <i class="bi bi-calendar-event text-orange me-2"></i>
-                        Nadch√°zej√≠c√≠ testy
+                        Testy ËekajÌcÌ na studenty
                     </h6>
                 </div>
                 <div class="card-body p-0">
                     <div class="upcoming-list">
-                        <div class="upcoming-item">
-                            <div class="upcoming-date">
-                                <div class="date-day">15</div>
-                                <div class="date-month">Led</div>
-                            </div>
-                            <div class="upcoming-content">
-                                <div class="upcoming-title">Matematika - Derivace</div>
-                                <div class="upcoming-meta">
-                                    <small class="text-muted">
-                                        <i class="bi bi-people me-1"></i>T≈ô√≠da 4.A ‚Ä¢ 28 student≈Ø
-                                    </small>
+                        @if (upcomingTests.Any())
+                        {
+                            @foreach (var t in upcomingTests)
+                            {
+                                var pending = t.StudentTests?.Count(st => st.StartedAt == DateTime.MinValue) ?? 0;
+
+                                <div class="upcoming-item">
+                                    <div class="upcoming-date">
+                                        <div class="date-day">@pending</div>
+                                        <div class="date-month">Ëek·</div>
+                                    </div>
+                                    <div class="upcoming-content">
+                                        <div class="upcoming-title">@t.Name</div>
+                                        <div class="upcoming-meta">
+                                            <small class="text-muted">
+                                                <i class="bi bi-book me-1"></i>@t.StudentField?.Name
+                                                ï
+                                                <i class="bi bi-people ms-1 me-1"></i>@(t.StudentTests?.Count ?? 0) p¯i¯azeno
+                                            </small>
+                                        </div>
+                                    </div>
                                 </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-4 text-muted">
+                                <p class="mb-0 small">é·dnÈ ËekajÌcÌ testy</p>
                             </div>
-                        </div>
-                        
-                        <div class="upcoming-item">
-                            <div class="upcoming-date">
-                                <div class="date-day">18</div>
-                                <div class="date-month">Led</div>
-                            </div>
-                            <div class="upcoming-content">
-                                <div class="upcoming-title">ƒåesk√Ω jazyk - Literatura</div>
-                                <div class="upcoming-meta">
-                                    <small class="text-muted">
-                                        <i class="bi bi-people me-1"></i>T≈ô√≠da 3.B ‚Ä¢ 24 student≈Ø
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="upcoming-item">
-                            <div class="upcoming-date">
-                                <div class="date-day">22</div>
-                                <div class="date-month">Led</div>
-                            </div>
-                            <div class="upcoming-content">
-                                <div class="upcoming-title">Fyzika - Optika</div>
-                                <div class="upcoming-meta">
-                                    <small class="text-muted">
-                                        <i class="bi bi-people me-1"></i>T≈ô√≠da 2.A ‚Ä¢ 30 student≈Ø
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
                 <div class="card-footer bg-white text-center">
                     <a href="/Test/Index" class="text-muted small">
-                        Zobrazit v≈°echny testy <i class="bi bi-arrow-right"></i>
+                        Zobrazit vöechny testy <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
             </div>
 
-            <!-- TIPS CARD -->
-            <div class="card shadow-sm border-primary">
-                <div class="card-body">
-                    <h6 class="text-primary">
-                        <i class="bi bi-lightbulb me-2"></i>Tip dne
-                    </h6>
-                    <p class="small mb-0">
-                        Zkuste vyu≈æ√≠t obr√°zky v ot√°zk√°ch pro zv√Ω≈°en√≠ zapojen√≠ student≈Ø! 
-                        Tests s vizu√°ln√≠m obsahem maj√≠ o 30% vy≈°≈°√≠ √∫spƒõ≈°nost.
-                    </p>
+            <!-- OVERVIEW CARD -->
+            <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #ff8a00, #ff6b00);">
+                <div class="card-body text-white">
+                    <h6><i class="bi bi-bar-chart me-2"></i>P¯ehled v ËÌslech</h6>
+                    <div class="d-flex justify-content-between mt-3 mb-1">
+                        <small>Ot·zek v bance:</small>
+                        <strong>@totalQuestions</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>AktivnÌch test˘:</small>
+                        <strong>@activeTests</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small>DokonËen˝ch test˘:</small>
+                        <strong>@recentFinished.Count</strong>
+                    </div>
                 </div>
             </div>
         </aside>

@@ -314,6 +314,9 @@ namespace SPSUL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ShuffleOrder")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("StartedAt")
                         .HasColumnType("datetime2");
 
@@ -416,7 +419,13 @@ namespace SPSUL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("ShuffleQuestions")
+                        .HasColumnType("bit");
+
                     b.Property<int>("StudentFieldId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TimeLimitMinutes")
                         .HasColumnType("int");
 
                     b.HasKey("TestId");

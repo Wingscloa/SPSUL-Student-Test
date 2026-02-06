@@ -1,219 +1,162 @@
-﻿@* Detail/View - Zobrazení dokončeného testu *@
+@using SPSUL.Models.Data
+@using SPSUL.Models.Display.TestModels
 @{
     ViewData["Title"] = "Detail testu";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+
+    var assignment = ViewBag.Assignment as StudentTest;
+    var questions = ViewBag.Questions as List<QuestionSnapshotItem> ?? new();
+    var answers = ViewBag.Answers as List<AnswerSnapshot> ?? new();
+
+    int correct = 0;
+    foreach (var q in questions)
+    {
+        var ans = answers.FirstOrDefault(a => a.QuestionId == q.QuestionId);
+        if (ans != null)
+        {
+            var cOpts = q.Options.Where(o => o.IsCorrect).Select(o => o.Text).OrderBy(t => t).ToList();
+            var sOpts = ans.SelectedOptions.OrderBy(t => t).ToList();
+            if (cOpts.SequenceEqual(sOpts)) correct++;
+        }
+    }
+    int total = questions.Count;
+    int pct = total > 0 ? (int)Math.Round((double)correct / total * 100) : 0;
+    var pctClass = pct >= 80 ? "success" : pct >= 50 ? "warning" : "danger";
+    var duration = assignment != null ? assignment.FinishedAt - assignment.StartedAt : TimeSpan.Zero;
 }
 
-<link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true" />
 
 <div class="container-fluid py-3">
     <div class="card shadow-sm">
         <div class="card-header brandText d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
                 <i class="bi bi-file-text me-2"></i>
-                Detail dokončeného testu
+                Detail dokonceneho testu
             </h5>
             <div class="d-flex gap-2">
                 <button class="btn btn-light btn-sm" onclick="window.print()">
-                    <i class="bi bi-printer me-1"></i>
-                    Tisk
+                    <i class="bi bi-printer me-1"></i>Tisk
                 </button>
                 <a href="/Detail/Index" class="btn btn-light btn-sm">
-                    <i class="bi bi-arrow-left me-1"></i>
-                    Zpět
+                    <i class="bi bi-arrow-left me-1"></i>Zpet
                 </a>
             </div>
         </div>
         <div class="card-body">
-            <!-- Informace o testu -->
-            <div class="row mb-4 pb-4 border-bottom">
-                <div class="col-md-4">
-                    <div class="info-box">
-                        <i class="bi bi-journal-text text-orange fs-4"></i>
-                        <div class="ms-3">
-                            <h6 class="text-muted mb-1">Název testu</h6>
-                            <p class="mb-0 fw-bold">Základy programování</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="info-box">
-                        <i class="bi bi-person-circle text-primary fs-4"></i>
-                        <div class="ms-3">
-                            <h6 class="text-muted mb-1">Student</h6>
-                            <p class="mb-0 fw-bold">Jan Novák (jnovak123)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="info-box">
-                        <i class="bi bi-calendar-check text-success fs-4"></i>
-                        <div class="ms-3">
-                            <h6 class="text-muted mb-1">Dokončeno</h6>
-                            <p class="mb-0 fw-bold">15.12.2024 14:35</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Výsledky -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="stat-card bg-success bg-opacity-10 border-success">
-                        <div class="stat-icon bg-success">
-                            <i class="bi bi-check-circle"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 class="text-success mb-1">85%</h3>
-                            <p class="text-muted mb-0">Úspěšnost</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card bg-primary bg-opacity-10 border-primary">
-                        <div class="stat-icon bg-primary">
-                            <i class="bi bi-list-check"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 class="text-primary mb-1">17/20</h3>
-                            <p class="text-muted mb-0">Správně</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card bg-warning bg-opacity-10 border-warning">
-                        <div class="stat-icon bg-warning">
-                            <i class="bi bi-clock"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 class="text-warning mb-1">25 min</h3>
-                            <p class="text-muted mb-0">Čas řešení</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card bg-info bg-opacity-10 border-info">
-                        <div class="stat-icon bg-info">
-                            <i class="bi bi-award"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 class="text-info mb-1">B</h3>
-                            <p class="text-muted mb-0">Známka</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Otázky a odpovědi -->
-            <h5 class="mb-3">
-                <i class="bi bi-list-ol me-2"></i>
-                Odpovědi na otázky
-            </h5>
-
-            @for (int i = 1; i <= 5; i++)
+            @if (assignment != null)
             {
-                var isCorrect = i % 3 != 0; // 2 z 3 správně
-                <div class="question-card mb-3 border-start border-4 border-@(isCorrect ? "success" : "danger")">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h6 class="mb-0">
-                            <span class="badge bg-secondary me-2">@i</span>
-                            Co je to proměnná v programování?
-                        </h6>
-                        <span class="badge bg-@(isCorrect ? "success" : "danger")">
-                            @(isCorrect ? "✓ Správně" : "✗ Špatně")
-                        </span>
-                    </div>
-                    <div class="mt-3">
-                        <div class="answer-option @(isCorrect ? "correct" : "wrong") mb-2">
-                            <strong>A)</strong> Místo v paměti pro uložení hodnoty
-                            <i class="bi bi-@(isCorrect ? "check-circle-fill text-success" : "x-circle-fill text-danger") ms-2"></i>
+                <!-- Info -->
+                <div class="row mb-4 pb-4 border-bottom">
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center p-3 rounded" style="background: #f8f9fa; border: 1px solid #dee2e6;">
+                            <i class="bi bi-journal-text fs-3 me-3" style="color: #ff8a00;"></i>
+                            <div>
+                                <small class="text-muted">Test</small>
+                                <div class="fw-bold">@assignment.Test.Name</div>
+                            </div>
                         </div>
-                        @if (!isCorrect)
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center p-3 rounded" style="background: #f8f9fa; border: 1px solid #dee2e6;">
+                            <i class="bi bi-person-circle fs-3 text-primary me-3"></i>
+                            <div>
+                                <small class="text-muted">Student</small>
+                                <div class="fw-bold">@assignment.Student.FirstName @assignment.Student.LastName</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center p-3 rounded" style="background: #f8f9fa; border: 1px solid #dee2e6;">
+                            <i class="bi bi-clock fs-3 text-info me-3"></i>
+                            <div>
+                                <small class="text-muted">Cas</small>
+                                <div class="fw-bold">@((int)duration.TotalMinutes) min @duration.Seconds s</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center p-3 rounded" style="background: #f8f9fa; border: 1px solid #dee2e6;">
+                            <i class="bi bi-trophy fs-3 text-@pctClass me-3"></i>
+                            <div>
+                                <small class="text-muted">Uspesnost</small>
+                                <div class="fw-bold text-@pctClass">@pct% (@correct/@total)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress bar -->
+                <div class="mb-4">
+                    <div class="progress" style="height: 30px; border-radius: 15px;">
+                        <div class="progress-bar bg-@pctClass" role="progressbar"
+                             style="width: @pct%" aria-valuenow="@pct" aria-valuemin="0" aria-valuemax="100">
+                            <strong>@pct%</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Otazky -->
+                <h5 class="mb-3">
+                    <i class="bi bi-list-ol me-2"></i>Odpovedi na otazky
+                </h5>
+
+                @for (int i = 0; i < questions.Count; i++)
+                {
+                    var q = questions[i];
+                    var answer = answers.FirstOrDefault(a => a.QuestionId == q.QuestionId);
+                    var correctOpts = q.Options.Where(o => o.IsCorrect).Select(o => o.Text).OrderBy(t => t).ToList();
+                    var selectedOpts = answer?.SelectedOptions?.OrderBy(t => t).ToList() ?? new List<string>();
+                    var isCorrect = correctOpts.SequenceEqual(selectedOpts);
+
+                    <div class="mb-3 p-3 rounded border-start border-4 border-@(isCorrect ? "success" : "danger")"
+                         style="background: #f8f9fa;">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0">
+                                <span class="badge bg-secondary me-2">@(i + 1)</span>
+                                @q.Header
+                            </h6>
+                            <span class="badge bg-@(isCorrect ? "success" : "danger")">
+                                @(isCorrect ? "Spravne" : "Spatne")
+                            </span>
+                        </div>
+
+                        @foreach (var opt in q.Options)
                         {
-                            <div class="answer-option correct mb-2">
-                                <strong>B)</strong> Konstanta v programu
-                                <i class="bi bi-check-circle-fill text-success ms-2"></i>
-                                <small class="text-success ms-2">(Správná odpověď)</small>
+                            var wasSelected = selectedOpts.Contains(opt.Text);
+                            var isCorrectOpt = opt.IsCorrect;
+                            var cls = "";
+                            if (wasSelected && isCorrectOpt) cls = "border-success bg-success bg-opacity-10";
+                            else if (wasSelected && !isCorrectOpt) cls = "border-danger bg-danger bg-opacity-10";
+                            else if (isCorrectOpt) cls = "border-success bg-success bg-opacity-10";
+
+                            <div class="p-2 mb-2 rounded border @cls">
+                                @opt.Text
+                                @if (wasSelected && isCorrectOpt)
+                                {
+                                    <i class="bi bi-check-circle-fill text-success ms-2"></i>
+                                }
+                                else if (wasSelected && !isCorrectOpt)
+                                {
+                                    <i class="bi bi-x-circle-fill text-danger ms-2"></i>
+                                }
+                                else if (isCorrectOpt)
+                                {
+                                    <i class="bi bi-check-circle text-success ms-2"></i>
+                                    <small class="text-success">(Spravna odpoved)</small>
+                                }
                             </div>
                         }
-                        <div class="answer-option mb-2">
-                            <strong>C)</strong> Funkce pro výpočet
-                        </div>
-                        <div class="answer-option">
-                            <strong>D)</strong> Datový typ
-                        </div>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
+                    <p class="text-muted mt-3">Zaznam nebyl nalezen.</p>
                 </div>
             }
         </div>
     </div>
 </div>
-
-<style>
-.info-box {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 10px;
-    border: 1px solid #dee2e6;
-}
-
-.stat-card {
-    padding: 1.5rem;
-    border-radius: 10px;
-    border: 2px solid;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    height: 100%;
-}
-
-.stat-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    flex-shrink: 0;
-}
-
-.stat-content h3 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.question-card {
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-radius: 10px;
-}
-
-.answer-option {
-    padding: 0.75rem 1rem;
-    background: white;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-}
-
-.answer-option.correct {
-    border-color: #198754;
-    background: rgba(25, 135, 84, 0.05);
-}
-
-.answer-option.wrong {
-    border-color: #dc3545;
-    background: rgba(220, 53, 69, 0.05);
-}
-
-</style>
-
-@section Scripts {
-    <script>
-        console.log('Detail View page loaded');
-    </script>
-}

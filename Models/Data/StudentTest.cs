@@ -8,6 +8,7 @@
         public DateTime StartedAt { get; set; }
         public DateTime FinishedAt { get; set; }
         public string ResultSnapshot { get; set; }
+        public string? ShuffleOrder { get; set; }
         public virtual Student Student { get; set; }
         public virtual Test Test { get; set; }
     }

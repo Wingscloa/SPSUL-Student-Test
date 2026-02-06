@@ -1,33 +1,47 @@
 ﻿@{
     ViewData["Title"] = "Přihlášení k testu";
-    Layout = "~/Views/Shared/Layouts/_Auth.cshtml"; ;
+    Layout = "~/Views/Shared/Layouts/_Auth.cshtml";
 }
-
 
 <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
 <link href="~/css/global.css" rel="stylesheet" asp-append-version="true" />
 
-<form asp-action="Take" asp-controller="Test" onkeydown="return event.key != 'Enter';">
+<form asp-action="Take" asp-controller="Test" method="get">
     <div class="container" style="min-width: 320px;">
         <div class="row headContainer justify-content-center gap-3">
             <img class="logo" src="\image\logo\spsul.webp" />
             <h1 class="Header">SPSUL</h1>
         </div>
+        @if (TempData["TestError"] != null)
+        {
+            <div class="alert alert-danger mt-2">
+                <i class="bi bi-exclamation-triangle me-2"></i>@TempData["TestError"]
+            </div>
+        }
         <div class="row">
             <div class="col">
-                <label for="TestId">Číslo testu</label>
-                <input type="text" id="TestId" name="TestId" class="form-control input" placeholder="Číslo testu" required autocomplete="off" />
+                <label for="testId">Číslo testu</label>
+                <input type="text" id="testId" name="testId" class="form-control input" 
+                       placeholder="Např. AB3K7XH2" required autocomplete="off"
+                       style="text-transform: uppercase; letter-spacing: 2px; font-weight: 600;" />
             </div>
         </div>
         <div class="row mt-1 text-end">
             <div class="col d-flex gap-2 justify-content-between">
-                <a class="link-primary" asp-controller="Test" asp-action="Example">Příkladový test</a>
                 <a class="link-primary" asp-controller="Auth" asp-action="Login">Jsem učitel</a>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <div class="alert alert-info py-2 mb-0 small">
+                    <i class="bi bi-lightbulb me-1"></i>
+                    Chceš si to vyzkoušet? Zadej kód <strong class="user-select-all" style="letter-spacing:2px;">DEMO2025</strong>
+                </div>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col">
-                <button class="btn btn-primary w-100"><span class="boldWhite">Začít test</span></button>
+                <button type="submit" class="btn btn-primary w-100"><span class="boldWhite">Začít test</span></button>
             </div>
         </div>
         <hr class="mt-3" />

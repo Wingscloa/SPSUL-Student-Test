@@ -1,36 +1,126 @@
 ﻿@using SPSUL.ViewComponents
 @model ConfigurationViewModel
 
+<!-- ============================================
+     CONFIG: fullscreen modal with sidebar
+     ============================================ -->
 <div class="modal fade" id="configModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-lg-down">
-        <div class="modal-content myModal d-flex flex-row">
-            <nav class="navbar" style="padding: 0;">
-                <ul class="customUl">
-                    <li class="menuItem active" onclick="loadConfig('ConfigProfile')"><a>Profil a oprávnění</a></li>
-                    <li class="menuItem" onclick="loadConfig('ConfigClass')"><a>Třídy</a></li>
-                    <li class="menuItem" onclick="loadConfig('ConfigStudent')"><a>Studenti</a></li>
-                    <li class="menuItem" onclick="loadConfig('ConfigTeacher')"><a>Učitelé</a></li>
-                    <li class="menuItem" onclick="loadConfig('ConfigAbout')"><a>O aplikaci</a></li>
-                    <li class="menuItem"><a class="signout" asp-controller="Auth" asp-action="Logout">Odhlásit se</a></li>
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-lg-down">
+        <div class="modal-content d-flex flex-column flex-lg-row">
+            <!-- SIDEBAR (hidden on mobile, shown >= lg) -->
+            <nav class="config-sidebar d-none d-lg-flex flex-column">
+                <div class="config-sidebar-header">
+                    <div class="config-avatar">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="config-sidebar-name">@Model.Name</div>
+                    <small class="config-sidebar-nick">@Model.Nickname</small>
+                </div>
+                <ul class="config-nav">
+                    <li class="config-nav-item active" onclick="loadConfig('ConfigProfile', this)">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Profil a oprávnění</span>
+                    </li>
+                    <li class="config-nav-item" onclick="loadConfig('ConfigClass', this)">
+                        <i class="bi bi-building"></i>
+                        <span>Třídy</span>
+                    </li>
+                    <li class="config-nav-item" onclick="loadConfig('ConfigStudent', this)">
+                        <i class="bi bi-people"></i>
+                        <span>Studenti</span>
+                    </li>
+                    <li class="config-nav-item" onclick="loadConfig('ConfigTeacher', this)">
+                        <i class="bi bi-person-workspace"></i>
+                        <span>Učitelé</span>
+                    </li>
+                    <li class="config-nav-item" onclick="loadConfig('ConfigAbout', this)">
+                        <i class="bi bi-info-circle"></i>
+                        <span>O aplikaci</span>
+                    </li>
                 </ul>
+                <div class="config-sidebar-footer">
+                    <a class="config-nav-item config-logout" asp-controller="Auth" asp-action="Logout">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span>Odhlásit se</span>
+                    </a>
+                </div>
             </nav>
-            <div class="modalContent d-flex flex-column flex-grow-1" style="min-height:0;">
-                <div class="ProfileContent d-flex justify-content-between align-items-center" style="height: 46px">
+
+            <!-- MOBILE TOP BAR (shown < lg) -->
+            <div class="d-lg-none config-mobile-topbar border-bottom w-100 flex-shrink-0">
+                <div class="d-flex align-items-center justify-content-between p-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="config-avatar-sm">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div>
+                            <strong class="d-block" style="font-size:.9rem;line-height:1.1">@Model.Name</strong>
+                            <small class="text-muted" style="font-size:.75rem">@Model.Nickname</small>
+                        </div>
+                    </div>
+                    <button type="button" class="config-close-btn" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="config-mobile-tabs">
+                    <button class="config-tab active" onclick="loadConfig('ConfigProfile', this)" data-section="ConfigProfile">
+                        <i class="bi bi-person-circle"></i><span>Profil</span>
+                    </button>
+                    <button class="config-tab" onclick="loadConfig('ConfigClass', this)" data-section="ConfigClass">
+                        <i class="bi bi-building"></i><span>Třídy</span>
+                    </button>
+                    <button class="config-tab" onclick="loadConfig('ConfigStudent', this)" data-section="ConfigStudent">
+                        <i class="bi bi-people"></i><span>Studenti</span>
+                    </button>
+                    <button class="config-tab" onclick="loadConfig('ConfigTeacher', this)" data-section="ConfigTeacher">
+                        <i class="bi bi-person-workspace"></i><span>Učitelé</span>
+                    </button>
+                    <button class="config-tab" onclick="loadConfig('ConfigAbout', this)" data-section="ConfigAbout">
+                        <i class="bi bi-info-circle"></i><span>Info</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTENT -->
+            <div class="config-content-area d-flex flex-column flex-grow-1" style="min-height:0;min-width:0;">
+                <!-- Desktop top bar -->
+                <div class="ProfileContent d-none d-lg-flex justify-content-between align-items-center" style="height:46px">
                     <div class="d-flex align-items-center gap-3">
                         <p class="TeacherName mb-0">@Model.Name
                             <span class="Nickname">@Model.Nickname</span>
                         </p>
                     </div>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal" aria-label="Zavřít konfiguraci">
+                    <button type="button" class="config-close-btn" data-bs-dismiss="modal" aria-label="Zavřít">
                         <i class="bi bi-x-lg" aria-hidden="true"></i>
                     </button>
                 </div>
-                <div class="modalBreak"></div>
+                <div class="modalBreak d-none d-lg-block"></div>
                 <div id="modalContainer" class="flex-grow-1" style="overflow:auto;">
                     @await Component.InvokeAsync("ConfigProfile")
-                    @* @await Component.InvokeAsync("ConfigClass") *@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- ============================================
+     EDIT OFFCANVAS (shared — both desktop & mobile)
+     ============================================ -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="ctEditor" aria-labelledby="ctEditorLabel">
+    <div class="offcanvas-header border-bottom">
+        <h6 class="offcanvas-title fw-bold" id="ctEditorLabel">Editace</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Zavřít"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form id="formDesktop">
+        </form>
+    </div>
+    <div class="border-top bg-light p-3 d-flex gap-2">
+        <button class="btn btn-outline-secondary flex-shrink-0" id="btnCancelDesktop" type="button" data-bs-dismiss="offcanvas">
+            <i class="bi bi-x-circle me-1"></i>Zrušit
+        </button>
+        <button class="btn btn-orange w-100 configSubmit" id="btnSaveDesktop" data-form="formDesktop" type="button">
+            <i class="bi bi-check2-circle me-1"></i>Uložit změny
+        </button>
     </div>
 </div>

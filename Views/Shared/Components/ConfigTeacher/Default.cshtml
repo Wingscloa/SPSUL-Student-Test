@@ -57,50 +57,10 @@
             }
         </div>
 
-        <!-- DESKTOP FORM (hidden on mobile) -->
-        <div class="col-12 col-lg-5 d-none d-lg-flex flex-column h-100 bg-white order-2 ct-form overflow-auto" style="display:none !important;max-height: inherit" id="editDesktop">
-            <div class="p-4 flex-grow-1 ct-scroll">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h6 class="configLabel mb-0" id="formTitleDesktop">
-                        <i class="bi bi-pencil-square me-2" id="formIconDesktop"></i>
-                        <span id="formTitleTextDesktop">Editace učitele</span>
-                    </h6>
-                    <button class="btn btn-sm btn-outline-secondary" id="btnCancelDesktop" type="button">
-                        <i class="bi bi-x-circle me-1"></i> Zrušit
-                    </button>
-                </div>
-                <form id="formDesktop">
-                    @await Html.PartialAsync("Config/TeacherCreateForm", createModel)
-                </form>
-            </div>
-            <div class="border-top bg-light flex-shrink-0 d-flex ct-savebar" style="padding:7px !important">
-                <button class="btn btn-orange btn-sm w-100 py-2 shadow-sm configSubmit" id="btnSaveDesktop" data-form="formDesktop" type="button">
-                    <i class="bi bi-check2-circle me-1"></i>
-                    <span>Uložit změny</span>
-                </button>
-            </div>
-        </div>
+        <!-- Editace v offcanvasu #ctEditor -->
     </div>
 </div>
 
-<!-- MOBILE OFFCANVAS EDITOR -->
-<div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="ctEditor" aria-labelledby="ctEditorLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="ctEditorLabel">Editace učitele</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Zavřít"></button>
-    </div>
-    <div class="offcanvas-body">
-        <form id="ConfigFormMobile">
-            @await Html.PartialAsync("Config/TeacherCreateForm", createModel)
-        </form>
-    </div>
-    <div class="border-top text-center p-3">
-        <button class="btn configSubmit cursor" data-form="ConfigFormMobile" style="position: sticky; bottom: 0; height: 65px" type="button">
-            <i class="bi bi-check2-circle me-1"></i>
-            <span>Uložit změny</span>
-        </button>
-    </div>
-</div>
 
 <input type="hidden" id="deleteIds" value="" />
 <input type="hidden" id="filterUrl" value="/api/teacher/content/"/>

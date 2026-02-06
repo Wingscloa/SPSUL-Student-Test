@@ -94,6 +94,8 @@ namespace SPSUL.Models
                 e.HasKey(e => e.TestId);
                 e.Property(e => e.IsActive).HasDefaultValue(true);
 
+                e.HasOne(e => e.Creator).WithMany().HasForeignKey(e => e.CreatorId);
+                e.HasOne(e => e.StudentField).WithMany(e => e.Tests).HasForeignKey(e => e.StudentFieldId);
             });
 
             modelBuilder.Entity<StudentTest>(e=>

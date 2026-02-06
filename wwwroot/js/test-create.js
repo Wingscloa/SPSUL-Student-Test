@@ -16,7 +16,32 @@ let testData = {
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
+    initSelect2();
 });
+
+// ============================================
+// SELECT2 INITIALIZATION
+// ============================================
+function initSelect2() {
+    $('#studentField').select2({
+        theme: 'bootstrap-5',
+        width: '100%',
+        placeholder: '-- Vyberte předmět --',
+        allowClear: true,
+        dropdownParent: $('#studentField').closest('.card-body')
+    });
+
+    $('#questionTypeFilter').select2({
+        theme: 'bootstrap-5',
+        width: '100%',
+        placeholder: 'Všechny typy',
+        allowClear: true
+    });
+
+    // Wire Select2 change events into existing handlers
+    $('#studentField').on('select2:select select2:clear', updatePreview);
+    $('#questionTypeFilter').on('select2:select select2:clear change', filterQuestions);
+}
 
 // ============================================
 // EVENT LISTENERS
@@ -132,28 +157,28 @@ function updateSectionTitle() {
 // VALIDATION
 // ============================================
 function validateCurrentStep() {
-    if (currentStep === 1) {
-        const name = document.getElementById('testName').value.trim();
-        const fieldId = document.getElementById('studentField').value;
+if (currentStep === 1) {
+    const name = document.getElementById('testName').value.trim();
+    const fieldId = $('#studentField').val();
 
-        if (!name || name.length < 3) {
-            toastr.error('Název testu musí mít alespoň 3 znaky.');
-            return false;
-        }
-
-        if (!fieldId) {
-            toastr.error('Musíte vybrat předmět.');
-            return false;
-        }
-
-        testData.name = name;
-        testData.fieldId = parseInt(fieldId);
-        testData.fieldName = document.getElementById('studentField').options[document.getElementById('studentField').selectedIndex].text;
-        testData.description = document.getElementById('description').value.trim();
-        testData.timeLimit = document.getElementById('timeLimit').value ? parseInt(document.getElementById('timeLimit').value) : null;
-
-        return true;
+    if (!name || name.length < 3) {
+        toastr.error('Název testu musí mít alespoň 3 znaky.');
+        return false;
     }
+
+    if (!fieldId) {
+        toastr.error('Musíte vybrat předmět.');
+        return false;
+    }
+
+    testData.name = name;
+    testData.fieldId = parseInt(fieldId);
+    testData.fieldName = $('#studentField option:selected').text();
+    testData.description = document.getElementById('description').value.trim();
+    testData.timeLimit = document.getElementById('timeLimit').value ? parseInt(document.getElementById('timeLimit').value) : null;
+
+    return true;
+}
 
     if (currentStep === 2) {
         if (selectedQuestions.size === 0) {
@@ -206,8 +231,8 @@ function clearAllSelections() {
 // QUESTION FILTERING
 // ============================================
 function filterQuestions() {
-    const searchTerm = document.getElementById('questionSearch').value.toLowerCase();
-    const typeFilter = document.getElementById('questionTypeFilter').value;
+const searchTerm = document.getElementById('questionSearch').value.toLowerCase();
+const typeFilter = $('#questionTypeFilter').val() || '';
 
     document.querySelectorAll('.question-card').forEach(card => {
         const name = card.dataset.questionName;
@@ -245,9 +270,8 @@ function toggleTimeLimit() {
 // PREVIEW UPDATE
 // ============================================
 function updatePreview() {
-    const name = document.getElementById('testName').value || 'Název testu';
-    const fieldSelect = document.getElementById('studentField');
-    const fieldName = fieldSelect.options[fieldSelect.selectedIndex]?.text || 'Předmět';
+const name = document.getElementById('testName').value || 'Název testu';
+const fieldName = $('#studentField option:selected').text() || 'Předmět';
     const timeLimit = document.getElementById('timeLimit').value;
     const timeLimitText = timeLimit ? `${timeLimit} minut` : 'Bez limitu';
 

@@ -130,5 +130,50 @@ namespace SPSUL.Controllers.API
 
             return PartialView("Views/Shared/Config/StudentCreateForm.cshtml", vm);
         }
+
+        // ============================================
+        // PROFILE UPDATE (current logged-in teacher)
+        // ============================================
+        [HttpPut]
+        [Route("/api/config/profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] ProfileUpdateDto dto)
+        {
+            int? teacherId = HttpContext.Session.GetInt32("TeacherId");
+            if (teacherId == null)
+                return Unauthorized("Nejste přihlášen.");
+
+            var teacher = await _ctx.Teachers.FindAsync(teacherId.Value);
+            if (teacher == null)
+                return NotFound("Učitel nebyl nalezen.");
+
+            if (string.IsNullOrWhiteSpace(dto.FirstName) || string.IsNullOrWhiteSpace(dto.LastName))
+                return BadRequest("Jméno a příjmení jsou povinné.");
+
+            if (string.IsNullOrWhiteSpace(dto.NickName))
+                return BadRequest("Přezdívka je povinná.");
+
+            teacher.FirstName = dto.FirstName.Trim();
+            teacher.LastName = dto.LastName.Trim();
+            teacher.NickName = dto.NickName.Trim();
+
+            if (!string.IsNullOrWhiteSpace(dto.NewPassword))
+            {
+                if (dto.NewPassword.Length < 4)
+                    return BadRequest("Heslo musí mít alespoň 4 znaky.");
+
+                teacher.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            }
+
+            await _ctx.SaveChangesAsync();
+            return Ok("Profil byl úspěšně aktualizován.");
+        }
+    }
+
+    public class ProfileUpdateDto
+    {
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
+        public string NickName { get; set; } = "";
+        public string? NewPassword { get; set; }
     }
 }
