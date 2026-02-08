@@ -1,4 +1,4 @@
-@model SPSUL.Models.Display.TestModels.TakeTestViewModel
+ï»¿@model SPSUL.Models.Display.TestModels.TakeTestViewModel
 @{
     ViewData["Title"] = Model.TestName;
     Layout = null;
@@ -126,8 +126,16 @@
                 width: 100%; height: auto; position: relative;
                 top: 0; border-right: none; border-bottom: 1px solid #e0e0e0;
             }
-            .nav-grid { grid-template-columns: repeat(8, 1fr); }
+            .nav-grid { grid-template-columns: repeat(6, 1fr); }
             .question-area { padding: 1rem; }
+            .test-header { padding: .75rem 1rem; flex-wrap: wrap; gap: .5rem; }
+            .test-header h4 { font-size: 1rem; }
+            .question-card { padding: 1.25rem; }
+            .question-header { font-size: 1.1rem; }
+            .question-footer { flex-wrap: wrap; gap: .5rem; }
+        }
+        @@media (max-width: 420px) {
+            .nav-grid { grid-template-columns: repeat(5, 1fr); }
         }
     </style>
 </head>
@@ -139,6 +147,9 @@
             <small>@Model.StudentName</small>
         </div>
         <div class="info">
+            <span id="saveIndicator" style="opacity:0;transition:opacity .3s;font-size:.8rem;">
+                <i class="bi bi-check-circle-fill" style="color:#4caf50"></i> UloÅ¾eno
+            </span>
             <span><i class="bi bi-list-check me-1"></i><span id="answeredCount">0</span>/@Model.Questions.Count</span>
             <span id="timerWrap">
                 <i class="bi bi-clock me-1"></i><span id="timer">00:00</span>
@@ -153,11 +164,11 @@
     <div class="test-layout">
         <!-- NAV -->
         <div class="question-nav">
-            <h6><i class="bi bi-grid-3x3-gap me-2"></i>Otázky</h6>
+            <h6><i class="bi bi-grid-3x3-gap me-2"></i>OtÃ¡zky</h6>
             <div class="nav-grid">
                 @for (int i = 0; i < Model.Questions.Count; i++)
                 {
-                    <button class="nav-btn @(i == 0 ? "active" : "")" data-index="@i" onclick="goToQuestion(@i)">
+                    <button class="nav-btn @(i == Model.CurrentQuestionIndex ? "active" : "")" data-index="@i" onclick="goToQuestion(@i)">
                         @(i + 1)
                     </button>
                 }
@@ -176,7 +187,7 @@
                 var existing = Model.ExistingAnswers.FirstOrDefault(a => a.QuestionId == q.QuestionId);
                 var letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H" };
 
-                <div class="question-card @(i == 0 ? "active" : "")" data-index="@i" data-question-id="@q.QuestionId">
+                <div class="question-card @(i == Model.CurrentQuestionIndex ? "active" : "")" data-index="@i" data-question-id="@q.QuestionId">
                     <div class="d-flex align-items-center mb-3">
                         <span class="question-number">@(i + 1)</span>
                         <span class="question-type-badge">@q.QuestionType</span>
@@ -203,7 +214,7 @@
                         @if (i > 0)
                         {
                             <button class="btn btn-outline-secondary" onclick="goToQuestion(@(i - 1))">
-                                <i class="bi bi-arrow-left me-2"></i>Pøedchozí
+                                <i class="bi bi-arrow-left me-2"></i>PÅ™edchozÃ­
                             </button>
                         }
                         else
@@ -213,7 +224,7 @@
                         @if (i < Model.Questions.Count - 1)
                         {
                             <button class="btn-orange" onclick="goToQuestion(@(i + 1))">
-                                Další<i class="bi bi-arrow-right ms-2"></i>
+                                DalÅ¡Ã­<i class="bi bi-arrow-right ms-2"></i>
                             </button>
                         }
                         else
@@ -231,12 +242,12 @@
                 <i class="bi bi-send-check" style="font-size: 4rem; color: #ff8a00;"></i>
                 <h3 class="mt-3">Opravdu chcete odevzdat test?</h3>
                 <p class="text-muted">
-                    Zodpovìzeno <strong><span id="finalAnswered">0</span></strong> z <strong>@Model.Questions.Count</strong> otázek.
-                    <br>Po odevzdání nelze odpovìdi zmìnit.
+                    ZodpovÄ›zeno <strong><span id="finalAnswered">0</span></strong> z <strong>@Model.Questions.Count</strong> otÃ¡zek.
+                    <br>Po odevzdÃ¡nÃ­ nelze odpovÄ›di zmÄ›nit.
                 </p>
                 <div class="d-flex gap-3 justify-content-center mt-3">
                     <button class="btn btn-outline-secondary btn-lg" onclick="hideFinishConfirm()">
-                        <i class="bi bi-arrow-left me-2"></i>Zpìt k testu
+                        <i class="bi bi-arrow-left me-2"></i>ZpÄ›t k testu
                     </button>
                     <button class="btn-orange btn-lg" id="finishBtn" onclick="finishTest()">
                         <i class="bi bi-check-circle me-2"></i>Odevzdat
@@ -254,7 +265,7 @@
             <h4 id="resultMessage" class="mt-2"></h4>
             <p class="text-muted" id="resultDetail"></p>
             <a href="/Auth/Test" class="btn-orange" style="display:inline-block; padding: .75rem 2rem; text-decoration: none; border-radius: 12px; margin-top: 1rem;">
-                <i class="bi bi-house me-2"></i>Zpìt na pøihlášení
+                <i class="bi bi-house me-2"></i>ZpÄ›t na pÅ™ihlÃ¡Å¡enÃ­
             </a>
         </div>
     </div>
@@ -267,17 +278,19 @@
         const TOTAL_QUESTIONS = @Model.Questions.Count;
         const ELAPSED_AT_LOAD = @((int)(DateTime.Now - Model.StartedAt).TotalSeconds);
         const TIME_LIMIT_SEC = @(Model.TimeLimitMinutes.HasValue ? Model.TimeLimitMinutes.Value * 60 : -1);
+        const SAVED_QUESTION_INDEX = @Model.CurrentQuestionIndex;
         const pageLoadedAt = Date.now();
         let currentQuestion = 0;
         let answers = {};
         let autoSaveInterval;
         let timerExpired = false;
+        let saveTimeout = null;
+        let saving = false;
 
         // ============================================
-        // INIT - load existing answers
+        // INIT - load existing answers, restore position
         // ============================================
         document.addEventListener('DOMContentLoaded', function () {
-            // Load existing answers from server snapshot
             @foreach (var ans in Model.ExistingAnswers)
             {
                 <text>
@@ -289,17 +302,22 @@
             updateAnsweredCount();
             startTimer();
 
-            // Auto-save every 30 seconds
+            // Restore question position
+            if (SAVED_QUESTION_INDEX > 0 && SAVED_QUESTION_INDEX < TOTAL_QUESTIONS) {
+                goToQuestion(SAVED_QUESTION_INDEX);
+            }
+
+            // Auto-save every 30s as a safety net
             autoSaveInterval = setInterval(saveProgress, 30000);
 
-            // Save on page visibility change (tab switch)
+            // Save on tab switch
             document.addEventListener('visibilitychange', function () {
-                if (document.hidden) saveProgress();
+                if (document.hidden) saveProgressSync();
             });
 
-            // Save before leaving
-            window.addEventListener('beforeunload', function (e) {
-                saveProgress();
+            // Save before leaving (reliable with sendBeacon)
+            window.addEventListener('beforeunload', function () {
+                saveProgressSync();
             });
         });
 
@@ -312,13 +330,16 @@
             document.querySelectorAll('.question-card').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-            document.querySelector(`.question-card[data-index="${index}"]`).classList.add('active');
-            document.querySelector(`.nav-btn[data-index="${index}"]`).classList.add('active');
+            document.querySelector('.question-card[data-index="' + index + '"]').classList.add('active');
+            document.querySelector('.nav-btn[data-index="' + index + '"]').classList.add('active');
 
             document.getElementById('finishSection').style.display = 'none';
             currentQuestion = index;
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Save position after navigation
+            debouncedSave();
         }
 
         // ============================================
@@ -328,7 +349,7 @@
             const card = el.closest('.question-card');
             const questionId = parseInt(card.dataset.questionId);
 
-            // For single-choice: deselect all, select this one
+            // Single-choice: deselect all, select this one
             card.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
             el.classList.add('selected');
 
@@ -340,6 +361,9 @@
             answers[questionId] = selectedTexts;
             updateNavButtons();
             updateAnsweredCount();
+
+            // Save immediately after answering
+            debouncedSave();
         }
 
         // ============================================
@@ -349,7 +373,7 @@
             document.querySelectorAll('.question-card').forEach(card => {
                 const idx = parseInt(card.dataset.index);
                 const qId = parseInt(card.dataset.questionId);
-                const navBtn = document.querySelector(`.nav-btn[data-index="${idx}"]`);
+                const navBtn = document.querySelector('.nav-btn[data-index="' + idx + '"]');
 
                 if (answers[qId] && answers[qId].length > 0) {
                     navBtn.classList.add('answered');
@@ -364,8 +388,14 @@
             document.getElementById('answeredCount').textContent = count;
         }
 
+        function showSaveIndicator() {
+            const el = document.getElementById('saveIndicator');
+            el.style.opacity = '1';
+            setTimeout(function () { el.style.opacity = '0'; }, 1500);
+        }
+
         // ============================================
-        // TIMER (countdown if limit, else count-up)
+        // TIMER
         // ============================================
         function startTimer() {
             const timerEl = document.getElementById('timer');
@@ -389,8 +419,8 @@
                     if (remaining <= 0 && !timerExpired) {
                         timerExpired = true;
                         timerEl.textContent = '00:00';
-                        toastr.warning('Èas vypršel! Test bude automaticky odevzdán.');
-                        setTimeout(() => autoFinish(), 1000);
+                        toastr.warning('ÄŒas vyprÅ¡el! Test bude automaticky odevzdÃ¡n.');
+                        setTimeout(function () { autoFinish(); }, 1000);
                     }
                 } else {
                     const mins = Math.floor(elapsedSec / 60);
@@ -408,29 +438,56 @@
                 const res = await fetch('/Test/FinishTest', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ loginId: LOGIN_ID, answers: buildAnswerList() })
+                    body: JSON.stringify({ loginId: LOGIN_ID, answers: buildAnswerList(), currentQuestionIndex: currentQuestion })
                 });
                 const data = await res.json();
                 if (res.ok) showResult(data);
-                else toastr.error('Chyba pøi odevzdání.');
+                else toastr.error('Chyba pÅ™i odevzdÃ¡nÃ­.');
             } catch {
                 toastr.error('Chyba komunikace.');
             }
         }
 
         // ============================================
-        // SAVE PROGRESS
+        // SAVE PROGRESS (debounced async + sync beacon)
         // ============================================
+        function buildPayload() {
+            return {
+                loginId: LOGIN_ID,
+                answers: buildAnswerList(),
+                currentQuestionIndex: currentQuestion
+            };
+        }
+
+        function debouncedSave() {
+            if (saveTimeout) clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveProgress, 500);
+        }
+
         async function saveProgress() {
-            const answerList = buildAnswerList();
+            if (saving) return;
+            saving = true;
             try {
-                await fetch('/Test/SaveProgress', {
+                const res = await fetch('/Test/SaveProgress', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ loginId: LOGIN_ID, answers: answerList })
+                    body: JSON.stringify(buildPayload())
                 });
+                if (res.ok) showSaveIndicator();
             } catch (e) {
                 console.warn('Auto-save failed:', e);
+            } finally {
+                saving = false;
+            }
+        }
+
+        // Synchronous save for beforeunload / visibilitychange (uses sendBeacon)
+        function saveProgressSync() {
+            try {
+                const payload = JSON.stringify(buildPayload());
+                navigator.sendBeacon('/Test/SaveProgress', new Blob([payload], { type: 'application/json' }));
+            } catch (e) {
+                console.warn('Beacon save failed:', e);
             }
         }
 
@@ -467,7 +524,7 @@
         async function finishTest() {
             const btn = document.getElementById('finishBtn');
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Odevzdávám...';
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>OdevzdÃ¡vÃ¡m...';
 
             clearInterval(autoSaveInterval);
 
@@ -475,7 +532,7 @@
                 const res = await fetch('/Test/FinishTest', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ loginId: LOGIN_ID, answers: buildAnswerList() })
+                    body: JSON.stringify({ loginId: LOGIN_ID, answers: buildAnswerList(), currentQuestionIndex: currentQuestion })
                 });
 
                 const data = await res.json();
@@ -483,7 +540,7 @@
                 if (res.ok) {
                     showResult(data);
                 } else {
-                    toastr.error(data.message || 'Chyba pøi odevzdání.');
+                    toastr.error(data.message || 'Chyba pÅ™i odevzdÃ¡nÃ­.');
                     btn.disabled = false;
                     btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Odevzdat';
                 }
@@ -500,20 +557,20 @@
 
             document.getElementById('resultScore').textContent = pct + '%';
             document.getElementById('resultDetail').textContent =
-                `Správnì ${data.correct} z ${data.total} otázek`;
+                'SprÃ¡vnÄ› ' + data.correct + ' z ' + data.total + ' otÃ¡zek';
 
             if (pct >= 80) {
-                document.getElementById('resultIcon').innerHTML = '??';
+                document.getElementById('resultIcon').innerHTML = '<i class="bi bi-trophy-fill" style="color:#4caf50"></i>';
                 document.getElementById('resultScore').style.color = '#4caf50';
-                document.getElementById('resultMessage').textContent = 'Výbornì!';
+                document.getElementById('resultMessage').textContent = 'VÃ½bornÄ›!';
             } else if (pct >= 50) {
-                document.getElementById('resultIcon').innerHTML = '??';
+                document.getElementById('resultIcon').innerHTML = '<i class="bi bi-hand-thumbs-up-fill" style="color:#ff9800"></i>';
                 document.getElementById('resultScore').style.color = '#ff9800';
-                document.getElementById('resultMessage').textContent = 'Dobøe!';
+                document.getElementById('resultMessage').textContent = 'DobÅ™e!';
             } else {
-                document.getElementById('resultIcon').innerHTML = '??';
+                document.getElementById('resultIcon').innerHTML = '<i class="bi bi-book-fill" style="color:#f44336"></i>';
                 document.getElementById('resultScore').style.color = '#f44336';
-                document.getElementById('resultMessage').textContent = 'Je tøeba zapracovat';
+                document.getElementById('resultMessage').textContent = 'Je tÅ™eba zapracovat';
             }
 
             overlay.classList.add('show');

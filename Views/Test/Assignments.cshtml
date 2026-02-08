@@ -1,6 +1,6 @@
-@using SPSUL.Models.Data
+ï»¿@using SPSUL.Models.Data
 @{
-    ViewData["Title"] = "Pøiøazení testu";
+    ViewData["Title"] = "PÅ™iÅ™azenÃ­ testu";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
 
     var test = ViewBag.Test as Test;
@@ -17,16 +17,16 @@
         <div>
             <h4 class="mb-1">
                 <i class="bi bi-people-fill me-2" style="color: #ff8a00;"></i>
-                Pøiøazení: <strong>@test?.Name</strong>
+                PÅ™iÅ™azenÃ­: <strong>@test?.Name</strong>
             </h4>
-            <small class="text-muted">Celkem @assignments.Count studentù | @finished.Count dokonèeno | @pending.Count probíhá | @notStarted.Count nezaèalo</small>
+            <small class="text-muted">Celkem @assignments.Count studentÅ¯ | @finished.Count dokonÄeno | @pending.Count probÃ­hÃ¡ | @notStarted.Count nezaÄalo</small>
         </div>
         <div class="d-flex gap-2">
             <a href="/Test/PrintCodes?id=@test?.TestId" class="btn btn-outline-secondary" target="_blank">
-                <i class="bi bi-printer me-1"></i>Tisk kódù
+                <i class="bi bi-printer me-1"></i>Tisk kÃ³dÅ¯
             </a>
             <a href="/Test/Index" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Zpìt
+                <i class="bi bi-arrow-left me-1"></i>ZpÄ›t
             </a>
         </div>
     </div>
@@ -36,7 +36,7 @@
             <div class="card border-primary">
                 <div class="card-body text-center">
                     <h2 class="text-primary mb-0">@assignments.Count</h2>
-                    <small class="text-muted">Celkem pøiøazeno</small>
+                    <small class="text-muted">Celkem pÅ™iÅ™azeno</small>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
             <div class="card border-success">
                 <div class="card-body text-center">
                     <h2 class="text-success mb-0">@finished.Count</h2>
-                    <small class="text-muted">Dokonèeno</small>
+                    <small class="text-muted">DokonÄeno</small>
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@
             <div class="card border-warning">
                 <div class="card-body text-center">
                     <h2 class="text-warning mb-0">@pending.Count</h2>
-                    <small class="text-muted">Probíhá</small>
+                    <small class="text-muted">ProbÃ­hÃ¡</small>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
             <div class="card border-secondary">
                 <div class="card-body text-center">
                     <h2 class="text-secondary mb-0">@notStarted.Count</h2>
-                    <small class="text-muted">Nezaèalo</small>
+                    <small class="text-muted">NezaÄalo</small>
                 </div>
             </div>
         </div>
@@ -72,10 +72,10 @@
                 <thead>
                     <tr>
                         <th>Student</th>
-                        <th>Login kód</th>
+                        <th>Login kÃ³d</th>
                         <th>Stav</th>
-                        <th>Zaèal</th>
-                        <th>Dokonèil</th>
+                        <th>ZaÄal</th>
+                        <th>DokonÄil</th>
                         <th class="text-center">Akce</th>
                     </tr>
                 </thead>
@@ -91,15 +91,15 @@
                             <td>
                                 @if (state == "done")
                                 {
-                                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Dokonèeno</span>
+                                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>DokonÄeno</span>
                                 }
                                 else if (state == "progress")
                                 {
-                                    <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Probíhá</span>
+                                    <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>ProbÃ­hÃ¡</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary"><i class="bi bi-clock me-1"></i>Nezaèal</span>
+                                    <span class="badge bg-secondary"><i class="bi bi-clock me-1"></i>NezaÄal</span>
                                 }
                             </td>
                             <td>
@@ -120,7 +120,7 @@
                                     <button class="btn btn-sm btn-outline-warning btn-reassign"
                                             data-student-id="@a.StudentId" data-test-id="@a.TestId"
                                             data-student-name="@a.Student.FirstName @a.Student.LastName"
-                                            title="Znovu pøiøadit">
+                                            title="Znovu pÅ™iÅ™adit">
                                         <i class="bi bi-arrow-repeat"></i>
                                     </button>
                                 </div>
@@ -131,7 +131,7 @@
                     {
                         <tr>
                             <td colspan="6" class="text-center py-4 text-muted">
-                                ádní studenti nebyli pøiøazeni.
+                                Å½Ã¡dnÃ­ studenti nebyli pÅ™iÅ™azeni.
                             </td>
                         </tr>
                     }
@@ -146,7 +146,7 @@
     document.querySelectorAll('.btn-reassign').forEach(btn => {
         btn.addEventListener('click', async function () {
             const name = this.dataset.studentName;
-            if (!confirm(`Znovu pøiøadit test studentovi ${name}?\nStará data budou smazána a bude vygenerován novı kód.`))
+            if (!confirm(`Znovu pÅ™iÅ™adit test studentovi ${name}?\nStarÃ¡ data budou smazÃ¡na a bude vygenerovÃ¡n novÃ½ kÃ³d.`))
                 return;
 
             const studentId = parseInt(this.dataset.studentId);
@@ -160,7 +160,7 @@
                 });
                 const data = await res.json();
                 if (res.ok) {
-                    toastr.success(`${data.message} Novı kód: ${data.loginId}`);
+                    toastr.success(`${data.message} NovÃ½ kÃ³d: ${data.loginId}`);
                     setTimeout(() => location.reload(), 1500);
                 } else {
                     toastr.error(data.message);

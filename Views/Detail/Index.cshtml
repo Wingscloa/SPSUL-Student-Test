@@ -17,15 +17,15 @@
                         Výsledky dokončených testů
                     </h5>
                     <div class="tools d-flex justify-content-center align-items-center gap-2">
-                        <!--Export-->
+                        <!--Export PDF-->
+                        <a class="iconLink cursor" title="Exportovat do PDF" id="exportPdfBtn">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            Export PDF
+                        </a>
+                        <!--Export CSV-->
                         <a class="iconLink cursor" title="Exportovat do CSV" href="/Detail/Export">
                             <i class="bi bi-file-earmark-spreadsheet"></i>
-                            Export
-                        </a>
-                        <!--Statistiky-->
-                        <a class="iconLink cursor" title="Zobrazit statistiky" href="/Detail/Stats">
-                            <i class="bi bi-graph-up-arrow"></i>
-                            Statistiky
+                            Export CSV
                         </a>
                     </div>
                 </div>
@@ -258,6 +258,12 @@
                 theme: 'bootstrap-5',
                 width: '100%'
             });
+        });
+
+        document.getElementById('exportPdfBtn')?.addEventListener('click', function () {
+            var form = document.querySelector('aside form');
+            var params = new URLSearchParams(new FormData(form));
+            window.location.href = '/Detail/ExportPdf?' + params.toString();
         });
     </script>
 }

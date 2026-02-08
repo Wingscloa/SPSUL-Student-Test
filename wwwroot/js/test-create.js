@@ -14,9 +14,12 @@ let testData = {
     questionIds: []
 };
 
-document.addEventListener('DOMContentLoaded', function() {
-    initializeEventListeners();
-    initSelect2();
+document.addEventListener('DOMContentLoaded', function () {
+
+    var timeout = setTimeout(function () {
+        initializeEventListeners();
+        initSelect2();
+    }, 500);
 });
 
 // ============================================
@@ -27,15 +30,12 @@ function initSelect2() {
         theme: 'bootstrap-5',
         width: '100%',
         placeholder: '-- Vyberte předmět --',
-        allowClear: true,
-        dropdownParent: $('#studentField').closest('.card-body')
     });
 
     $('#questionTypeFilter').select2({
         theme: 'bootstrap-5',
         width: '100%',
         placeholder: 'Všechny typy',
-        allowClear: true
     });
 
     // Wire Select2 change events into existing handlers

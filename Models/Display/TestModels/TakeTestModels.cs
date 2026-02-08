@@ -16,6 +16,7 @@ namespace SPSUL.Models.Display.TestModels
     {
         public string LoginId { get; set; } = string.Empty;
         public List<AnswerSnapshot> Answers { get; set; } = new();
+        public int CurrentQuestionIndex { get; set; }
     }
 
     public class AnswerSnapshot
@@ -27,6 +28,7 @@ namespace SPSUL.Models.Display.TestModels
     public class TestResultSnapshot
     {
         public List<AnswerSnapshot> Answers { get; set; } = new();
+        public int CurrentQuestionIndex { get; set; }
     }
 
     public class QuestionSnapshotItem
@@ -52,7 +54,14 @@ namespace SPSUL.Models.Display.TestModels
         public string StudentName { get; set; } = string.Empty;
         public DateTime StartedAt { get; set; }
         public int? TimeLimitMinutes { get; set; }
+        public int CurrentQuestionIndex { get; set; }
         public List<QuestionSnapshotItem> Questions { get; set; } = new();
         public List<AnswerSnapshot> ExistingAnswers { get; set; } = new();
+    }
+
+    public class SelectedCodesDto
+    {
+        public int TestId { get; set; }
+        public List<string> LoginIds { get; set; } = new();
     }
 }

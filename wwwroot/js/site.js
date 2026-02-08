@@ -143,6 +143,8 @@ function hideOptions() {
 }
 
 activatedMode = ''
+activatedEndpoint = ''
+activatedMethod = 'POST'
 function setMode(name) {
     activatedMode = name
     var modes = ['edit', 'delete', 'deactivate','activate']
@@ -163,13 +165,13 @@ function setMode(name) {
 }
 
 function resetRows() {
-    const rows = document.querySelectorAll('tr.table-danger, tr.table-warning')
-    rows.forEach(function (row) { arguments[0].classList.remove('table-danger', 'table-warning'); });
+    const rows = document.querySelectorAll('tr.table-danger, tr.table-warning, tr.table-success')
+    rows.forEach(function (row) { row.classList.remove('table-danger', 'table-warning', 'table-success'); });
     document.getElementById('Ids').value = '';
     setMode('edit');
 }
 
-async function rowFetch(endpoint, method, ids, failMsg, scsMsg) {
+async function rowFetch(endpoint, method, ids) {
     try {
         loadingScreen(true);
         const response = await fetch(endpoint, {
@@ -181,9 +183,9 @@ async function rowFetch(endpoint, method, ids, failMsg, scsMsg) {
         const result = await response.json();
 
         if (response.ok) {
-            toastr.success(result.message || 'Otázka je aktualizovaná!', 'Úspěch');
+            toastr.success(result.message || 'Akce proběhla úspěšně.', 'Úspěch');
         } else {
-            toastr.error(result.message || 'Chyba při aktualizaci otázky', 'Chyba');
+            toastr.error(result.message || 'Akce se nezdařila.', 'Chyba');
         }
 
         loadingScreen(false);
@@ -202,64 +204,59 @@ function deactivateRows(endpoint) {
 
 
 document.addEventListener('click', function (e) {
-    const deleteMode = e.target.closest('#deleteMode');
+const deleteMode = e.target.closest('#deleteMode');
 
-    if (deleteMode) {
-        hideMode()
-        showOptions();
-        setMode('delete');
+if (deleteMode) {
+    hideMode()
+    showOptions();
+    activatedEndpoint = '/' + (deleteMode.dataset.endpoint || '');
+    activatedMethod = deleteMode.dataset.method || 'POST';
+    setMode('delete');
+}
+
+const deactivateMode = e.target.closest('#deactivateMode');
+
+if (deactivateMode) {
+    hideMode()
+    showOptions();
+    activatedEndpoint = '/' + (deactivateMode.dataset.endpoint || '');
+    activatedMethod = deactivateMode.dataset.method || 'POST';
+    setMode('deactivate');
+}
+
+const activate = e.target.closest("#activate");
+
+if (activate) {
+    hideMode();
+    showOptions();
+    activatedEndpoint = '/' + (activate.dataset.endpoint || '');
+    activatedMethod = activate.dataset.method || 'POST';
+    setMode('activate');
+}
+
+const cancelOption = e.target.closest('#cancelOption');
+
+if (cancelOption) {
+    showMode()
+    hideOptions();
+    resetRows();
+}
+
+const acceptOption = e.target.closest('#acceptOption');
+
+if (acceptOption) {
+    var ids = document.getElementById('Ids').value.split(';').map(id => parseInt(id)).filter(id => !isNaN(id));
+    if (ids.length > 0 && activatedEndpoint) {
+        rowFetch(activatedEndpoint, activatedMethod, ids);
+    } else {
+        toastr.warning('Nevybrali jste žádné záznamy.');
     }
+    showMode()
+    hideOptions();
+    resetRows();
+}
 
-    const deactivateMode = e.target.closest('#deactivateMode');
-
-    if (deactivateMode) {
-        hideMode()
-        showOptions();
-        setMode('deactivate');
-    }
-
-    const activate = e.target.closest("#activate");
-
-    if (activate) {
-        hideMode();
-        showOptions();
-        setMode('activate');
-    }
-
-    const cancelOption = e.target.closest('#cancelOption');
-
-    if (cancelOption) {
-        showMode()
-        hideOptions();
-        resetRows();
-    }
-
-    const acceptOption = e.target.closest('#acceptOption');
-
-    if (acceptOption) {
-        var ids = document.getElementById('Ids').value.split(';').map(id => parseInt(id)).filter(id => !isNaN(id));
-        if (activatedMode == 'delete') {
-            var scsMsg = 'Otázka byla úspěšně smazány';
-            var failMsg = 'Otázka byla neúspěšně smazány';
-            rowFetch('/Question/Delete/', 'POST', ids, failMsg, scsMsg);
-        }
-        else if (activatedMode == 'deactivate') {
-            var scsMsg = 'Otázka byla úspěšně deaktivována';
-            var failMsg = 'Otázka byla neúspěšně deaktivována';
-            rowFetch('/Question/Deactivate/', 'PUT', ids, failMsg, scsMsg);
-        }
-        else if (activatedMode == 'activate') {
-            var scsMsg = 'Otázka byla úspěšně aktivována';
-            var failMsg = 'Otázka byla neúspěšně aktivována';
-            rowFetch('/Question/Activate/', 'PUT', ids, failMsg, scsMsg);
-
-        }
-        showMode()
-        hideOptions();
-        resetRows();
-    }
-
-    const deactivateBtn = e.target.closest('.btn-deactivate');
+const deactivateBtn = e.target.closest('.btn-deactivate');
     const deleteBtn = e.target.closest('.btn-delete');
     const activateBtn = e.target.closest('.btn-activate');
 

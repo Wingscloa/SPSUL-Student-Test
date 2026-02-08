@@ -11,9 +11,21 @@ namespace SPSUL.Controllers
     public class TestController : Controller
     {
         private readonly SpsulContext _ctx;
-        public TestController(SpsulContext context)
+        private readonly PdfService _pdf;
+        public TestController(SpsulContext context, PdfService pdf)
         {
             _ctx = context;
+            _pdf = pdf;
+        }
+
+        // ============================================
+        // EXAMPLE - demo test without login
+        // ============================================
+        [HttpGet]
+        [AllowAnonymousTest]
+        public IActionResult Example()
+        {
+            return View();
         }
 
         // ============================================
@@ -87,6 +99,44 @@ namespace SPSUL.Controllers
             ViewBag.Assignments = assignments;
 
             return View();
+        }
+
+        // ============================================
+        // DOWNLOAD CODES PDF
+        // ============================================
+        public async Task<IActionResult> DownloadCodesPdf(int id)
+        {
+            var test = await _ctx.Tests.FindAsync(id);
+            if (test == null) return RedirectToAction("Index");
+
+            var assignments = await _ctx.StudentTests
+                .Include(st => st.Student)
+                .Where(st => st.TestId == id)
+                .ToListAsync();
+
+            var pdfBytes = _pdf.GenerateCodesPdf(test, assignments);
+            return File(pdfBytes, "application/pdf", $"Kody-{test.Name}.pdf");
+        }
+
+        // ============================================
+        // DOWNLOAD CODES PDF - selected only
+        // ============================================
+        [HttpPost]
+        public async Task<IActionResult> DownloadSelectedCodesPdf([FromBody] SelectedCodesDto dto)
+        {
+            var test = await _ctx.Tests.FindAsync(dto.TestId);
+            if (test == null) return NotFound();
+
+            var assignments = await _ctx.StudentTests
+                .Include(st => st.Student)
+                .Where(st => st.TestId == dto.TestId && dto.LoginIds.Contains(st.LoginId))
+                .ToListAsync();
+
+            if (assignments.Count == 0)
+                return BadRequest(new { message = "Žádné kódy nebyly vybrány." });
+
+            var pdfBytes = _pdf.GenerateCodesPdf(test, assignments);
+            return File(pdfBytes, "application/pdf", $"Kody-{test.Name}.pdf");
         }
 
         // ============================================
@@ -293,6 +343,7 @@ namespace SPSUL.Controllers
                 StudentName = $"{assignment.Student.FirstName} {assignment.Student.LastName}",
                 StartedAt = assignment.StartedAt,
                 TimeLimitMinutes = assignment.Test.TimeLimitMinutes,
+                CurrentQuestionIndex = existingResult.CurrentQuestionIndex,
                 Questions = questions,
                 ExistingAnswers = existingResult.Answers
             };
@@ -318,7 +369,8 @@ namespace SPSUL.Controllers
 
             assignment.ResultSnapshot = JsonSerializer.Serialize(new TestResultSnapshot
             {
-                Answers = dto.Answers
+                Answers = dto.Answers,
+                CurrentQuestionIndex = dto.CurrentQuestionIndex
             });
             await _ctx.SaveChangesAsync();
 
@@ -436,10 +488,6 @@ namespace SPSUL.Controllers
         // ============================================
         // CREATE
         // ============================================
-        public IActionResult Example()
-        {
-            return View();
-        }
 
         public async Task<IActionResult> Create()
         {

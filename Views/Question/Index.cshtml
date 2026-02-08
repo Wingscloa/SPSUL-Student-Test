@@ -17,16 +17,6 @@
                         Seznam otázek
                     </h5>
                     <div class="tools d-flex justify-content-center align-items-center gap-2">
-                        <!--Export-->
-                        <a class="iconLink cursor" title="Exportovat statistiky" id="exportBtn">
-                            <i class="bi bi-file-earmark-spreadsheet"></i>
-                            Export
-                        </a>
-                        <!--Statistiky-->
-                        <a class="iconLink cursor" title="Zobrazit statistiky" id="statsBtn">
-                            <i class="bi bi-graph-up-arrow"></i>
-                            Statistiky
-                        </a>
                         <!--Cancel-->
                         <a class="iconLink cursor option" id="cancelOption" style="display: none">
                             <i class="bi bi-dash-circle"></i>
@@ -38,17 +28,17 @@
                             Potvrdit
                         </a>
                         <!--Activate-->
-                        <a class="iconLink cursor mode" title="Aktivovat otázky" id="activate" data-endpoint="Question/Activate/">
+                        <a class="iconLink cursor mode" title="Aktivovat otázky" id="activate" data-endpoint="Question/Activate/" data-method="PUT">
                             <i class="bi bi-arrow-up-circle-fill"></i>
                             Aktivace
                         </a>
                         <!--Deactivate-->
-                        <a class="iconLink cursor mode" title="Deaktivovat otázky" id="deactivateMode" data-endpoint="Question/Deactivate/">
+                        <a class="iconLink cursor mode" title="Deaktivovat otázky" id="deactivateMode" data-endpoint="Question/Deactivate/" data-method="PUT">
                             <i class="bi bi-arrow-down-circle-fill"></i>
                             Deaktivace
                         </a>
                         <!--Delete Mode-->
-                        <a class="iconLink cursor mode" title="Smazat otázky" id="deleteMode" data-endpoint="Question/Delete/">
+                        <a class="iconLink cursor mode" title="Smazat otázky" id="deleteMode" data-endpoint="Question/Delete/" data-method="POST">
                             <i class="bi bi-dash-circle"></i>
                             Smazat
                         </a>

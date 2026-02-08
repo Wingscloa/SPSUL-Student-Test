@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -74,7 +74,7 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Students" asp-action="Index" title="Správa studentů">
                             <i class="bi bi-people-fill"></i>
-                            <span>Studenti</span>
+                            <span>Studenti</span>   
                         </a>
                     </li>
                     
@@ -114,7 +114,6 @@
     @await RenderSectionAsync("Scripts", required: false)
     @await Html.PartialAsync("_TabBar")
     <script src="~/js/configuration.js" asp-append-version="true"></script>
+    @await Html.PartialAsync("_NotificationHandler")
 </body>
 </html>
-
-@await Html.PartialAsync("_NotificationHandler")

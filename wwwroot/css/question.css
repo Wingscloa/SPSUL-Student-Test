@@ -297,3 +297,30 @@
    REMOVE BUTTON STYLES
    ============================================ */
 
+/* ============================================
+   QUESTION FORM VALIDATION
+   ============================================ */
+#questionForm .form-control.is-valid,
+#questionForm .form-select.is-valid {
+    border-color: #22c55e;
+}
+#questionForm .form-control.is-valid:focus,
+#questionForm .form-select.is-valid:focus {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+#questionForm .form-control.is-invalid,
+#questionForm .form-select.is-invalid {
+    border-color: #ef4444;
+}
+#questionForm .form-control.is-invalid:focus,
+#questionForm .form-select.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+.option-card.is-invalid {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.12);
+}
+.option-card .option-text.is-valid {
+    border-color: #22c55e !important;
+}
+

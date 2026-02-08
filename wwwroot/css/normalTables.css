@@ -368,3 +368,39 @@
         padding: 1rem 2rem;
         font-size: 1.1rem;
     }
+
+/* ============================================
+   ASSIGN MODAL - STUDENT LIST
+   ============================================ */
+.student-item {
+    border: 2px solid #e9ecef;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.student-item:hover:not(.student-disabled) {
+    border-color: #ff8a00;
+    background: #fff8f0;
+}
+
+.student-item.student-selected {
+    border-color: #ff8a00;
+    background: #fff3e0;
+    box-shadow: 0 0 0 1px rgba(255, 138, 0, 0.2);
+}
+
+.student-item.student-selected .form-check-input {
+    background-color: #ff8a00;
+    border-color: #ff8a00;
+}
+
+.student-item.student-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #f8f9fa;
+    border-color: #e9ecef;
+}
+
+.student-item.student-disabled label {
+    cursor: not-allowed;
+}

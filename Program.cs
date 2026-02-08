@@ -1,12 +1,15 @@
 using SPSUL.Models;
 using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
+
 namespace SPSUL
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+            QuestPDF.Settings.License = LicenseType.Community;
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Logging.ClearProviders();
@@ -52,12 +55,17 @@ namespace SPSUL
             });
 
             builder.Services.AddScoped<AzureBlobService>();
+            builder.Services.AddScoped<PdfService>();
 
             // Add services to the container.
             builder.Services.AddDbContext<SpsulContext>(e => e.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
+#if DEBUG
             builder.Services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
+#else
+            builder.Services.AddControllersWithViews();
+#endif
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.
@@ -72,12 +80,6 @@ namespace SPSUL
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
-
-            app.UseSession();
-
-            app.UseAuthorization();
-
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
@@ -86,6 +88,12 @@ namespace SPSUL
                     ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={durationInSeconds}");
                 }
             });
+
+            app.UseRouting();
+
+            app.UseSession();
+
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",

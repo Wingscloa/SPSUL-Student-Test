@@ -1,4 +1,4 @@
-@using SPSUL.Models.Data
+Ôªø@using SPSUL.Models.Data
 @{
     Layout = null;
     var test = ViewBag.Test as Test;
@@ -8,13 +8,41 @@
 <html lang="cs">
 <head>
     <meta charset="utf-8" />
-    <title>P¯ihlaöovacÌ kÛdy - @test?.Name</title>
+    <title>P≈ôihla≈°ovac√≠ k√≥dy - @test?.Name</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; }
 
         h1 { text-align: center; margin-bottom: 5px; font-size: 1.4rem; }
         .subtitle { text-align: center; color: #666; margin-bottom: 20px; font-size: .9rem; }
+
+        .toolbar {
+            margin: 20px 0;
+            text-align: center;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .toolbar button, .toolbar a {
+            padding: 10px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-pdf { background: #d9534f; color: white; }
+        .btn-pdf:hover { background: #c9302c; }
+        .btn-pdf-selected { background: #5bc0de; color: white; }
+        .btn-pdf-selected:hover { background: #31b0d5; }
+        .btn-select-all { background: #5cb85c; color: white; }
+        .btn-select-all:hover { background: #449d44; }
+        .btn-back { background: transparent; color: #666; border: 1px solid #ccc; }
 
         .codes-grid {
             display: grid;
@@ -28,6 +56,33 @@
             padding: 12px;
             text-align: center;
             page-break-inside: avoid;
+            position: relative;
+            cursor: pointer;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .code-card.selected {
+            border-color: #5bc0de;
+            box-shadow: 0 0 0 3px rgba(91, 192, 222, 0.3);
+        }
+        .code-card .check-mark {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: transparent;
+            transition: all .2s;
+        }
+        .code-card.selected .check-mark {
+            background: #5bc0de;
+            border-color: #5bc0de;
+            color: white;
         }
 
         .code-card .student-name {
@@ -58,37 +113,80 @@
             color: #888;
         }
 
-        .no-print { margin: 20px 0; text-align: center; }
-
         @@media print {
-            .no-print { display: none !important; }
+            .toolbar { display: none !important; }
             body { padding: 10px; }
-            .code-card { border-width: 1px; }
+            .code-card { border-width: 1px; cursor: default; }
+            .code-card .check-mark { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="no-print">
-        <button onclick="window.print()" style="padding: 10px 30px; font-size: 1.1rem; cursor: pointer;
-                background: #ff8a00; color: white; border: none; border-radius: 8px; font-weight: 600;">
-            ??? Vytisknout kÛdy
-        </button>
-        <a href="/Test/Assignments?id=@test?.TestId" style="margin-left: 10px; color: #666;">? ZpÏt</a>
+    <div class="toolbar">
+        <a href="/Test/DownloadCodesPdf?id=@test?.TestId" class="btn-pdf">üìÑ St√°hnout v≈°e (PDF)</a>
+        <button onclick="downloadSelected()" class="btn-pdf-selected">üìÑ St√°hnout vybran√© (PDF)</button>
+        <button onclick="toggleAll()" class="btn-select-all">‚òë Vybrat / Zru≈°it v≈°e</button>
+        <a href="/Test/Assignments?id=@test?.TestId" class="btn-back">‚Üê Zpƒõt</a>
     </div>
 
     <h1>@test?.Name</h1>
-    <p class="subtitle">P¯ihlaöovacÌ kÛdy pro studenty ï P¯ihlaste se na adrese ökoly</p>
+    <p class="subtitle">P≈ôihla≈°ovac√≠ k√≥dy pro studenty ‚Ä¢ Kliknƒõte na kartu pro v√Ωbƒõr</p>
 
     <div class="codes-grid">
         @foreach (var a in assignments)
         {
-            <div class="code-card">
+            <div class="code-card" data-login="@a.LoginId" onclick="toggleCard(this)">
+                <div class="check-mark">‚úì</div>
                 <div class="student-name">@a.Student.FirstName @a.Student.LastName</div>
                 <div class="test-name">@test?.Name</div>
                 <div class="login-code">@a.LoginId</div>
-                <div class="instructions">Zadejte tento kÛd na p¯ihlaöovacÌ str·nce testu</div>
+                <div class="instructions">Zadejte tento k√≥d na p≈ôihla≈°ovac√≠ str√°nce testu</div>
             </div>
         }
     </div>
+
+    <script>
+        function toggleCard(el) {
+            el.classList.toggle('selected');
+        }
+
+        function toggleAll() {
+            var cards = document.querySelectorAll('.code-card');
+            var allSelected = Array.from(cards).every(c => c.classList.contains('selected'));
+            cards.forEach(c => {
+                if (allSelected) c.classList.remove('selected');
+                else c.classList.add('selected');
+            });
+        }
+
+        function downloadSelected() {
+            var selected = document.querySelectorAll('.code-card.selected');
+            if (selected.length === 0) {
+                alert('Vyberte alespo≈à jeden k√≥d.');
+                return;
+            }
+
+            var loginIds = Array.from(selected).map(c => c.getAttribute('data-login'));
+
+            fetch('/Test/DownloadSelectedCodesPdf', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ testId: @(test?.TestId ?? 0), loginIds: loginIds })
+            })
+            .then(resp => {
+                if (!resp.ok) throw new Error('Chyba p≈ôi generov√°n√≠ PDF');
+                return resp.blob();
+            })
+            .then(blob => {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'Kody-vybrane.pdf';
+                a.click();
+                URL.revokeObjectURL(url);
+            })
+            .catch(err => alert(err.message));
+        }
+    </script>
 </body>
 </html>

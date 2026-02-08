@@ -8,46 +8,47 @@
 };
 
 
-async function EditQuestion() {
+async function UpdateQuestion() {
     disableInputs(true);
     disableSubmitButton(true);
     const isValid = await Validate();
     if (!isValid) {
+        disableInputs(false);
+        disableSubmitButton(false);
         return;
     }
     try {
         loadingScreen(true);
         const data = await GatherData();
-        const myData = {
-            header: data.header,
-            description: data.description,
-            questionTypeId: data.questionTypeId,
-            FieldId: data.FieldId,
-            options: data.options,
-            QuestionId: parseInt(document.getElementById('QuestionId').value),
-            IsActive: document.getElementById('IsActive').value === 'True'
-        };
         const response = await fetch('/Question/Update', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(myData)
+            body: JSON.stringify(data)
         })
 
         const result = await response.json();
 
         if (response.ok) {
-            toastr.success(result.message || 'Otázka je aktualizovaná!', 'Úspěch');
+            toastr.success(result.message || 'Otázka aktualizovaná!', 'Úspěch');
             setTimeout(() => {
                 window.location.href = '/Question/Index';
             }, 1500);
         } else {
             loadingScreen(false)
-            toastr.error(result.message || 'Chyba při aktualizaci otázky', 'Chyba');
+            console.error('Server validation errors:', result);
+            if (result.errors && result.errors.length > 0) {
+                result.errors.forEach(err => toastr.error(err, 'Validace'));
+            } else {
+                toastr.error(result.message || 'Chyba při aktualizaci otázky', 'Chyba');
+            }
         }
     } catch (err) {
         loadingScreen(false)
         toastr.error('Chyba při komunikaci se serverem', 'Chyba');
         console.error(err);
+    } finally {
+        disableInputs(false);
+        disableSubmitButton(false);
     }
 }
 
@@ -235,118 +236,179 @@ async function CreateQuestion() {
             setTimeout(() => {
                 window.location.href = '/Question/Index';
             }, 1500);
-        } else
-        {
-            loadingScreen(false)
-            toastr.error(result.message || 'Chyba při vytváření otázky', 'Chyba');
-        }
-    } catch (err) {
-        loadingScreen(false)
-        toastr.error('Chyba při komunikaci se serverem', 'Chyba');
-        console.error(err);
-    }
-}
-
-async function UpdateQuestion() {
-    disableInputs(true);
-    disableSubmitButton(true);
-    const isValid = await Validate();
-
-    if (!isValid) {
-        disableInputs(false);
-        disableSubmitButton(false);
-        return;
-    }
-
-    try {
-        loadingScreen(true);
-        const data = await GatherData();
-        const response = await fetch('/Question/Update', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        })
-
-        const result = await response.json();
-
-        if (response.ok) {
-            toastr.success(result.message || 'Otázka aktualizovaná!', 'Úspěch');
-            setTimeout(() => {
-                window.location.href = '/Question/Index';
-            }, 1500);
         } else {
             loadingScreen(false)
-            toastr.error(result.message || 'Chyba při aktualizaci otázky', 'Chyba');
+            console.error('Server validation errors:', result);
+            if (result.errors && result.errors.length > 0) {
+                result.errors.forEach(err => toastr.error(err, 'Validace'));
+            } else {
+                toastr.error(result.message || 'Chyba při vytváření otázky', 'Chyba');
+            }
         }
     } catch (err) {
         loadingScreen(false)
         toastr.error('Chyba při komunikaci se serverem', 'Chyba');
         console.error(err);
+    } finally {
+        disableInputs(false);
+        disableSubmitButton(false);
     }
 }
 
+
+
 async function Validate() {
-    const header = document.getElementById('Header').value.trim();
-    const description = document.getElementById('Description').value.trim();
-    const questionTypeId = parseInt(document.getElementById('QuestionTypeId').value);
-    const fieldId = parseInt(document.getElementById('FieldId').value);
+    const header = document.getElementById('Header');
+    const description = document.getElementById('Description');
+    const questionTypeId = document.getElementById('QuestionTypeId');
+    const fieldId = document.getElementById('FieldId');
 
-    if (!header || !description) {
-        toastr.warning('Vyplň nadpis a popis otázky', 'Varování');
-        return false;
-    }
-
-    const optionInputs = document.querySelectorAll('.option-text');
-
-    if (optionInputs.length === 0) {
-        toastr.warning('Vygeneruj nejdříve možnosti odpovědí', 'Varování');
-        return false;
-    }
-
-    let hasCorrect = false;
+    clearAllValidation();
     let isValid = true;
+
+    // Header
+    if (!header.value.trim()) {
+        setFieldError(header, 'Nadpis je povinný');
+        isValid = false;
+    } else if (header.value.trim().length < 3) {
+        setFieldError(header, 'Nadpis musí mít alespoň 3 znaky');
+        isValid = false;
+    } else if (header.value.trim().length > 128) {
+        setFieldError(header, 'Nadpis nesmí být delší než 128 znaků');
+        isValid = false;
+    } else {
+        setFieldSuccess(header);
+    }
+
+    // Description
+    if (!description.value.trim()) {
+        setFieldError(description, 'Popis je povinný');
+        isValid = false;
+    } else if (description.value.trim().length < 10) {
+        setFieldError(description, 'Popis musí mít alespoň 10 znaků');
+        isValid = false;
+    } else if (description.value.trim().length > 512) {
+        setFieldError(description, 'Popis nesmí být delší než 512 znaků');
+        isValid = false;
+    } else {
+        setFieldSuccess(description);
+    }
+
+    // Question type
+    if (!questionTypeId.value || parseInt(questionTypeId.value) <= 0) {
+        setFieldError(questionTypeId, 'Vyberte typ otázky');
+        isValid = false;
+    } else {
+        setFieldSuccess(questionTypeId);
+    }
+
+    // Field
+    if (!fieldId.value || parseInt(fieldId.value) <= 0) {
+        setFieldError(fieldId, 'Vyberte předmět');
+        isValid = false;
+    } else {
+        setFieldSuccess(fieldId);
+    }
+
+    // Options existence
+    const optionInputs = document.querySelectorAll('.option-text');
+    if (optionInputs.length < 2) {
+        toastr.warning('Otázka musí mít alespoň 2 možnosti odpovědí. Klikněte na Generovat.', 'Chybí možnosti');
+        isValid = false;
+    } else if (optionInputs.length > 10) {
+        toastr.warning('Otázka může mít maximálně 10 možností odpovědí.', 'Příliš mnoho možností');
+        isValid = false;
+    }
+
+    // Options validation
+    let hasCorrect = false;
+    let allOptionsFilled = true;
     optionInputs.forEach((input, idx) => {
-        if (!isValid) return;
+        const card = input.closest('.option-card');
         const text = input.value.trim();
         const isCorrect = document.getElementById(`isCorrect_${idx}`)?.checked || false;
 
         if (!text) {
-            toastr.warning(`Vyplň text pro možnosti, zkontroluj vše před uložením`, 'Varování');
-            isValid = false;
-            return false;
+            card?.classList.add('is-invalid');
+            input.classList.add('is-invalid');
+            allOptionsFilled = false;
+        } else {
+            card?.classList.remove('is-invalid');
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
         }
         if (isCorrect) hasCorrect = true;
     });
 
-    if (!isValid) { return false; }
-
-    if (!hasCorrect) {
-        toastr.warning('Označ alespoň jednu správnou odpověď', 'Varování');
-        return false;
+    if (!allOptionsFilled) {
+        toastr.warning('Vyplňte text u všech možností odpovědí', 'Prázdné možnosti');
+        isValid = false;
     }
 
+    if (optionInputs.length >= 2 && !hasCorrect) {
+        toastr.warning('Označte alespoň jednu správnou odpověď', 'Chybí správná odpověď');
+        isValid = false;
+    }
+
+    // File inputs (required images)
     const fileInputs = document.querySelectorAll('input[type="file"][required="true"]');
-    var hasFileInputs = true;
+    let allFilesOk = true;
     fileInputs.forEach((input, idx) => {
-        const file = input.files[0];
-        if (!file && hasFileInputs) {
-            toastr.warning(`Vyber obrázek pro ${idx + 1}. možnost`, 'Varování');
-            hasFileInputs = false;
+        if (!input.files[0]) {
+            const card = input.closest('.option-card');
+            card?.classList.add('is-invalid');
+            allFilesOk = false;
         }
-    })
+    });
+    if (!allFilesOk) {
+        toastr.warning('Vyberte obrázek u všech možností, které ho vyžadují', 'Chybí obrázky');
+        isValid = false;
+    }
 
-    if (!hasFileInputs) { return false; }
+    if (!isValid) {
+        toastr.error('Opravte chyby ve formuláři před odesláním', 'Validace selhala');
+    }
 
-    return true;
+    return isValid;
+}
+
+function setFieldError(el, message) {
+    el.classList.remove('is-valid');
+    el.classList.add('is-invalid');
+    // Remove old feedback
+    const existing = el.parentElement.querySelector('.q-feedback');
+    if (existing) existing.remove();
+    // Add error feedback
+    const fb = document.createElement('div');
+    fb.className = 'q-feedback text-danger';
+    fb.style.fontSize = '.8rem';
+    fb.style.marginTop = '.25rem';
+    fb.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>' + message;
+    el.parentElement.appendChild(fb);
+}
+
+function setFieldSuccess(el) {
+    el.classList.remove('is-invalid');
+    el.classList.add('is-valid');
+    const existing = el.parentElement.querySelector('.q-feedback');
+    if (existing) existing.remove();
+}
+
+function clearAllValidation() {
+    document.querySelectorAll('.is-invalid, .is-valid').forEach(el => {
+        el.classList.remove('is-invalid', 'is-valid');
+    });
+    document.querySelectorAll('.q-feedback').forEach(el => el.remove());
 }
 
 
 async function GatherData() {
     const header = document.getElementById('Header').value.trim();
     const description = document.getElementById('Description').value.trim();
-    const questionTypeId = parseInt(document.getElementById('QuestionTypeId').value);
-    const fieldId = parseInt(document.getElementById('FieldId').value);
+    const questionTypeId = parseInt(document.getElementById('QuestionTypeId').value) || 0;
+    const fieldId = parseInt(document.getElementById('FieldId').value) || 0;
     const options = [];
+
     const optionInputs = document.querySelectorAll('.option-card');
 
     for (const [idx, input] of optionInputs.entries()) {
@@ -362,8 +424,8 @@ async function GatherData() {
 
         var optionData = {
             text: input.querySelector('input[name="optionText"]').value.trim(),
-            isCorrect: input.querySelector('input[name="CorrectInput"]').checked || false,
-            ImageBase64: base64
+            isCorrect: input.querySelector('input[name="CorrectInput"]')?.checked || false,
+            imageBase64: base64
         };
 
         options.push(optionData);
@@ -373,12 +435,15 @@ async function GatherData() {
         header: header,
         description: description,
         questionTypeId: questionTypeId,
-        FieldId: fieldId,
+        fieldId: fieldId,
         options: options
     };
 
     // Edit 
-    data.QuestionId = parseInt(document.getElementById('QuestionId')?.value || 0);
+    const questionIdEl = document.getElementById('QuestionId');
+    if (questionIdEl) {
+        data.questionId = parseInt(questionIdEl.value) || 0;
+    }
 
     return data;
 }
@@ -399,30 +464,37 @@ function resetForm() {
 // Header input listener
 
 document.addEventListener('DOMContentLoaded', () => {
-    setUpFlex(3);
-    updatePreview();
-    // Header
-    const headerInput = document.getElementById('Header');
+setUpFlex(3);
+updatePreview();
+// Header
+const headerInput = document.getElementById('Header');
 
-    headerInput.addEventListener('input', (e) => {
-        const preview = document.getElementById('previewHeader')
+headerInput.addEventListener('input', (e) => {
+    const preview = document.getElementById('previewHeader')
+    if (preview) {
+        preview.textContent = e.target.value || '';
+    }
+    // Live validation
+    const v = e.target.value.trim();
+    if (v.length >= 3 && v.length <= 128) setFieldSuccess(e.target);
+    else if (v.length > 0) { setFieldError(e.target, v.length < 3 ? 'Min. 3 znaky' : 'Max. 128 znaků'); }
+    else { e.target.classList.remove('is-valid', 'is-invalid'); const fb = e.target.parentElement.querySelector('.q-feedback'); if (fb) fb.remove(); }
+})
 
-        if (preview) {
-            preview.textContent = e.target.value || '';
-        }
-    })
+// Description
+const descriptionInput = document.getElementById('Description');
 
-    // Description
-
-    const descriptionInput = document.getElementById('Description');
-
-    descriptionInput.addEventListener('input', (e) => {
-        const preview = document.getElementById('previewDescription')
-
-        if (preview) {
-            preview.textContent = e.target.value || '';
-        }
-    })
+descriptionInput.addEventListener('input', (e) => {
+    const preview = document.getElementById('previewDescription')
+    if (preview) {
+        preview.textContent = e.target.value || '';
+    }
+    // Live validation
+    const v = e.target.value.trim();
+    if (v.length >= 10 && v.length <= 512) setFieldSuccess(e.target);
+    else if (v.length > 0) { setFieldError(e.target, v.length < 10 ? 'Min. 10 znaků' : 'Max. 512 znaků'); }
+    else { e.target.classList.remove('is-valid', 'is-invalid'); const fb = e.target.parentElement.querySelector('.q-feedback'); if (fb) fb.remove(); }
+})
 
     // Generate Button
 

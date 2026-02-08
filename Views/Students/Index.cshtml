@@ -1,5 +1,6 @@
 ﻿@using SPSUL.Models.Data
-@model List<Student>
+@using SPSUL.Models.Display.StudentModels
+@model StudentIndexVM
 
 @{
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
@@ -17,35 +18,40 @@
                         Seznam studentů
                     </h5>
                     <div class="tools d-flex justify-content-center align-items-center gap-2">
-                        <!--Export-->
-                        <a class="iconLink cursor" title="Exportovat statistiky" id="exportBtn">
-                            <i class="bi bi-file-earmark-spreadsheet"></i>
-                            Export
+                        <!--Cancel-->
+                        <a class="iconLink cursor option" id="cancelOption" style="display: none">
+                            <i class="bi bi-dash-circle"></i>
+                            Zrušit
                         </a>
-                        <!--Statistiky-->
-                        <a class="iconLink cursor" title="Zobrazit statistiky" id="statsBtn">
-                            <i class="bi bi-graph-up-arrow"></i>
-                            Statistiky
+                        <!--Confirm-->
+                        <a class="iconLink cursor option" id="acceptOption" style="display: none">
+                            <i class="bi bi-plus-circle"></i>
+                            Potvrdit
+                        </a>
+                        <!--Export-->
+                        <a class="iconLink cursor mode" title="Exportovat do PDF" id="exportBtn">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            Export PDF
                         </a>
                         <!--Activate-->
-                        <a class="iconLink cursor mode" title="Aktivovat studenty" id="activate" data-endpoint="Students/Activate/">
+                        <a class="iconLink cursor mode" title="Aktivovat studenty" id="activate" data-endpoint="Students/Activate/" data-method="POST">
                             <i class="bi bi-arrow-up-circle-fill"></i>
                             Aktivace
                         </a>
                         <!--Deactivate-->
-                        <a class="iconLink cursor mode" title="Deaktivovat studenty" id="deactivateMode" data-endpoint="Students/Deactivate/">
+                        <a class="iconLink cursor mode" title="Deaktivovat studenty" id="deactivateMode" data-endpoint="Students/Deactivate/" data-method="POST">
                             <i class="bi bi-arrow-down-circle-fill"></i>
                             Deaktivace
                         </a>
                         <!--Delete Mode-->
-                        <a class="iconLink cursor mode" title="Smazat studenty" id="deleteMode" data-endpoint="Students/Delete/">
+                        <a class="iconLink cursor mode" title="Smazat studenty" id="deleteMode" data-endpoint="Students/Delete/" data-method="POST">
                             <i class="bi bi-dash-circle"></i>
                             Smazat
                         </a>
-                        <!--Create-->
-                        <a class="iconLink mode" asp-action="Create" asp-controller="Students" title="Vytvořit studenta">
-                            <i class="bi bi-plus-circle"></i>
-                            Vytvořit
+                        <!--Bulk Create-->
+                        <a class="iconLink cursor mode" title="Hromadné vytvoření" id="bulkCreateBtn">
+                            <i class="bi bi-people-fill"></i>
+                            Hromadně vytvořit
                         </a>
                     </div>
                 </div>
@@ -57,47 +63,55 @@
                                 <th class="col-2">Příjmení</th>
                                 <th class="col-2">Třída</th>
                                 <th class="col-2">Obor</th>
-                                <th class="col-1">Dokončené testy</th>
-                                <th class="col-1">Průměr úspěšnosti</th>
                                 <th class="col-1">Aktivní</th>
                                 <th class="col-1 text-center" id="editHeader" style="display:table-cell">Edit</th>
-                                <!--Delete-->
                                 <th class="col-1 d-none" id="deleteHeader">Smazat</th>
-                                <!--Deaktivace-->
                                 <th class="col-1 d-none" id="deactivateHeader">Deaktivace</th>
-                                <!--Aktivace-->
                                 <th class="col-1 d-none" id="activateHeader">Aktivace</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var s in Model)
+                            @foreach (var s in Model.Students)
                             {
+                                var classNames = s.ClassesStudents?.Select(cs => cs.Classes?.Name).Where(n => n != null);
+                                var fieldNames = s.ClassesStudents?
+                                    .SelectMany(cs => cs.Classes?.ClassesFields?.Select(cf => cf.StudentField?.Name) ?? Enumerable.Empty<string?>())
+                                    .Where(n => n != null)
+                                    .Distinct();
+
                                 <tr data-id="@s.StudentId">
                                     <td>@s.FirstName</td>
                                     <td>@s.LastName</td>
-                                    <td>@* TODO: @s.ClassName *@ -</td>
-                                    <td>@* TODO: @s.FieldName *@ -</td>
-                                    <td>@* TODO: @s.CompletedTests *@ -</td>
-                                    <td>@* TODO: @s.AvgSuccess % *@ -</td>
+                                    <td>
+                                        @if (classNames != null && classNames.Any())
+                                        {
+                                            @(string.Join(", ", classNames))
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">–</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (fieldNames != null && fieldNames.Any())
+                                        {
+                                            @(string.Join(", ", fieldNames))
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">–</span>
+                                        }
+                                    </td>
                                     <td><span class="badge bg-@(s.IsActive ? "success" : "secondary")">@(s.IsActive ? "Aktivní" : "Neaktivní")</span></td>
-                                    <td class="text-center editButton"><a class="icon-btn" title="Edit" href="/Students/Edit?id=@s.StudentId"><i class="bi bi-pencil-square"></i></a></td>
-                                    <!-- Delete Button --> 
+                                    <td class="text-center editButton"><a class="icon-btn student-edit-btn" title="Edit" data-id="@s.StudentId" role="button"><i class="bi bi-pencil-square"></i></a></td>
                                     <td class="text-center deleteButton d-none">
-                                        <div class="btn-delete">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </div>
+                                        <div class="btn-delete"><i class="bi bi-trash-fill"></i></div>
                                     </td>
-                                    <!-- Deactivate Button -->
                                     <td class="text-center deactivateButton d-none">
-                                        <div class="btn-deactivate">
-                                            <i class="bi bi-archive-fill"></i>
-                                        </div>
+                                        <div class="btn-deactivate"><i class="bi bi-archive-fill"></i></div>
                                     </td>
-                                    <!-- Activate Button -->
                                     <td class="text-center activateButton d-none">
-                                        <div class="btn-activate">
-                                            <i class="bi bi-archive-fill"></i>
-                                        </div>
+                                        <div class="btn-activate"><i class="bi bi-archive-fill"></i></div>
                                     </td>
                                 </tr>
                             }
@@ -105,11 +119,7 @@
                     </table>
                 </div>
                 <div class="card-footer d-flex justify-content-between align-items-center">
-                    <div>Strana 1 / 1 (@Model.Count položek)</div>
-                    <div class="btn-group">
-                        <a class="btn btn-outline-secondary disabled">Předchozí</a>
-                        <a class="btn btn-outline-secondary disabled">Další</a>
-                    </div>
+                    <div>@Model.Students.Count položek</div>
                 </div>
             </div>
         </div>
@@ -119,68 +129,56 @@
                 <div class="card-header brandText fw-bold"><i class="bi bi-funnel me-2"></i>Filtrace</div>
                 <div class="card-body">
                     <form method="get" class="vstack gap-2">
-                        <!--Jméno-->
-                        <input class="form-control" name="name" value="@Context.Request.Query["name"]" placeholder="Jméno nebo příjmení" />
-                        
-                        <!--Třída-->
+                        <input class="form-control" name="name" value="@Model.Name" placeholder="Jméno nebo příjmení" />
+
                         <select class="form-select select2" name="classId">
-                            <option disabled selected>Vyber třídu</option>
-                            @* @foreach (var class in Model.Classes) {
-                                <option value="@class.ClassId">@class.Name</option>
-                            } *@
+                            <option value="">Vyber třídu</option>
+                            @foreach (var c in Model.Classes)
+                            {
+                                <option value="@c.ClassesId" selected="@(Model.ClassId == c.ClassesId)">@c.Name</option>
+                            }
                         </select>
-                        
-                        <!--Obor-->
+
                         <select class="form-select select2" name="fieldId">
-                            <option disabled selected>Vyber obor</option>
-                            @* @foreach (var field in Model.Fields) {
-                                <option value="@field.StudentFieldId">@field.Name</option>
-                            } *@
+                            <option value="">Vyber obor</option>
+                            @foreach (var f in Model.Fields)
+                            {
+                                <option value="@f.StudentFieldId" selected="@(Model.FieldId == f.StudentFieldId)">@f.Name</option>
+                            }
                         </select>
-                        
-                        <!--Aktivní-->
+
                         <select class="form-select select2" name="active">
                             <option value="">Aktivní/Neaktivní</option>
-                            <option value="true" selected="@(Context.Request.Query["active"] == "true")">Aktivní</option>
-                            <option value="false" selected="@(Context.Request.Query["active"] == "false")">Neaktivní</option>
+                            <option value="true" selected="@(Model.Active == true)">Aktivní</option>
+                            <option value="false" selected="@(Model.Active == false)">Neaktivní</option>
                         </select>
-                        
-                        
+
                         <button class="btn btn-orange w-100">
-                            <i class="bi bi-funnel-fill me-2"></i>
-                            Filtrovat
+                            <i class="bi bi-funnel-fill me-2"></i>Filtrovat
                         </button>
-                        
                         <a href="@Url.Action("Index", "Students")" class="btn btn-outline-secondary w-100">
-                            <i class="bi bi-x-circle me-2"></i>
-                            Resetovat
+                            <i class="bi bi-x-circle me-2"></i>Resetovat
                         </a>
                     </form>
                 </div>
             </div>
-            
-            <!-- Rychlé statistiky -->
+
             <div class="card shadow-sm mt-3">
                 <div class="card-header bg-light fw-bold">
-                    <i class="bi bi-clipboard-data me-2"></i>
-                    Rychlé statistiky
+                    <i class="bi bi-clipboard-data me-2"></i>Rychlé statistiky
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Celkem studentů:</span>
-                        <strong>@Model.Count</strong>
+                        <span class="text-muted">Celkem:</span>
+                        <strong>@Model.Students.Count</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Aktivní:</span>
-                        <strong class="text-success">@Model.Count(x => x.IsActive)</strong>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Neaktivní:</span>
-                        <strong class="text-secondary">@Model.Count(x => !x.IsActive)</strong>
+                        <strong class="text-success">@Model.Students.Count(x => x.IsActive)</strong>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="text-muted">Zobrazeno:</span>
-                        <strong class="text-primary">@Model.Count</strong>
+                        <span class="text-muted">Neaktivní:</span>
+                        <strong class="text-secondary">@Model.Students.Count(x => !x.IsActive)</strong>
                     </div>
                 </div>
             </div>
@@ -190,16 +188,371 @@
 
 <input type="hidden" id="Ids" name="Ids" value="" />
 
+<!-- Bulk Create Modal -->
+<div class="modal fade" id="bulkModal" tabindex="-1" aria-labelledby="bulkModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkModalLabel">
+                    <i class="bi bi-people-fill me-2"></i>Hromadné vytvoření studentů
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Přiřadit do tříd (volitelné)</label>
+                    <select class="form-select select2-bulk" id="bulkClassIds" multiple>
+                        @foreach (var c in Model.Classes)
+                        {
+                            <option value="@c.ClassesId">@c.Name</option>
+                        }
+                    </select>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="form-label fw-bold mb-0">Studenti</label>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="bulkAddRow">
+                        <i class="bi bi-plus-circle me-1"></i>Přidat řádek
+                    </button>
+                </div>
+                <div id="bulkRows">
+                    <div class="row g-2 mb-2 bulk-row">
+                        <div class="col-5">
+                            <input type="text" class="form-control bulk-first" placeholder="Jméno" maxlength="64" />
+                        </div>
+                        <div class="col-5">
+                            <input type="text" class="form-control bulk-last" placeholder="Příjmení" maxlength="64" />
+                        </div>
+                        <div class="col-2 d-flex align-items-center">
+                            <button type="button" class="btn btn-sm btn-outline-danger bulk-remove-row" title="Odebrat">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <hr />
+                    <label class="form-label fw-bold">Nebo vložte ze schránky</label>
+                    <textarea class="form-control" id="bulkPaste" rows="3"
+                              placeholder="Jméno Příjmení (každý student na nový řádek)"></textarea>
+                    <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="bulkParseBtn">
+                        <i class="bi bi-clipboard me-1"></i>Zpracovat text
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zrušit</button>
+                <button type="button" class="btn btn-orange" id="bulkSubmitBtn">
+                    <i class="bi bi-check2-circle me-1"></i>Vytvořit studenty
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Student Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">
+                    <i class="bi bi-pencil-square me-2"></i>Editace studenta
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="editFormBody">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-orange" role="status"></div>
+                        <p class="text-muted mt-2">Načítám formulář…</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zrušit</button>
+                <button type="button" class="btn btn-orange" id="editSubmitBtn">
+                    <i class="bi bi-check2-circle me-1"></i>Uložit změny
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
-        // Export funkcionalita
-        document.getElementById('exportBtn')?.addEventListener('click', function() {
-            toastr.info('Export statistik bude dostupný brzy');
+        // ============================================
+        // Select2 init
+        // ============================================
+        $(document).ready(function () {
+            $('.select2').select2({ theme: 'bootstrap-5', width: '100%' });
         });
-        
-        // Statistiky modal
-        document.getElementById('statsBtn')?.addEventListener('click', function() {
-            toastr.info('Detailní statistiky budou dostupné brzy');
+
+        // ============================================
+        // PDF Export
+        // ============================================
+        document.getElementById('exportBtn')?.addEventListener('click', function () {
+            var form = document.querySelector('aside form');
+            var fd = new FormData(form);
+            var body = {};
+            var name = fd.get('name');
+            if (name) body.SearchFilter = name;
+            var active = fd.get('active');
+            if (active === 'true') body.ActiveFilter = true;
+            else if (active === 'false') body.ActiveFilter = false;
+
+            fetch('/api/pdf/students', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(function (resp) {
+                if (!resp.ok) throw new Error('Chyba při generování PDF');
+                return resp.blob();
+            })
+            .then(function (blob) {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'Studenti.pdf';
+                a.click();
+                URL.revokeObjectURL(url);
+            })
+            .catch(function (err) { toastr.error(err.message); });
+        });
+
+        // ============================================
+        // Bulk Create Modal
+        // ============================================
+        var bulkModal;
+        document.getElementById('bulkCreateBtn')?.addEventListener('click', function () {
+            var modalEl = document.getElementById('bulkModal');
+            bulkModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            bulkModal.show();
+
+            // Init select2 inside modal
+            setTimeout(function () {
+                $('.select2-bulk').select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    dropdownParent: $('#bulkModal'),
+                    placeholder: 'Vyber třídy'
+                });
+            }, 200);
+        });
+
+        // Add row
+        document.getElementById('bulkAddRow')?.addEventListener('click', function () {
+            addBulkRow('', '');
+        });
+
+        function addBulkRow(first, last) {
+            var html = '<div class="row g-2 mb-2 bulk-row">' +
+                '<div class="col-5"><input type="text" class="form-control bulk-first" placeholder="Jméno" maxlength="64" value="' + escapeHtml(first) + '" /></div>' +
+                '<div class="col-5"><input type="text" class="form-control bulk-last" placeholder="Příjmení" maxlength="64" value="' + escapeHtml(last) + '" /></div>' +
+                '<div class="col-2 d-flex align-items-center"><button type="button" class="btn btn-sm btn-outline-danger bulk-remove-row" title="Odebrat"><i class="bi bi-x-lg"></i></button></div>' +
+                '</div>';
+            document.getElementById('bulkRows').insertAdjacentHTML('beforeend', html);
+        }
+
+        function escapeHtml(str) {
+            var d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        // Remove row (delegation)
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest('.bulk-remove-row');
+            if (!btn) return;
+            var rows = document.querySelectorAll('.bulk-row');
+            if (rows.length <= 1) { toastr.warning('Musí být alespoň jeden řádek.'); return; }
+            btn.closest('.bulk-row').remove();
+        });
+
+        // Parse pasted text
+        document.getElementById('bulkParseBtn')?.addEventListener('click', function () {
+            var text = document.getElementById('bulkPaste').value.trim();
+            if (!text) { toastr.warning('Vložte text se studenty.'); return; }
+
+            var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(function (l) { return l.length > 0; });
+            var added = 0;
+
+            lines.forEach(function (line) {
+                // support tab or space separator
+                var parts = line.split(/[\t;,]+/).map(function (p) { return p.trim(); });
+                if (parts.length === 1) {
+                    // try splitting by space: "Jan Novák"
+                    parts = line.split(/\s+/);
+                }
+                if (parts.length >= 2) {
+                    addBulkRow(parts[0], parts.slice(1).join(' '));
+                    added++;
+                }
+            });
+
+            if (added > 0) {
+                document.getElementById('bulkPaste').value = '';
+                toastr.success('Přidáno ' + added + ' řádků.');
+            } else {
+                toastr.warning('Nepodařilo se rozpoznat studenty. Formát: Jméno Příjmení');
+            }
+        });
+
+        // Submit bulk create
+        document.getElementById('bulkSubmitBtn')?.addEventListener('click', async function () {
+            var rows = document.querySelectorAll('.bulk-row');
+            var students = [];
+
+            rows.forEach(function (row) {
+                var first = row.querySelector('.bulk-first').value.trim();
+                var last = row.querySelector('.bulk-last').value.trim();
+                if (first && last) {
+                    students.push({ firstName: first, lastName: last });
+                }
+            });
+
+            if (students.length === 0) {
+                toastr.warning('Vyplňte jméno a příjmení alespoň u jednoho studenta.');
+                return;
+            }
+
+            var classesIds = $('#bulkClassIds').val();
+            classesIds = classesIds ? classesIds.map(Number) : [];
+
+            var btn = this;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Vytvářím...';
+
+            try {
+                var res = await fetch('/Students/BulkCreate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ students: students, classesIds: classesIds })
+                });
+
+                var data = await res.json();
+
+                if (res.ok) {
+                    toastr.success(data.message);
+                    if (bulkModal) bulkModal.hide();
+                    setTimeout(function () { location.reload(); }, 800);
+                } else {
+                    if (data.errors && data.errors.length > 0) {
+                        data.errors.forEach(function (e) { toastr.error(e); });
+                    } else {
+                        toastr.error(data.message || 'Chyba při vytváření.');
+                    }
+                }
+            } catch (err) {
+                toastr.error('Chyba komunikace se serverem.');
+                console.error(err);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Vytvořit studenty';
+            }
+        });
+
+        // ============================================
+        // Edit Student Modal
+        // ============================================
+        var editModal;
+        var editStudentId = null;
+
+        document.addEventListener('click', async function (e) {
+            var btn = e.target.closest('.student-edit-btn');
+            if (!btn) return;
+            e.preventDefault();
+
+            editStudentId = parseInt(btn.dataset.id);
+            var modalEl = document.getElementById('editModal');
+            editModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+            // Show spinner while loading
+            document.getElementById('editFormBody').innerHTML =
+                '<div class="text-center py-4">' +
+                '<div class="spinner-border text-orange" role="status"></div>' +
+                '<p class="text-muted mt-2">Načítám formulář…</p></div>';
+
+            editModal.show();
+
+            try {
+                var res = await fetch('/api/Config/StudentEditForm/' + editStudentId);
+                if (!res.ok) throw new Error('Nepodařilo se načíst formulář.');
+                var html = await res.text();
+                document.getElementById('editFormBody').innerHTML = html;
+
+                // Init select2 inside the edit modal
+                setTimeout(function () {
+                    $('#editFormBody .select2').select2({
+                        theme: 'bootstrap-5',
+                        width: '100%',
+                        dropdownParent: $('#editModal')
+                    });
+                }, 100);
+            } catch (err) {
+                document.getElementById('editFormBody').innerHTML =
+                    '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i>' + err.message + '</div>';
+                console.error(err);
+            }
+        });
+
+        document.getElementById('editSubmitBtn')?.addEventListener('click', async function () {
+            var formBody = document.getElementById('editFormBody');
+            var inputs = formBody.querySelectorAll('input, select');
+            var data = {};
+
+            inputs.forEach(function (el) {
+                var name = el.getAttribute('name');
+                if (!name) return;
+
+                if (el.tagName === 'SELECT' && el.multiple) {
+                    var vals = Array.from(el.selectedOptions).map(function (o) { return parseInt(o.value); }).filter(function (v) { return !isNaN(v); });
+                    data[name] = vals;
+                } else if (el.type === 'checkbox') {
+                    data[name] = el.checked;
+                } else if (el.type === 'hidden' && name.toLowerCase().includes('id')) {
+                    var parsed = parseInt(el.value);
+                    if (!isNaN(parsed)) data[name] = parsed;
+                } else {
+                    data[name] = el.value.trim();
+                }
+            });
+
+            // Validation
+            if (!data.FirstName || data.FirstName.length < 2) {
+                toastr.warning('Jméno musí mít alespoň 2 znaky.'); return;
+            }
+            if (!data.LastName || data.LastName.length < 2) {
+                toastr.warning('Příjmení musí mít alespoň 2 znaky.'); return;
+            }
+
+            var btn = this;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Ukládám...';
+
+            try {
+                var res = await fetch('/api/Student', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                var text = await res.text();
+
+                if (res.ok) {
+                    toastr.success(text || 'Student aktualizován.');
+                    if (editModal) editModal.hide();
+                    setTimeout(function () { location.reload(); }, 800);
+                } else {
+                    toastr.error(text || 'Chyba při aktualizaci.');
+                }
+            } catch (err) {
+                toastr.error('Chyba komunikace se serverem.');
+                console.error(err);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Uložit změny';
+            }
         });
     </script>
 }

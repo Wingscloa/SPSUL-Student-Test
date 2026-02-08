@@ -10,6 +10,7 @@
 <link href="~/css/test.css" rel="stylesheet" asp-append-version="true" />
 <link href="~/css/createtest.css" rel="stylesheet" asp-append-version="true" />
 <script src="~/js/question.js" asp-append-version="true"></script>
+<link href="~/css/normaltables.css" asp-append-version="true" rel="stylesheet" />
 
 <div class="container-fluid py-4">
     <div class="row g-4">
@@ -39,7 +40,7 @@
                                 <i class="bi bi-text-paragraph text-orange"></i> Popis/Znění otázky
                             </label>
                             <textarea class="form-control" id="Description" name="Description"
-                                      rows="4" placeholder="Zadej popis/znění otázky" maxlength="512" required>@Model.Question.Description</textarea>
+                                      rows="6" placeholder="Zadej popis/znění otázky" maxlength="512" required>@Model.Question.Description</textarea>
                         </div>
 
                         <!-- Typ otázky -->

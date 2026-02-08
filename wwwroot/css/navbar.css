@@ -1,4 +1,4 @@
-/* ============================================
+Ôªø/* ============================================
    MODERN NAVBAR DESIGN SYSTEM
    ============================================ */
 
@@ -14,7 +14,7 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Scrolled state - menöÌ navbar */
+/* Scrolled state - men≈°√≠ navbar */
 .navbar.scrolled {
     padding: 0.5rem 0;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
@@ -54,7 +54,7 @@
         transition: transform 0.3s ease;
     }
 
-    /* OdstranÏna rotace loga */
+    /* Odstranƒõna rotace loga */
     .navbar-brand:hover img:first-child {
         transform: scale(1.05);
     }
@@ -64,7 +64,7 @@
     gap: 0.5rem;
 }
 
-/* Nav Items - ModernÏjöÌ buttons */
+/* Nav Items - Modernƒõj≈°√≠ buttons */
 .nav-item {
     position: relative;
 }
@@ -123,7 +123,7 @@
         transform: scale(1.15);
     }
 
-/* Primary Button (Vytvo¯it test) - Special styling */
+/* Primary Button (Vytvo≈ôit test) - Special styling */
 .nav-link.PrimaryButton {
     background: linear-gradient(135deg, #ff8a00 0%, #ff6b00 100%);
     color: white !important;
@@ -221,7 +221,7 @@
         height: 20px;
     }
 
-    /* User info na mobilu - menöÌ */
+    /* User info na mobilu - men≈°√≠ */
     .user-info {
         padding: 0.35rem 0.75rem;
         gap: 0.5rem;
@@ -242,7 +242,7 @@
     }
 }
 
-/* Hide desktop nav on mobile (pouûÌv·me TabBar) */
+/* Hide desktop nav on mobile (pou≈æ√≠v√°me TabBar) */
 @media (max-width: 991px) {
     .navbar-collapse {
         display: none !important;
@@ -253,7 +253,7 @@
    NAVBAR ANIMATIONS
    ============================================ */
 
-/* Fade in animace p¯i naËtenÌ */
+/* Fade in animace p≈ôi naƒçten√≠ */
 @keyframes navbarFadeIn {
     from {
         opacity: 0;
@@ -354,7 +354,7 @@ USER INFO SECTION
     line-height: 1;
 }
 
-/* Dropdown toggle (pokud m·ö dropdown) */
+/* Dropdown toggle (pokud m√°≈° dropdown) */
 .user-info .dropdown-toggle {
     border: none;
     background: transparent;
@@ -371,7 +371,7 @@ USER INFO SECTION
    UTILITIES
    ============================================ */
 
-/* Badge notification (nap¯. pro poËet ËekajÌcÌch test˘) */
+/* Badge notification (nap≈ô. pro poƒçet ƒçekaj√≠c√≠ch test≈Ø) */
 .nav-link .badge {
     position: absolute;
     top: 5px;

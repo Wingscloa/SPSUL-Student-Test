@@ -15,10 +15,12 @@ namespace SPSUL.Controllers
     public class DetailController : Controller
     {
         private readonly SpsulContext _ctx;
+        private readonly PdfService _pdf;
 
-        public DetailController(SpsulContext ctx)
+        public DetailController(SpsulContext ctx, PdfService pdf)
         {
             _ctx = ctx;
+            _pdf = pdf;
         }
 
         // GET: Detail/Index
@@ -192,6 +194,68 @@ namespace SPSUL.Controllers
         }
 
         // ============================================
+        // EXPORT PDF
+        // ============================================
+        public async Task<IActionResult> ExportPdf(
+            string? Q1,
+            bool? completed,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            string? sortBy)
+        {
+            var allItems = await _ctx.StudentTests
+                .Include(st => st.Test)
+                .Include(st => st.Student)
+                .Where(st => st.FinishedAt != DateTime.MinValue)
+                .ToListAsync();
+
+            var testData = allItems.Select(st =>
+            {
+                int successPct = CalculateSuccess(st);
+                return new AssignedTestVm
+                {
+                    Id = st.TestId,
+                    StudentId = st.StudentId,
+                    Nazev = st.Test.Name,
+                    LoginId = st.LoginId,
+                    Jmeno = $"{st.Student.FirstName} {st.Student.LastName}",
+                    ZacalV = st.StartedAt,
+                    DokoncilV = st.FinishedAt,
+                    UspechPct = successPct,
+                    Absolvoval = successPct >= 50,
+                    Aktivni = st.Test.IsActive
+                };
+            }).AsQueryable();
+
+            if (!string.IsNullOrEmpty(Q1))
+                testData = testData.Where(x =>
+                    x.Nazev.Contains(Q1, StringComparison.OrdinalIgnoreCase) ||
+                    x.Jmeno.Contains(Q1, StringComparison.OrdinalIgnoreCase));
+
+            if (completed.HasValue)
+                testData = testData.Where(x => x.Absolvoval == completed.Value);
+
+            if (dateFrom.HasValue)
+                testData = testData.Where(x => x.ZacalV >= dateFrom.Value);
+
+            if (dateTo.HasValue)
+                testData = testData.Where(x => x.DokoncilV <= dateTo.Value);
+
+            testData = sortBy switch
+            {
+                "date-asc" => testData.OrderBy(x => x.DokoncilV),
+                "success-desc" => testData.OrderByDescending(x => x.UspechPct),
+                "success-asc" => testData.OrderBy(x => x.UspechPct),
+                "name-asc" => testData.OrderBy(x => x.Nazev),
+                "name-desc" => testData.OrderByDescending(x => x.Nazev),
+                _ => testData.OrderByDescending(x => x.DokoncilV)
+            };
+
+            var pdfBytes = _pdf.GenerateResultsPdf(testData.ToList());
+            return File(pdfBytes, "application/pdf", $"Vysledky_{DateTime.Now:yyyyMMdd_HHmm}.pdf");
+        }
+
+        // ============================================
         // EXPORT CSV
         // ============================================
         public async Task<IActionResult> Export()
@@ -226,85 +290,6 @@ namespace SPSUL.Controllers
                 .ToArray();
 
             return File(bytes, "text/csv", $"vysledky_{DateTime.Now:yyyyMMdd_HHmm}.csv");
-        }
-
-        // ============================================
-        // STATS - statistiky dashboard
-        // ============================================
-        public async Task<IActionResult> Stats()
-        {
-            var allItems = await _ctx.StudentTests
-                .Include(st => st.Test)
-                    .ThenInclude(t => t.StudentField)
-                .Include(st => st.Student)
-                    .ThenInclude(s => s.ClassesStudents)
-                        .ThenInclude(cs => cs.Classes)
-                .Where(st => st.FinishedAt != DateTime.MinValue)
-                .ToListAsync();
-
-            // Per-test stats
-            var testStats = allItems
-                .GroupBy(st => new { st.TestId, st.Test.Name })
-                .Select(g => new
-                {
-                    g.Key.Name,
-                    Count = g.Count(),
-                    AvgPct = g.Average(st => (double)CalculateSuccess(st)),
-                    BestPct = g.Max(st => CalculateSuccess(st)),
-                    WorstPct = g.Min(st => CalculateSuccess(st))
-                })
-                .OrderByDescending(x => x.Count)
-                .ToList();
-
-            // Per-class stats
-            var classStats = allItems
-                .SelectMany(st => st.Student.ClassesStudents.Select(cs => new
-                {
-                    ClassName = cs.Classes?.Name ?? "Bez tøídy",
-                    Pct = CalculateSuccess(st)
-                }))
-                .GroupBy(x => x.ClassName)
-                .Select(g => new
-                {
-                    ClassName = g.Key,
-                    Count = g.Count(),
-                    AvgPct = g.Average(x => (double)x.Pct)
-                })
-                .OrderByDescending(x => x.AvgPct)
-                .ToList();
-
-            // Time trend (last 30 days)
-            var thirtyDaysAgo = DateTime.Now.AddDays(-30);
-            var timeTrend = allItems
-                .Where(st => st.FinishedAt >= thirtyDaysAgo)
-                .GroupBy(st => st.FinishedAt.Date)
-                .Select(g => new
-                {
-                    Date = g.Key.ToString("dd.MM"),
-                    Count = g.Count(),
-                    AvgPct = g.Average(st => (double)CalculateSuccess(st))
-                })
-                .OrderBy(x => x.Date)
-                .ToList();
-
-            // Overall
-            int totalTests = allItems.Count;
-            double overallAvg = totalTests > 0 ? allItems.Average(st => (double)CalculateSuccess(st)) : 0;
-            int passed = allItems.Count(st => CalculateSuccess(st) >= 50);
-
-            ViewBag.TestStats = testStats;
-            ViewBag.ClassStats = classStats;
-            ViewBag.TimeTrend = timeTrend;
-            ViewBag.TotalTests = totalTests;
-            ViewBag.OverallAvg = overallAvg;
-            ViewBag.Passed = passed;
-            ViewBag.Failed = totalTests - passed;
-
-            ViewBag.TestStatsJson = JsonSerializer.Serialize(testStats);
-            ViewBag.ClassStatsJson = JsonSerializer.Serialize(classStats);
-            ViewBag.TimeTrendJson = JsonSerializer.Serialize(timeTrend);
-
-            return View();
         }
 
         // ============================================

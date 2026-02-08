@@ -3,47 +3,90 @@
     Layout = "~/Views/Shared/Layouts/_Auth.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
-<link href="~/css/global.css" rel="stylesheet" asp-append-version="true" />
-
-<form asp-action="Take" asp-controller="Test" method="get">
-    <div class="container" style="min-width: 320px;">
-        <div class="row headContainer justify-content-center gap-3">
-            <img class="logo" src="\image\logo\spsul.webp" />
-            <h1 class="Header">SPSUL</h1>
-        </div>
-        @if (TempData["TestError"] != null)
-        {
-            <div class="alert alert-danger mt-2">
-                <i class="bi bi-exclamation-triangle me-2"></i>@TempData["TestError"]
-            </div>
-        }
-        <div class="row">
-            <div class="col">
-                <label for="testId">Číslo testu</label>
-                <input type="text" id="testId" name="testId" class="form-control input" 
-                       placeholder="Např. AB3K7XH2" required autocomplete="off"
-                       style="text-transform: uppercase; letter-spacing: 2px; font-weight: 600;" />
-            </div>
-        </div>
-        <div class="row mt-1 text-end">
-            <div class="col d-flex gap-2 justify-content-between">
-                <a class="link-primary" asp-controller="Auth" asp-action="Login">Jsem učitel</a>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col">
-                <div class="alert alert-info py-2 mb-0 small">
-                    <i class="bi bi-lightbulb me-1"></i>
-                    Chceš si to vyzkoušet? Zadej kód <strong class="user-select-all" style="letter-spacing:2px;">DEMO2025</strong>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col">
-                <button type="submit" class="btn btn-primary w-100"><span class="boldWhite">Začít test</span></button>
-            </div>
-        </div>
-        <hr class="mt-3" />
+<div class="auth-card">
+    <div class="auth-logo-area">
+        <img class="auth-logo" alt="SPSUL logo" src="/image/logo/spsul.webp" />
+        <h1 class="auth-brand">SPSUL</h1>
+        <p class="auth-subtitle">Přihlášení k testu</p>
     </div>
-</form>
+
+    @if (TempData["TestError"] != null)
+    {
+        <div class="auth-alert auth-alert-error">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>@TempData["TestError"]</span>
+        </div>
+    }
+
+    <form asp-action="Take" asp-controller="Test" method="get" id="testLoginForm" novalidate>
+        <div class="auth-field">
+            <label class="auth-label" for="testId">
+                <i class="bi bi-key"></i> Kód testu
+            </label>
+            <div class="auth-input-wrap">
+                <i class="bi bi-key-fill auth-input-icon"></i>
+                <input type="text" id="testId" name="testId" class="auth-input auth-input-code"
+                       placeholder="Např. AB3K7XH2" required autocomplete="off"
+                       maxlength="12" />
+            </div>
+            <div class="auth-field-feedback" id="codeFeedback"></div>
+        </div>
+
+        <div class="auth-demo-hint">
+            <i class="bi bi-mortarboard-fill"></i>
+            <span>Chceš si to vyzkoušet? Zkus ukázkový test</span>
+        </div>
+
+        <button type="submit" class="auth-submit" id="testLoginBtn">
+            <span class="auth-submit-text">Začít test</span>
+            <i class="bi bi-play-circle-fill"></i>
+        </button>
+    </form>
+
+    <a href="/Test/Example" class="auth-example-btn">
+        <i class="bi bi-lightning-charge-fill me-1"></i>Vyzkoušet příklad testu
+    </a>
+
+    <div class="auth-footer">
+        <a class="auth-link" asp-controller="Auth" asp-action="Login">
+            <i class="bi bi-person-workspace me-1"></i>Jsem učitel
+        </a>
+    </div>
+    <div class="auth-divider"></div>
+</div>
+
+<script>
+(function () {
+    const form = document.getElementById('testLoginForm');
+    const code = document.getElementById('testId');
+    const fb = document.getElementById('codeFeedback');
+
+    function setFeedback(el, feedbackEl, ok, msg) {
+        el.classList.remove('valid', 'invalid');
+        feedbackEl.classList.remove('show', 'ok', 'err');
+        if (msg) {
+            el.classList.add(ok ? 'valid' : 'invalid');
+            feedbackEl.textContent = msg;
+            feedbackEl.classList.add('show', ok ? 'ok' : 'err');
+        }
+    }
+
+    // Auto-uppercase
+    code.addEventListener('input', function () {
+        this.value = this.value.toUpperCase();
+        const v = this.value.trim();
+        if (!v) setFeedback(code, fb, false, '');
+        else if (v.length < 4) setFeedback(code, fb, false, 'Kód je příliš krátký');
+        else setFeedback(code, fb, true, 'Kód je v pořádku ✓');
+    });
+
+    form.addEventListener('submit', function (e) {
+        if (!code.value.trim()) {
+            setFeedback(code, fb, false, 'Zadejte kód testu');
+            e.preventDefault();
+            return;
+        }
+        loadingScreen(true);
+    });
+})();
+</script>

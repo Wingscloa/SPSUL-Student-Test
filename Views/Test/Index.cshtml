@@ -1,4 +1,4 @@
-@using SPSUL.Models.Data
+ï»¿@using SPSUL.Models.Data
 @model List<Test>
 @{
     ViewData["Title"] = "Testy";
@@ -14,12 +14,16 @@
             <div class="card shadow-sm cardTable">
                 <div class="card-header brandText d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="bi bi-journal-text me-2"></i>Seznam testù
+                        <i class="bi bi-journal-text me-2"></i>Seznam testÅ¯
                     </h5>
                     <div class="tools d-flex justify-content-center align-items-center gap-2">
-                        <a class="iconLink mode" asp-action="Create" asp-controller="Test" title="Vytvoøit test">
+                        <a class="iconLink cursor mode" title="Exportovat do PDF" href="/api/pdf/tests">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            Export PDF
+                        </a>
+                        <a class="iconLink mode" asp-action="Create" asp-controller="Test" title="VytvoÅ™it test">
                             <i class="bi bi-plus-circle"></i>
-                            Vytvoøit
+                            VytvoÅ™it
                         </a>
                     </div>
                 </div>
@@ -28,14 +32,14 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Název</th>
-                                <th>Tvùrce</th>
-                                <th>Pøedmìt</th>
-                                <th>Otázek</th>
-                                <th>Pøiøazeno</th>
-                                <th>Aktivní</th>
-                                <th class="text-center">Pøiøadit</th>
-                                <th class="text-center">Pøiøazení</th>
+                                <th>NÃ¡zev</th>
+                                <th>TvÅ¯rce</th>
+                                <th>PÅ™edmÄ›t</th>
+                                <th>OtÃ¡zek</th>
+                                <th>PÅ™iÅ™azeno</th>
+                                <th>AktivnÃ­</th>
+                                <th class="text-center">PÅ™iÅ™adit</th>
+                                <th class="text-center">PÅ™iÅ™azenÃ­</th>
                                 <th class="text-center">Edit</th>
                                 <th class="text-center">Stav</th>
                                 <th class="text-center">Smazat</th>
@@ -57,13 +61,13 @@
                                     <td><span class="badge bg-secondary">@(t.StudentTests?.Count ?? 0)</span></td>
                                     <td>
                                         <span class="badge bg-@(t.IsActive ? "success" : "secondary")">
-                                            @(t.IsActive ? "Aktivní" : "Neaktivní")
+                                            @(t.IsActive ? "AktivnÃ­" : "NeaktivnÃ­")
                                         </span>
                                     </td>
                                     <td class="text-center">
                                         @if (t.IsActive)
                                         {
-                                            <button class="icon-btn btn-assign" title="Pøiøadit studentùm"
+                                            <button class="icon-btn btn-assign" title="PÅ™iÅ™adit studentÅ¯m"
                                                     data-test-id="@t.TestId" data-test-name="@t.Name"
                                                     data-bs-toggle="modal" data-bs-target="#assignModal">
                                                 <i class="bi bi-person-plus-fill"></i>
@@ -77,7 +81,7 @@
                                     <td class="text-center">
                                         @if ((t.StudentTests?.Count ?? 0) > 0)
                                         {
-                                            <a class="icon-btn" title="Zobrazit pøiøazení"
+                                            <a class="icon-btn" title="Zobrazit pÅ™iÅ™azenÃ­"
                                                href="/Test/Assignments?id=@t.TestId">
                                                 <i class="bi bi-people-fill"></i>
                                             </a>
@@ -112,9 +116,9 @@
                                 <tr>
                                     <td colspan="12" class="text-center py-5">
                                         <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
-                                        <p class="text-muted mt-3">Zatím žádné testy</p>
+                                        <p class="text-muted mt-3">ZatÃ­m Å¾Ã¡dnÃ© testy</p>
                                         <a asp-action="Create" class="btn btn-orange">
-                                            <i class="bi bi-plus-circle me-2"></i>Vytvoøit první test
+                                            <i class="bi bi-plus-circle me-2"></i>VytvoÅ™it prvnÃ­ test
                                         </a>
                                     </td>
                                 </tr>
@@ -123,7 +127,7 @@
                     </table>
                 </div>
                 <div class="card-footer d-flex justify-content-between align-items-center">
-                    <div>Celkem @Model.Count testù</div>
+                    <div>Celkem @Model.Count testÅ¯</div>
                 </div>
             </div>
         </div>
@@ -133,11 +137,11 @@
                 <div class="card-header brandText fw-bold">Filtrace</div>
                 <div class="card-body">
                     <form method="get" class="vstack gap-2">
-                        <input class="form-control" name="q" placeholder="Hledat název testu" />
+                        <input class="form-control" name="q" placeholder="Hledat nÃ¡zev testu" />
                         <select class="form-select" name="active">
-                            <option value="">Aktivní/Neaktivní</option>
-                            <option value="true">Aktivní</option>
-                            <option value="false">Neaktivní</option>
+                            <option value="">AktivnÃ­/NeaktivnÃ­</option>
+                            <option value="true">AktivnÃ­</option>
+                            <option value="false">NeaktivnÃ­</option>
                         </select>
                         <button class="btn btn-orange w-100">
                             <i class="bi bi-funnel-fill me-2"></i>Filtrovat
@@ -150,19 +154,19 @@
             </div>
             <div class="card shadow-sm mt-3">
                 <div class="card-header bg-light fw-bold">
-                    <i class="bi bi-clipboard-data me-2"></i>Rychlé statistiky
+                    <i class="bi bi-clipboard-data me-2"></i>RychlÃ© statistiky
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Celkem testù:</span>
+                        <span class="text-muted">Celkem testÅ¯:</span>
                         <strong>@Model.Count</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Aktivní:</span>
+                        <span class="text-muted">AktivnÃ­:</span>
                         <strong class="text-success">@Model.Count(t => t.IsActive)</strong>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="text-muted">Neaktivní:</span>
+                        <span class="text-muted">NeaktivnÃ­:</span>
                         <strong class="text-secondary">@Model.Count(t => !t.IsActive)</strong>
                     </div>
                 </div>
@@ -178,30 +182,43 @@
             <div class="modal-header" style="background: linear-gradient(135deg, #ff8a00, #ff6b00); color: white;">
                 <h5 class="modal-title">
                     <i class="bi bi-person-plus-fill me-2"></i>
-                    Pøiøadit test: <span id="assignTestName"></span>
+                    PÅ™iÅ™adit test: <span id="assignTestName"></span>
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="assignTestId" />
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Filtrovat podle tøídy:</label>
-                    <select class="form-select" id="classFilter">
-                        <option value="">Všechny tøídy</option>
-                        @foreach (var c in classes)
-                        {
-                            <option value="@c.ClassesId">@c.Name (@c.ClassesStudents.Count studentù)</option>
-                        }
-                    </select>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold mb-1">
+                            <i class="bi bi-funnel me-1"></i>Filtrovat podle tÅ™Ã­dy
+                        </label>
+                        <select class="form-select" id="classFilter">
+                            <option value="">VÅ¡echny tÅ™Ã­dy</option>
+                            @foreach (var c in classes)
+                            {
+                                <option value="@c.ClassesId">@c.Name (@c.ClassesStudents.Count studentÅ¯)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold mb-1">
+                            <i class="bi bi-search me-1"></i>Hledat
+                        </label>
+                        <input type="text" class="form-control" id="studentSearch" placeholder="JmÃ©no studenta..." />
+                    </div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="form-check">
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background:#f8f9fa;">
+                    <div class="form-check mb-0">
                         <input class="form-check-input" type="checkbox" id="selectAllStudents">
-                        <label class="form-check-label fw-bold" for="selectAllStudents">Vybrat všechny</label>
+                        <label class="form-check-label fw-bold" for="selectAllStudents">Vybrat vÅ¡echny dostupnÃ©</label>
                     </div>
-                    <span class="badge bg-warning text-dark" id="selectedStudentCount">0 vybráno</span>
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="badge bg-orange" id="selectedStudentCount" style="background:#ff8a00;">0 vybrÃ¡no</span>
+                        <span class="badge bg-secondary" id="alreadyAssignedInfo"></span>
+                    </div>
                 </div>
 
                 <div class="student-list" style="max-height: 400px; overflow-y: auto;">
@@ -209,17 +226,22 @@
                     {
                         var classNames = string.Join(", ", s.ClassesStudents?.Select(cs => cs.Classes?.Name ?? "") ?? Array.Empty<string>());
                         var classIds = string.Join(",", s.ClassesStudents?.Select(cs => cs.ClassesId) ?? Array.Empty<int>());
+                        var fullName = $"{s.FirstName} {s.LastName}";
 
-                        <div class="form-check student-item p-2 rounded mb-1" data-classes="@classIds"
-                             style="border: 1px solid #e9ecef; transition: all 0.2s;">
-                            <input class="form-check-input student-checkbox" type="checkbox"
+                        <div class="student-item d-flex align-items-center p-2 rounded mb-1"
+                             data-classes="@classIds" data-student-id="@s.StudentId" data-name="@fullName.ToLower()">
+                            <input class="form-check-input student-checkbox me-2 flex-shrink-0" type="checkbox"
                                    value="@s.StudentId" id="student_@s.StudentId">
-                            <label class="form-check-label w-100" for="student_@s.StudentId">
-                                <strong>@s.FirstName @s.LastName</strong>
-                                @if (!string.IsNullOrEmpty(classNames))
-                                {
-                                    <span class="badge bg-secondary ms-2">@classNames</span>
-                                }
+                            <label class="form-check-label w-100 d-flex align-items-center justify-content-between"
+                                   for="student_@s.StudentId" style="cursor:pointer;">
+                                <span>
+                                    <strong>@s.FirstName @s.LastName</strong>
+                                    @if (!string.IsNullOrEmpty(classNames))
+                                    {
+                                        <span class="badge bg-light text-dark border ms-2" style="font-weight:500;">@classNames</span>
+                                    }
+                                </span>
+                                <span class="assign-status-badge"></span>
                             </label>
                         </div>
                     }
@@ -227,16 +249,16 @@
 
                 <div id="assignResults" class="mt-3" style="display: none;">
                     <div class="alert alert-success">
-                        <h6 class="alert-heading"><i class="bi bi-check-circle me-2"></i>Test pøiøazen!</h6>
-                        <p class="mb-2">Pøihlašovací kódy pro studenty:</p>
+                        <h6 class="alert-heading"><i class="bi bi-check-circle me-2"></i>Test pÅ™iÅ™azen!</h6>
+                        <p class="mb-2">PÅ™ihlaÅ¡ovacÃ­ kÃ³dy pro studenty:</p>
                         <div id="loginIdList"></div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer" id="assignFooter">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zavøít</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ZavÅ™Ã­t</button>
                 <button type="button" class="btn btn-orange" id="assignBtn">
-                    <i class="bi bi-check-circle me-2"></i>Pøiøadit vybraným
+                    <i class="bi bi-check-circle me-2"></i>PÅ™iÅ™adit vybranÃ½m
                 </button>
             </div>
         </div>
@@ -257,12 +279,12 @@
                 <p>Opravdu chcete smazat test <strong id="deleteTestName"></strong>?</p>
                 <p class="text-danger small mb-0">
                     <i class="bi bi-info-circle me-1"></i>
-                    Budou smazána i všechna pøiøazení studentù k tomuto testu. Tuto akci nelze vrátit.
+                    Budou smazÃ¡na i vÅ¡echna pÅ™iÅ™azenÃ­ studentÅ¯ k tomuto testu. Tuto akci nelze vrÃ¡tit.
                 </p>
                 <input type="hidden" id="deleteTestId" />
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zrušit</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ZruÅ¡it</button>
                 <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
                     <i class="bi bi-trash me-2"></i>Smazat
                 </button>
@@ -273,50 +295,141 @@
 
 @section Scripts {
 <script>
-    // Open modal: set test info
+    // Build assignment map: testId => [studentId, ...]
+    const assignmentMap = {};
+    @foreach (var t in Model)
+    {
+        if (t.StudentTests != null && t.StudentTests.Any())
+        {
+            var ids = string.Join(",", t.StudentTests.Select(st => st.StudentId));
+            <text>assignmentMap[@t.TestId] = [@ids];</text>
+        }
+    }
+
+    // ============================================
+    // ASSIGN MODAL
+    // ============================================
+    let currentAssignTestId = 0;
+
     document.querySelectorAll('.btn-assign').forEach(btn => {
         btn.addEventListener('click', function () {
-            document.getElementById('assignTestId').value = this.dataset.testId;
+            currentAssignTestId = parseInt(this.dataset.testId);
+            document.getElementById('assignTestId').value = currentAssignTestId;
             document.getElementById('assignTestName').textContent = this.dataset.testName;
             document.getElementById('assignResults').style.display = 'none';
             document.getElementById('assignFooter').style.display = '';
-            document.querySelectorAll('.student-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('classFilter').value = '';
+            document.getElementById('studentSearch').value = '';
             document.getElementById('selectAllStudents').checked = false;
-            updateCount();
+
+            const assigned = assignmentMap[currentAssignTestId] || [];
+            let alreadyCount = 0;
+
+            document.querySelectorAll('.student-item').forEach(item => {
+                const studentId = parseInt(item.dataset.studentId);
+                const cb = item.querySelector('.student-checkbox');
+                const badge = item.querySelector('.assign-status-badge');
+                const isAssigned = assigned.includes(studentId);
+
+                // Reset visibility
+                item.style.display = '';
+                cb.checked = false;
+                cb.disabled = isAssigned;
+                item.classList.remove('student-selected', 'student-disabled');
+
+                if (isAssigned) {
+                    item.classList.add('student-disabled');
+                    badge.innerHTML = '<span class="badge bg-success"><i class="bi bi-check2 me-1"></i>PÅ™iÅ™azeno</span>';
+                    alreadyCount++;
+                } else {
+                    badge.innerHTML = '';
+                }
+            });
+
+            document.getElementById('alreadyAssignedInfo').textContent =
+                alreadyCount > 0 ? alreadyCount + ' jiÅ¾ pÅ™iÅ™azeno' : '';
+
+            updateAssignCount();
+            resetAssignBtn();
         });
     });
 
     // Class filter
     document.getElementById('classFilter').addEventListener('change', function () {
-        const id = this.value;
+        filterStudentList();
+        document.getElementById('selectAllStudents').checked = false;
+    });
+
+    // Search filter
+    document.getElementById('studentSearch').addEventListener('input', function () {
+        filterStudentList();
+        document.getElementById('selectAllStudents').checked = false;
+    });
+
+    function filterStudentList() {
+        const classId = document.getElementById('classFilter').value;
+        const search = document.getElementById('studentSearch').value.toLowerCase().trim();
+
         document.querySelectorAll('.student-item').forEach(item => {
-            item.style.display = (!id || item.dataset.classes.split(',').includes(id)) ? '' : 'none';
+            const matchesClass = !classId || item.dataset.classes.split(',').includes(classId);
+            const matchesSearch = !search || item.dataset.name.includes(search);
+            item.style.display = (matchesClass && matchesSearch) ? '' : 'none';
+        });
+    }
+
+    // Select all (only visible + available)
+    document.getElementById('selectAllStudents').addEventListener('change', function () {
+        const checked = this.checked;
+        document.querySelectorAll('.student-item').forEach(item => {
+            if (item.style.display === 'none') return;
+            const cb = item.querySelector('.student-checkbox');
+            if (cb.disabled) return; // skip already assigned
+            cb.checked = checked;
+            item.classList.toggle('student-selected', checked);
+        });
+        updateAssignCount();
+    });
+
+    // Individual checkbox change
+    document.querySelectorAll('.student-checkbox').forEach(cb => {
+        cb.addEventListener('change', function () {
+            const item = this.closest('.student-item');
+            item.classList.toggle('student-selected', this.checked);
+            updateAssignCount();
+
+            // Update select-all state
+            const visible = document.querySelectorAll('.student-item:not([style*="display: none"]) .student-checkbox:not(:disabled)');
+            const visibleChecked = document.querySelectorAll('.student-item:not([style*="display: none"]) .student-checkbox:not(:disabled):checked');
+            document.getElementById('selectAllStudents').checked =
+                visible.length > 0 && visible.length === visibleChecked.length;
         });
     });
 
-    // Select all
-    document.getElementById('selectAllStudents').addEventListener('change', function () {
-        document.querySelectorAll('.student-item:not([style*="display: none"]) .student-checkbox')
-            .forEach(cb => cb.checked = this.checked);
-        updateCount();
-    });
+    function updateAssignCount() {
+        const count = document.querySelectorAll('.student-checkbox:checked').length;
+        const badge = document.getElementById('selectedStudentCount');
+        badge.textContent = count + ' vybrÃ¡no';
+        badge.style.background = count > 0 ? '#ff8a00' : '#6c757d';
+    }
 
-    document.querySelectorAll('.student-checkbox').forEach(cb => cb.addEventListener('change', updateCount));
-
-    function updateCount() {
-        document.getElementById('selectedStudentCount').textContent =
-            document.querySelectorAll('.student-checkbox:checked').length + ' vybráno';
+    function resetAssignBtn() {
+        const btn = document.getElementById('assignBtn');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>PÅ™iÅ™adit vybranÃ½m';
     }
 
     // Assign
     document.getElementById('assignBtn').addEventListener('click', async function () {
-        const testId = parseInt(document.getElementById('assignTestId').value);
-        const studentIds = [...document.querySelectorAll('.student-checkbox:checked')].map(cb => parseInt(cb.value));
+        const testId = currentAssignTestId;
+        const studentIds = [...document.querySelectorAll('.student-checkbox:checked:not(:disabled)')].map(cb => parseInt(cb.value));
 
-        if (!studentIds.length) { toastr.error('Vyberte alespoò jednoho studenta.'); return; }
+        if (!studentIds.length) {
+            toastr.error('Vyberte alespoÅˆ jednoho studenta.');
+            return;
+        }
 
         this.disabled = true;
-        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Pøiøazuji...';
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>PÅ™iÅ™azuji...';
 
         try {
             const res = await fetch('/Test/Assign', {
@@ -328,7 +441,7 @@
 
             if (res.ok) {
                 toastr.success(data.message);
-                let html = '<table class="table table-sm mb-0"><thead><tr><th>Student</th><th>Pøihlašovací kód</th></tr></thead><tbody>';
+                let html = '<table class="table table-sm mb-0"><thead><tr><th>Student</th><th>PÅ™ihlaÅ¡ovacÃ­ kÃ³d</th></tr></thead><tbody>';
                 data.assignments.forEach(a => {
                     html += `<tr><td>${a.studentName}</td><td><code class="fs-5 user-select-all">${a.loginId}</code></td></tr>`;
                 });
@@ -336,15 +449,17 @@
                 document.getElementById('loginIdList').innerHTML = html;
                 document.getElementById('assignResults').style.display = '';
                 document.getElementById('assignFooter').style.display = 'none';
+
+                // Update local map so reopening modal reflects changes
+                if (!assignmentMap[testId]) assignmentMap[testId] = [];
+                studentIds.forEach(id => { if (!assignmentMap[testId].includes(id)) assignmentMap[testId].push(id); });
             } else {
                 toastr.error(data.message);
-                this.disabled = false;
-                this.innerHTML = '<i class="bi bi-check-circle me-2"></i>Pøiøadit vybraným';
+                resetAssignBtn();
             }
         } catch {
-            toastr.error('Chyba pøi komunikaci se serverem.');
-            this.disabled = false;
-            this.innerHTML = '<i class="bi bi-check-circle me-2"></i>Pøiøadit vybraným';
+            toastr.error('Chyba pÅ™i komunikaci se serverem.');
+            resetAssignBtn();
         }
     });
 
@@ -361,7 +476,7 @@
     document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
         const id = parseInt(document.getElementById('deleteTestId').value);
         this.disabled = true;
-        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mažu...';
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>MaÅ¾u...';
 
         try {
             const res = await fetch('/Test/Delete', {
@@ -381,10 +496,10 @@
                 }
                 bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
             } else {
-                toastr.error(data.message || 'Chyba pøi mazání.');
+                toastr.error(data.message || 'Chyba pÅ™i mazÃ¡nÃ­.');
             }
         } catch {
-            toastr.error('Chyba pøi komunikaci se serverem.');
+            toastr.error('Chyba pÅ™i komunikaci se serverem.');
         }
 
         this.disabled = false;
@@ -415,19 +530,19 @@
                     if (data.isActive) {
                         icon.className = 'bi bi-toggle-on text-success';
                         badge.className = 'badge bg-success';
-                        badge.textContent = 'Aktivní';
+                        badge.textContent = 'AktivnÃ­';
                         this.title = 'Deaktivovat';
                     } else {
                         icon.className = 'bi bi-toggle-off text-secondary';
                         badge.className = 'badge bg-secondary';
-                        badge.textContent = 'Neaktivní';
+                        badge.textContent = 'NeaktivnÃ­';
                         this.title = 'Aktivovat';
                     }
                 } else {
                     toastr.error(data.message || 'Chyba.');
                 }
             } catch {
-                toastr.error('Chyba pøi komunikaci se serverem.');
+                toastr.error('Chyba pÅ™i komunikaci se serverem.');
             }
         });
     });

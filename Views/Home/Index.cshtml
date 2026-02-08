@@ -1,4 +1,4 @@
-@using SPSUL.Models.Data
+Ôªø@using SPSUL.Models.Data
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
@@ -19,17 +19,17 @@
     string greetIcon;
     if (hour < 12)
     {
-        greeting = "DobrÈ r·no";
+        greeting = "Dobr√© r√°no";
         greetIcon = "bi-sunrise text-warning";
     }
     else if (hour < 18)
     {
-        greeting = "Dobr˝ den";
+        greeting = "Dobr√Ω den";
         greetIcon = "bi-sun text-warning";
     }
     else
     {
-        greeting = "Dobr˝ veËer";
+        greeting = "Dobr√Ω veƒçer";
         greetIcon = "bi-moon-stars text-info";
     }
 }
@@ -70,10 +70,10 @@
                 new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: labels.length ? labels : ['é·dn· data'],
+                        labels: labels.length ? labels : ['≈Ω√°dn√° data'],
                         datasets: [
                             {
-                                label: 'Pr˘mÏrn· ˙spÏönost (%)',
+                                label: 'Pr≈Ømƒõrn√° √∫spƒõ≈°nost (%)',
                                 data: values.length ? values : [0],
                                 borderColor: '#ff8a00',
                                 backgroundColor: 'rgba(255, 138, 0, 0.1)',
@@ -86,7 +86,7 @@
                                 pointBorderWidth: 2
                             },
                             {
-                                label: 'CÌlov· hodnota',
+                                label: 'C√≠lov√° hodnota',
                                 data: Array(Math.max(labels.length, 1)).fill(75),
                                 borderColor: '#198754',
                                 backgroundColor: 'transparent',
@@ -127,7 +127,7 @@
             <h1 class="welcome-title">
                 <i class="bi @greetIcon"></i> @greeting, <span class="text-orange">@teacherName</span>!
             </h1>
-            <p class="welcome-subtitle text-muted">P¯ehled vaöÌ v˝uky</p>
+            <p class="welcome-subtitle text-muted">P≈ôehled va≈°√≠ v√Ωuky</p>
         </div>
 
         <div class="quick-stats">
@@ -135,28 +135,28 @@
                 <div class="stat-icon"><i class="bi bi-clipboard-check"></i></div>
                 <div class="stat-content">
                     <div class="stat-value" data-target="@activeTests">0</div>
-                    <div class="stat-label">AktivnÌch test˘</div>
+                    <div class="stat-label">Aktivn√≠ch test≈Ø</div>
                 </div>
             </div>
             <div class="stat-card stat-card--success">
                 <div class="stat-icon"><i class="bi bi-people"></i></div>
                 <div class="stat-content">
                     <div class="stat-value" data-target="@totalStudents">0</div>
-                    <div class="stat-label">Student˘</div>
+                    <div class="stat-label">Student≈Ø</div>
                 </div>
             </div>
             <div class="stat-card stat-card--info">
                 <div class="stat-icon"><i class="bi bi-graph-up"></i></div>
                 <div class="stat-content">
                     <div class="stat-value" data-target="@avgSuccess.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)" data-suffix="%">0%</div>
-                    <div class="stat-label">Pr˘mÏrn· ˙spÏönost</div>
+                    <div class="stat-label">Pr≈Ømƒõrn√° √∫spƒõ≈°nost</div>
                 </div>
             </div>
             <div class="stat-card stat-card--warning">
                 <div class="stat-icon"><i class="bi bi-clock-history"></i></div>
                 <div class="stat-content">
                     <div class="stat-value" data-target="@pendingCount">0</div>
-                    <div class="stat-label">»ek· na zah·jenÌ</div>
+                    <div class="stat-label">ƒåek√° na zah√°jen√≠</div>
                 </div>
             </div>
         </div>
@@ -173,9 +173,9 @@
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="bi bi-activity text-orange me-2"></i>
-                        PoslednÌ aktivita
+                        Posledn√≠ aktivita
                     </h5>
-                    <a href="/Detail/Index" class="btn btn-sm btn-outline-secondary">Zobrazit vöe</a>
+                    <a href="/Detail/Index" class="btn btn-sm btn-outline-secondary">Zobrazit v≈°e</a>
                 </div>
                 <div class="card-body p-0">
                     <div class="activity-list">
@@ -184,9 +184,9 @@
                             @foreach (var st in recentFinished)
                             {
                                 var ago = DateTime.Now - st.FinishedAt;
-                                var agoText = ago.TotalMinutes < 60 ? $"P¯ed {(int)ago.TotalMinutes} min"
-                                    : ago.TotalHours < 24 ? $"P¯ed {(int)ago.TotalHours} hod"
-                                    : $"P¯ed {(int)ago.TotalDays} dny";
+                                var agoText = ago.TotalMinutes < 60 ? $"P≈ôed {(int)ago.TotalMinutes} min"
+                                    : ago.TotalHours < 24 ? $"P≈ôed {(int)ago.TotalHours} hod"
+                                    : $"P≈ôed {(int)ago.TotalDays} dny";
 
                                 <div class="activity-item">
                                     <div class="activity-icon bg-success-subtle">
@@ -194,7 +194,7 @@
                                     </div>
                                     <div class="activity-content">
                                         <div class="activity-title">
-                                            @st.Student.FirstName @st.Student.LastName dokonËil/a Ñ@st.Test.Name"
+                                            @st.Student.FirstName @st.Student.LastName dokonƒçil/a ‚Äû@st.Test.Name"
                                         </div>
                                         <div class="activity-meta">
                                             <span class="activity-time">
@@ -212,7 +212,7 @@
                         {
                             <div class="text-center py-4 text-muted">
                                 <i class="bi bi-inbox fs-2 opacity-25"></i>
-                                <p class="mt-2 mb-0">ZatÌm û·dn· aktivita</p>
+                                <p class="mt-2 mb-0">Zat√≠m ≈æ√°dn√° aktivita</p>
                             </div>
                         }
                     </div>
@@ -224,7 +224,7 @@
                 <div class="card-header bg-white">
                     <h5 class="mb-0">
                         <i class="bi bi-graph-up text-orange me-2"></i>
-                        Statistiky ˙spÏönosti
+                        Statistiky √∫spƒõ≈°nosti
                     </h5>
                 </div>
                 <div class="card-body">
@@ -241,22 +241,22 @@
                 <div class="card-header bg-orange text-white">
                     <h6 class="mb-0">
                         <i class="bi bi-lightning-charge me-2"></i>
-                        RychlÈ akce
+                        Rychl√© akce
                     </h6>
                 </div>
                 <div class="card-body p-2">
                     <div class="d-grid gap-2">
                         <a href="/Test/Create" class="btn btn-outline-orange btn-sm">
-                            <i class="bi bi-plus-circle me-2"></i>Vytvo¯it test
+                            <i class="bi bi-plus-circle me-2"></i>Vytvo≈ôit test
                         </a>
                         <a href="/Question/Create" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-patch-question me-2"></i>P¯idat ot·zku
+                            <i class="bi bi-patch-question me-2"></i>P≈ôidat ot√°zku
                         </a>
                         <a href="/Students/Index" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-people me-2"></i>Spr·va student˘
+                            <i class="bi bi-people me-2"></i>Spr√°va student≈Ø
                         </a>
                         <a href="/Detail/Index" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-clipboard-data me-2"></i>Zobrazit v˝sledky
+                            <i class="bi bi-clipboard-data me-2"></i>Zobrazit v√Ωsledky
                         </a>
                         <a href="/Detail/Stats" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-graph-up-arrow me-2"></i>Statistiky
@@ -270,7 +270,7 @@
                 <div class="card-header bg-white">
                     <h6 class="mb-0">
                         <i class="bi bi-calendar-event text-orange me-2"></i>
-                        Testy ËekajÌcÌ na studenty
+                        Testy ƒçekaj√≠c√≠ na studenty
                     </h6>
                 </div>
                 <div class="card-body p-0">
@@ -284,15 +284,15 @@
                                 <div class="upcoming-item">
                                     <div class="upcoming-date">
                                         <div class="date-day">@pending</div>
-                                        <div class="date-month">Ëek·</div>
+                                        <div class="date-month">ƒçek√°</div>
                                     </div>
                                     <div class="upcoming-content">
                                         <div class="upcoming-title">@t.Name</div>
                                         <div class="upcoming-meta">
                                             <small class="text-muted">
                                                 <i class="bi bi-book me-1"></i>@t.StudentField?.Name
-                                                ï
-                                                <i class="bi bi-people ms-1 me-1"></i>@(t.StudentTests?.Count ?? 0) p¯i¯azeno
+                                                ‚Ä¢
+                                                <i class="bi bi-people ms-1 me-1"></i>@(t.StudentTests?.Count ?? 0) p≈ôi≈ôazeno
                                             </small>
                                         </div>
                                     </div>
@@ -302,14 +302,14 @@
                         else
                         {
                             <div class="text-center py-4 text-muted">
-                                <p class="mb-0 small">é·dnÈ ËekajÌcÌ testy</p>
+                                <p class="mb-0 small">≈Ω√°dn√© ƒçekaj√≠c√≠ testy</p>
                             </div>
                         }
                     </div>
                 </div>
                 <div class="card-footer bg-white text-center">
                     <a href="/Test/Index" class="text-muted small">
-                        Zobrazit vöechny testy <i class="bi bi-arrow-right"></i>
+                        Zobrazit v≈°echny testy <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -317,17 +317,17 @@
             <!-- OVERVIEW CARD -->
             <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #ff8a00, #ff6b00);">
                 <div class="card-body text-white">
-                    <h6><i class="bi bi-bar-chart me-2"></i>P¯ehled v ËÌslech</h6>
+                    <h6><i class="bi bi-bar-chart me-2"></i>P≈ôehled v ƒç√≠slech</h6>
                     <div class="d-flex justify-content-between mt-3 mb-1">
-                        <small>Ot·zek v bance:</small>
+                        <small>Ot√°zek v bance:</small>
                         <strong>@totalQuestions</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
-                        <small>AktivnÌch test˘:</small>
+                        <small>Aktivn√≠ch test≈Ø:</small>
                         <strong>@activeTests</strong>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <small>DokonËen˝ch test˘:</small>
+                        <small>Dokonƒçen√Ωch test≈Ø:</small>
                         <strong>@recentFinished.Count</strong>
                     </div>
                 </div>

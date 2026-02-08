@@ -19,13 +19,6 @@ $(document).on('click', '.config-tab', function () {
     $('.config-tab').removeClass('active');
     $(this).addClass('active');
 });
-
-
-
-
-
-
-
 function initTitlesSelect2() {
     $selects = $(".select2")
     $selects.each(function () {
@@ -69,7 +62,6 @@ function showEditorOffcanvas() {
         });
     }, 10);
 }
-
 
 // Handle clicks 
 
@@ -184,6 +176,8 @@ document.addEventListener('click', function (e) {
         await filterForm()
 
         cancelDeleteMode()
+        showConfigMods(true);
+        showConfigOptions(false);
     })
 
     document.addEventListener('click', function (e) {
@@ -486,8 +480,6 @@ document.addEventListener('click', function (e) {
     }
 
     // dynamic events on elements like inputs, focus etc.
-
-        // uzivatel zada vstup
     document.addEventListener('input', function (event) {
         const el = event.target
 
@@ -544,6 +536,52 @@ document.addEventListener('click', function (e) {
                 input.value = '';
                 await filterForm();
             }
+        }
+    });
+
+    // PDF export from config sections
+    document.addEventListener('click', async function (e) {
+        const btn = e.target.closest('#btnExportPdf');
+        if (!btn) return;
+
+        const pdfUrlEl = document.getElementById('pdfUrl');
+        if (!pdfUrlEl) {
+            toastr.error('PDF export není pro tuto sekci dostupný.');
+            return;
+        }
+
+        const data = getDataFromForm('filterForm');
+        try {
+            const response = await fetch(pdfUrlEl.value, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                toastr.error('Nepodařilo se vygenerovat PDF.');
+                return;
+            }
+
+            const blob = await response.blob();
+            const disposition = response.headers.get('Content-Disposition');
+            let filename = 'export.pdf';
+            if (disposition) {
+                const match = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (match && match[1]) filename = match[1].replace(/['"]/g, '');
+            }
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            toastr.success('PDF bylo úspěšně staženo.');
+        }
+        catch (error) {
+            console.error('PDF export error:', error);
+            toastr.error('Nastala chyba při generování PDF.');
         }
     });
 

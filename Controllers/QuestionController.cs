@@ -252,9 +252,12 @@ namespace SPSUL.Controllers
             // Validace pomocí ModelState (Data Annotations z DTO)
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
+                var errors = ModelState
+                    .Where(e => e.Value?.Errors.Count > 0)
+                    .SelectMany(e => e.Value!.Errors.Select(err => 
+                        string.IsNullOrEmpty(err.ErrorMessage) 
+                            ? $"{e.Key}: {err.Exception?.Message}" 
+                            : err.ErrorMessage))
                     .ToList();
 
                 return BadRequest(new 
@@ -374,9 +377,12 @@ namespace SPSUL.Controllers
             // Validace pomocí ModelState (Data Annotations z DTO)
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
+                var errors = ModelState
+                    .Where(e => e.Value?.Errors.Count > 0)
+                    .SelectMany(e => e.Value!.Errors.Select(err => 
+                        string.IsNullOrEmpty(err.ErrorMessage) 
+                            ? $"{e.Key}: {err.Exception?.Message}" 
+                            : err.ErrorMessage))
                     .ToList();
 
                 return BadRequest(new 

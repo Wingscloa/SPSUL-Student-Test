@@ -1,40 +1,116 @@
 ﻿@{
     ViewData["Title"] = "Login učitele";
-    Layout = "~/Views/Shared/Layouts/_Auth.cshtml"; ;
+    Layout = "~/Views/Shared/Layouts/_Auth.cshtml";
 }
 
-
-<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
-<link href="~/css/global.css" rel="stylesheet" asp-append-version="true"/>
-
-<form asp-controller="Auth" asp-action="Login" onkeydown="return event.key != 'Enter';">
-    <div class="container" style="min-width: 320px;">
-        <div class="row headContainer justify-content-center gap-3">
-            <img class="logo" alt="Školní logo" src=".\image\logo\spsul.webp" />
-            <h1 class="Header">SPSUL</h1>
-        </div>
-            <div class="row">
-            <div class="col">
-                <label for="name">Jméno</label>
-                <input type="text" id="NickName" name="NickName" class="form-control input" placeholder="Jméno" required autocomplete="off" />
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col">
-                <label for="Password">Heslo</label>
-                <input type="password" id="Password" name="Password" class="form-control input" placeholder="Heslo" required autocomplete="off" />
-            </div>
-        </div>
-        <div class="row mt-1 text-end">
-            <div class=col>
-                <a class="link-primary" asp-controller="Auth" asp-action="Test">Jsem student</a>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col">
-                <button class="btn btn-primary w-100"><span class="boldWhite">Přihlásit se</span></button>
-            </div>
-        </div>
-        <hr class="mt-3" />
+<div class="auth-card">
+    <div class="auth-logo-area">
+        <img class="auth-logo" alt="SPSUL logo" src="/image/logo/spsul.webp" />
+        <h1 class="auth-brand">SPSUL</h1>
+        <p class="auth-subtitle">Informační systém</p>
     </div>
-</form>
+
+    @if (TempData["TestError"] != null)
+    {
+        <div class="auth-alert auth-alert-error">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>@TempData["TestError"]</span>
+        </div>
+    }
+
+    <form asp-controller="Auth" asp-action="Login" id="loginForm" novalidate>
+        <div class="auth-field">
+            <label class="auth-label" for="NickName">
+                <i class="bi bi-person"></i> Přezdívka
+            </label>
+            <div class="auth-input-wrap">
+                <i class="bi bi-person-fill auth-input-icon"></i>
+                <input type="text" id="NickName" name="NickName" class="auth-input"
+                       placeholder="Zadejte přezdívku" required autocomplete="off" />
+            </div>
+            <div class="auth-field-feedback" id="nickFeedback"></div>
+        </div>
+
+        <div class="auth-field">
+            <label class="auth-label" for="Password">
+                <i class="bi bi-lock"></i> Heslo
+            </label>
+            <div class="auth-input-wrap">
+                <i class="bi bi-lock-fill auth-input-icon"></i>
+                <input type="password" id="Password" name="Password" class="auth-input"
+                       placeholder="Zadejte heslo" required autocomplete="off" />
+                <button type="button" class="auth-toggle-pw" tabindex="-1" aria-label="Zobrazit heslo">
+                    <i class="bi bi-eye"></i>
+                </button>
+            </div>
+            <div class="auth-field-feedback" id="pwFeedback"></div>
+        </div>
+
+        <button type="submit" class="auth-submit" id="loginBtn">
+            <span class="auth-submit-text">Přihlásit se</span>
+            <i class="bi bi-arrow-right-circle-fill"></i>
+        </button>
+    </form>
+
+    <div class="auth-footer">
+        <a class="auth-link" asp-controller="Auth" asp-action="Test">
+            <i class="bi bi-mortarboard me-1"></i>Jsem student
+        </a>
+    </div>
+    <div class="auth-divider"></div>
+</div>
+
+<script>
+(function () {
+    const form = document.getElementById('loginForm');
+    const nick = document.getElementById('NickName');
+    const pw = document.getElementById('Password');
+    const nickFb = document.getElementById('nickFeedback');
+    const pwFb = document.getElementById('pwFeedback');
+
+    function setFeedback(el, fb, ok, msg) {
+        el.classList.remove('valid', 'invalid');
+        fb.classList.remove('show', 'ok', 'err');
+        if (msg) {
+            el.classList.add(ok ? 'valid' : 'invalid');
+            fb.textContent = msg;
+            fb.classList.add('show', ok ? 'ok' : 'err');
+        }
+    }
+
+    nick.addEventListener('input', function () {
+        const v = this.value.trim();
+        if (!v) setFeedback(nick, nickFb, false, '');
+        else if (v.length < 2) setFeedback(nick, nickFb, false, 'Přezdívka je příliš krátká');
+        else setFeedback(nick, nickFb, true, 'Vypadá dobře ✓');
+    });
+
+    pw.addEventListener('input', function () {
+        const v = this.value;
+        if (!v) setFeedback(pw, pwFb, false, '');
+        else if (v.length < 4) setFeedback(pw, pwFb, false, 'Heslo musí mít alespoň 4 znaky');
+        else setFeedback(pw, pwFb, true, 'Heslo je v pořádku ✓');
+    });
+
+    form.addEventListener('submit', function (e) {
+        let ok = true;
+        if (!nick.value.trim()) { setFeedback(nick, nickFb, false, 'Přezdívka je povinná'); ok = false; }
+        if (!pw.value) { setFeedback(pw, pwFb, false, 'Heslo je povinné'); ok = false; }
+        if (!ok) { e.preventDefault(); return; }
+        loadingScreen(true);
+    });
+
+    // Toggle password visibility
+    document.querySelector('.auth-toggle-pw')?.addEventListener('click', function () {
+        const input = this.closest('.auth-input-wrap').querySelector('input');
+        const icon = this.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+    });
+})();
+</script>
