@@ -18,6 +18,7 @@
     <link href="~/css/configuration.css" rel="stylesheet" asp-append-version="true" />
     <!-- JS libraries -->
     <script src="~/js/loading.js" asp-append-version="true"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/bouncy.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/select2/js/select2.min.js" asp-append-version="true"></script>
     <script src="~/lib/toastr.js/toastr.min.js" asp-append-version="true"></script>
@@ -27,21 +28,8 @@
 </head>
 <body>
     <div id="loader-overlay">
-        <div class="mascot-container">
-            <div class="mascot-body">
-                <div class="grad-cap">
-                    <div class="cap-top">
-                        <div class="tassel"></div>
-                    </div>
-                    <div class="cap-base"></div>
-                </div>
-                <div class="eye left"><div class="pupil"></div></div>
-                <div class="eye right"><div class="pupil"></div></div>
-                <div class="mouth"></div>
-            </div>
-            <div class="shadow-oval"></div>
-        </div>
-        <p class="loading-text">Chvilku strpení,<br><span style="color: #ff8a00">pracuji na žádosti...</span></p>
+        <l-bouncy size="55" speed="1.75" color="#ff8a00"></l-bouncy>
+        <p class="loader-text">Načítám...</p>
     </div>
     <!-- Modern Navbar -->
     <nav class="navbar navbar-expand-lg" id="mainNavbar">

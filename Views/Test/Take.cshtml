@@ -274,13 +274,13 @@
         // ============================================
         // STATE
         // ============================================
-        const LOGIN_ID = '@Model.LoginId';
+        const LOGIN_ID = '@Html.Raw(Model.LoginId)';
         const TOTAL_QUESTIONS = @Model.Questions.Count;
-        const ELAPSED_AT_LOAD = @((int)(DateTime.Now - Model.StartedAt).TotalSeconds);
+        const ELAPSED_AT_LOAD = Math.max(0, @((int)(DateTime.Now - Model.StartedAt).TotalSeconds));
         const TIME_LIMIT_SEC = @(Model.TimeLimitMinutes.HasValue ? Model.TimeLimitMinutes.Value * 60 : -1);
         const SAVED_QUESTION_INDEX = @Model.CurrentQuestionIndex;
         const pageLoadedAt = Date.now();
-        let currentQuestion = 0;
+        let currentQuestion = SAVED_QUESTION_INDEX;
         let answers = {};
         let autoSaveInterval;
         let timerExpired = false;
@@ -291,11 +291,16 @@
         // INIT - load existing answers, restore position
         // ============================================
         document.addEventListener('DOMContentLoaded', function () {
-            @foreach (var ans in Model.ExistingAnswers)
-            {
-                <text>
-                answers[@ans.QuestionId] = @System.Text.Json.JsonSerializer.Serialize(ans.SelectedOptions);
-                </text>
+            // Load existing answers (Html.Raw prevents Razor HTML-encoding the JSON)
+            try {
+                @foreach (var ans in Model.ExistingAnswers)
+                {
+                    <text>
+                    answers[@ans.QuestionId] = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ans.SelectedOptions));
+                    </text>
+                }
+            } catch (e) {
+                console.error('Error loading saved answers:', e);
             }
 
             updateNavButtons();
@@ -330,10 +335,15 @@
             document.querySelectorAll('.question-card').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-            document.querySelector('.question-card[data-index="' + index + '"]').classList.add('active');
-            document.querySelector('.nav-btn[data-index="' + index + '"]').classList.add('active');
+            var card = document.querySelector('.question-card[data-index="' + index + '"]');
+            var navBtn = document.querySelector('.nav-btn[data-index="' + index + '"]');
 
-            document.getElementById('finishSection').style.display = 'none';
+            if (card) card.classList.add('active');
+            if (navBtn) navBtn.classList.add('active');
+
+            var finishSection = document.getElementById('finishSection');
+            if (finishSection) finishSection.style.display = 'none';
+
             currentQuestion = index;
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -346,14 +356,17 @@
         // OPTION SELECTION
         // ============================================
         function selectOption(el, questionIndex) {
-            const card = el.closest('.question-card');
-            const questionId = parseInt(card.dataset.questionId);
+            var card = el.closest('.question-card');
+            if (!card) return;
+
+            var questionId = parseInt(card.dataset.questionId);
+            if (isNaN(questionId)) return;
 
             // Single-choice: deselect all, select this one
             card.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
             el.classList.add('selected');
 
-            const selectedTexts = [];
+            var selectedTexts = [];
             card.querySelectorAll('.option-item.selected').forEach(o => {
                 selectedTexts.push(o.dataset.text);
             });
@@ -371,9 +384,10 @@
         // ============================================
         function updateNavButtons() {
             document.querySelectorAll('.question-card').forEach(card => {
-                const idx = parseInt(card.dataset.index);
-                const qId = parseInt(card.dataset.questionId);
-                const navBtn = document.querySelector('.nav-btn[data-index="' + idx + '"]');
+                var idx = parseInt(card.dataset.index);
+                var qId = parseInt(card.dataset.questionId);
+                var navBtn = document.querySelector('.nav-btn[data-index="' + idx + '"]');
+                if (!navBtn) return;
 
                 if (answers[qId] && answers[qId].length > 0) {
                     navBtn.classList.add('answered');
@@ -384,12 +398,12 @@
         }
 
         function updateAnsweredCount() {
-            const count = Object.values(answers).filter(a => a && a.length > 0).length;
+            var count = Object.values(answers).filter(a => a && a.length > 0).length;
             document.getElementById('answeredCount').textContent = count;
         }
 
         function showSaveIndicator() {
-            const el = document.getElementById('saveIndicator');
+            var el = document.getElementById('saveIndicator');
             el.style.opacity = '1';
             setTimeout(function () { el.style.opacity = '0'; }, 1500);
         }
@@ -398,17 +412,17 @@
         // TIMER
         // ============================================
         function startTimer() {
-            const timerEl = document.getElementById('timer');
-            const timerWrap = document.getElementById('timerWrap');
+            var timerEl = document.getElementById('timer');
+            var timerWrap = document.getElementById('timerWrap');
 
             function update() {
-                const clientDelta = Math.floor((Date.now() - pageLoadedAt) / 1000);
-                const elapsedSec = ELAPSED_AT_LOAD + clientDelta;
+                var clientDelta = Math.floor((Date.now() - pageLoadedAt) / 1000);
+                var elapsedSec = ELAPSED_AT_LOAD + clientDelta;
 
                 if (TIME_LIMIT_SEC > 0) {
-                    const remaining = Math.max(0, TIME_LIMIT_SEC - elapsedSec);
-                    const mins = Math.floor(remaining / 60);
-                    const secs = remaining % 60;
+                    var remaining = Math.max(0, TIME_LIMIT_SEC - elapsedSec);
+                    var mins = Math.floor(remaining / 60);
+                    var secs = remaining % 60;
                     timerEl.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
 
                     if (remaining <= 60 && remaining > 0) {
@@ -423,8 +437,8 @@
                         setTimeout(function () { autoFinish(); }, 1000);
                     }
                 } else {
-                    const mins = Math.floor(elapsedSec / 60);
-                    const secs = elapsedSec % 60;
+                    var mins = Math.floor(elapsedSec / 60);
+                    var secs = elapsedSec % 60;
                     timerEl.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
                 }
             }
@@ -435,12 +449,12 @@
         async function autoFinish() {
             clearInterval(autoSaveInterval);
             try {
-                const res = await fetch('/Test/FinishTest', {
+                var res = await fetch('/Test/FinishTest', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ loginId: LOGIN_ID, answers: buildAnswerList(), currentQuestionIndex: currentQuestion })
                 });
-                const data = await res.json();
+                var data = await res.json();
                 if (res.ok) showResult(data);
                 else toastr.error('Chyba při odevzdání.');
             } catch {
@@ -468,7 +482,7 @@
             if (saving) return;
             saving = true;
             try {
-                const res = await fetch('/Test/SaveProgress', {
+                var res = await fetch('/Test/SaveProgress', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(buildPayload())
@@ -484,7 +498,7 @@
         // Synchronous save for beforeunload / visibilitychange (uses sendBeacon)
         function saveProgressSync() {
             try {
-                const payload = JSON.stringify(buildPayload());
+                var payload = JSON.stringify(buildPayload());
                 navigator.sendBeacon('/Test/SaveProgress', new Blob([payload], { type: 'application/json' }));
             } catch (e) {
                 console.warn('Beacon save failed:', e);
@@ -492,9 +506,9 @@
         }
 
         function buildAnswerList() {
-            const list = [];
+            var list = [];
             document.querySelectorAll('.question-card').forEach(card => {
-                const qId = parseInt(card.dataset.questionId);
+                var qId = parseInt(card.dataset.questionId);
                 list.push({
                     questionId: qId,
                     selectedOptions: answers[qId] || []
@@ -507,7 +521,7 @@
         // FINISH
         // ============================================
         function showFinishConfirm() {
-            const count = Object.values(answers).filter(a => a && a.length > 0).length;
+            var count = Object.values(answers).filter(a => a && a.length > 0).length;
             document.getElementById('finalAnswered').textContent = count;
 
             document.querySelectorAll('.question-card').forEach(c => c.classList.remove('active'));
@@ -522,20 +536,20 @@
         }
 
         async function finishTest() {
-            const btn = document.getElementById('finishBtn');
+            var btn = document.getElementById('finishBtn');
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Odevzdávám...';
 
             clearInterval(autoSaveInterval);
 
             try {
-                const res = await fetch('/Test/FinishTest', {
+                var res = await fetch('/Test/FinishTest', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ loginId: LOGIN_ID, answers: buildAnswerList(), currentQuestionIndex: currentQuestion })
                 });
 
-                const data = await res.json();
+                var data = await res.json();
 
                 if (res.ok) {
                     showResult(data);
@@ -552,8 +566,8 @@
         }
 
         function showResult(data) {
-            const overlay = document.getElementById('resultOverlay');
-            const pct = data.successPct;
+            var overlay = document.getElementById('resultOverlay');
+            var pct = data.successPct;
 
             document.getElementById('resultScore').textContent = pct + '%';
             document.getElementById('resultDetail').textContent =

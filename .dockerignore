@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/node_modules/
+**/Azurite/
+**/*.user
+**/*.suo
+**/Tester/
+*.md
+.git/
+.gitignore
+docker-compose.yml
+Dockerfile
+docker-entrypoint.sh
+.dockerignore

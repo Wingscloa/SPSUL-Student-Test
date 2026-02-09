@@ -68,6 +68,14 @@ namespace SPSUL
 #endif
 
             var app = builder.Build();
+
+            // Auto-apply pending EF Core migrations (for Docker / production)
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<SpsulContext>();
+                db.Database.Migrate();
+            }
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -76,9 +84,8 @@ namespace SPSUL
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+                app.UseHttpsRedirection();
             }
-
-            app.UseHttpsRedirection();
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -98,13 +105,6 @@ namespace SPSUL
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Auth}/{action=Login}");
-
-            // Seed demo test data (kód: DEMO2025)
-            using (var scope = app.Services.CreateScope())
-            {
-                var ctx = scope.ServiceProvider.GetRequiredService<SpsulContext>();
-                DemoDataSeeder.SeedAsync(ctx).GetAwaiter().GetResult();
-            }
 
             app.Run();
         }

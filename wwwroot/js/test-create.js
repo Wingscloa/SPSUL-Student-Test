@@ -26,21 +26,33 @@ document.addEventListener('DOMContentLoaded', function () {
 // SELECT2 INITIALIZATION
 // ============================================
 function initSelect2() {
-    $('#studentField').select2({
-        theme: 'bootstrap-5',
-        width: '100%',
-        placeholder: '-- Vyberte předmět --',
-    });
+var $container = $('.test-create-container');
 
-    $('#questionTypeFilter').select2({
-        theme: 'bootstrap-5',
-        width: '100%',
-        placeholder: 'Všechny typy',
-    });
+$('#studentField').select2({
+    theme: 'bootstrap-5',
+    width: '100%',
+    placeholder: '-- Vyberte předmět --',
+    dropdownParent: $container
+});
+
+$('#questionTypeFilter').select2({
+    theme: 'bootstrap-5',
+    width: '100%',
+    placeholder: 'Všechny typy',
+    dropdownParent: $container
+});
 
     // Wire Select2 change events into existing handlers
     $('#studentField').on('select2:select select2:clear', updatePreview);
     $('#questionTypeFilter').on('select2:select select2:clear change', filterQuestions);
+
+    $('#questionFieldFilter').select2({
+        theme: 'bootstrap-5',
+        width: '100%',
+        placeholder: 'Všechny předměty',
+        dropdownParent: $container
+    });
+    $('#questionFieldFilter').on('select2:select select2:clear change', filterQuestions);
 }
 
 // ============================================
@@ -62,6 +74,7 @@ function initializeEventListeners() {
     // Question filtering
     document.getElementById('questionSearch').addEventListener('input', filterQuestions);
     document.getElementById('questionTypeFilter').addEventListener('change', filterQuestions);
+    document.getElementById('questionFieldFilter').addEventListener('change', filterQuestions);
 
     // Question selection
     document.querySelectorAll('.question-checkbox').forEach(checkbox => {
@@ -70,15 +83,34 @@ function initializeEventListeners() {
 
     document.getElementById('clearSelection').addEventListener('click', clearAllSelections);
 
-    // Question card click
+    // Question card click (but not on toggle button)
     document.querySelectorAll('.question-card').forEach(card => {
         card.addEventListener('click', function(e) {
-            if (e.target.type !== 'checkbox') {
-                const checkbox = this.querySelector('.question-checkbox');
-                checkbox.checked = !checkbox.checked;
-                checkbox.dispatchEvent(new Event('change'));
-            }
+            if (e.target.type === 'checkbox' || e.target.closest('.toggle-options-btn')) return;
+            const checkbox = this.querySelector('.question-checkbox');
+            checkbox.checked = !checkbox.checked;
+            checkbox.dispatchEvent(new Event('change'));
         });
+    });
+
+    // Toggle options panel
+    document.querySelectorAll('.toggle-options-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const card = this.closest('.question-card');
+            const panel = card.querySelector('.question-options-panel');
+            const isOpen = panel.style.display !== 'none';
+            panel.style.display = isOpen ? 'none' : 'block';
+            this.classList.toggle('open', !isOpen);
+        });
+    });
+
+    // Carousel nav
+    document.getElementById('prevPreviewBtn').addEventListener('click', function() {
+        if (previewIndex > 0) { previewIndex--; renderPreviewSlide(); }
+    });
+    document.getElementById('nextPreviewBtn').addEventListener('click', function() {
+        if (previewIndex < previewQuestions.length - 1) { previewIndex++; renderPreviewSlide(); }
     });
 }
 
@@ -108,6 +140,8 @@ function nextStep() {
         if (currentStep === 3) {
             updateSummary();
             updateFullPreview();
+        } else {
+            document.getElementById('previewNav').classList.add('d-none');
         }
     }
 }
@@ -116,6 +150,10 @@ function prevStep() {
     if (currentStep > 1) {
         document.getElementById(`step${currentStep}`).classList.remove('active');
         document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
+
+        if (currentStep === 3) {
+            document.getElementById('previewNav').classList.add('d-none');
+        }
 
         currentStep--;
 
@@ -231,22 +269,29 @@ function clearAllSelections() {
 // QUESTION FILTERING
 // ============================================
 function filterQuestions() {
-const searchTerm = document.getElementById('questionSearch').value.toLowerCase();
-const typeFilter = $('#questionTypeFilter').val() || '';
+    const searchTerm = document.getElementById('questionSearch').value.toLowerCase();
+    const typeFilter = $('#questionTypeFilter').val() || '';
+    const fieldFilter = $('#questionFieldFilter').val() || '';
+    let visibleCount = 0;
 
     document.querySelectorAll('.question-card').forEach(card => {
         const name = card.dataset.questionName;
         const type = card.dataset.questionType;
+        const field = card.dataset.questionField;
 
         const matchesSearch = !searchTerm || name.includes(searchTerm);
         const matchesType = !typeFilter || type === typeFilter;
+        const matchesField = !fieldFilter || field === fieldFilter;
 
-        if (matchesSearch && matchesType) {
+        if (matchesSearch && matchesType && matchesField) {
             card.style.display = '';
+            visibleCount++;
         } else {
             card.style.display = 'none';
         }
     });
+
+    document.getElementById('availableCount').textContent = visibleCount + ' otázek';
 }
 
 // ============================================
@@ -306,10 +351,45 @@ function updateSummary() {
 }
 
 // ============================================
-// FULL PREVIEW UPDATE
+// FULL PREVIEW UPDATE (carousel)
 // ============================================
+let previewQuestions = [];
+let previewIndex = 0;
+
 function updateFullPreview() {
-    let previewHTML = `
+    previewQuestions = [];
+    previewIndex = 0;
+
+    let questionNumber = 1;
+    selectedQuestions.forEach(questionId => {
+        const questionCard = document.querySelector(`[data-question-id="${questionId}"]`);
+        const questionTitle = questionCard.querySelector('.form-check-label').textContent.trim();
+        const questionDesc = questionCard.querySelector('.question-card-body small').textContent.trim();
+        let options = [];
+        try { options = JSON.parse(questionCard.dataset.questionOptions || '[]'); } catch(e) {}
+
+        previewQuestions.push({
+            number: questionNumber++,
+            title: questionTitle,
+            description: questionDesc,
+            options: options
+        });
+    });
+
+    // Show carousel nav
+    const nav = document.getElementById('previewNav');
+    if (previewQuestions.length > 0) {
+        nav.classList.remove('d-none');
+    } else {
+        nav.classList.add('d-none');
+    }
+
+    renderPreviewHeader();
+    renderPreviewSlide();
+}
+
+function renderPreviewHeader() {
+    let headerHTML = `
         <div class="preview-test-header">
             <div class="preview-test-title">${testData.name}</div>
             <div class="preview-meta">
@@ -329,29 +409,45 @@ function updateFullPreview() {
         </div>
     `;
 
-    let questionNumber = 1;
-    selectedQuestions.forEach(questionId => {
-        const questionCard = document.querySelector(`[data-question-id="${questionId}"]`);
-        const questionTitle = questionCard.querySelector('.form-check-label').textContent;
-        const questionDesc = questionCard.querySelector('.question-card-body small').textContent;
+    const contentEl = document.getElementById('previewContent');
+    // Keep header + slide container
+    contentEl.innerHTML = headerHTML + '<div id="previewSlide"></div>';
+}
 
-        previewHTML += `
-            <div class="preview-question">
-                <div class="mb-2">
-                    <span class="preview-question-number">${questionNumber}</span>
-                    <strong>${questionTitle}</strong>
-                </div>
-                <p class="text-muted mb-3">${questionDesc}</p>
-                <div class="preview-option">A) Možnost A</div>
-                <div class="preview-option">B) Možnost B</div>
-                <div class="preview-option">C) Možnost C</div>
-                <div class="preview-option">D) Možnost D</div>
-            </div>
-        `;
-        questionNumber++;
+function renderPreviewSlide() {
+    if (previewQuestions.length === 0) return;
+
+    const q = previewQuestions[previewIndex];
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+    let optionsHTML = '';
+    q.options.forEach((opt, j) => {
+        const correctClass = opt.isCorrect ? ' correct' : '';
+        optionsHTML += `
+            <div class="preview-option${correctClass}">
+                <strong class="me-2">${letters[j] || (j+1)})</strong>
+                ${opt.text}
+                ${opt.isCorrect ? '<i class="bi bi-check-circle-fill text-success ms-auto"></i>' : ''}
+            </div>`;
     });
 
-    document.getElementById('previewContent').innerHTML = previewHTML;
+    const slideHTML = `
+        <div class="preview-question preview-slide">
+            <div class="mb-2">
+                <span class="preview-question-number">${q.number}</span>
+                <strong>${q.title}</strong>
+            </div>
+            <p class="text-muted mb-3">${q.description}</p>
+            ${optionsHTML}
+        </div>
+    `;
+
+    const slideEl = document.getElementById('previewSlide');
+    if (slideEl) slideEl.innerHTML = slideHTML;
+
+    // Update counter
+    document.getElementById('previewCounter').textContent =
+        `${previewIndex + 1}/${previewQuestions.length}`;
 }
 
 // ============================================

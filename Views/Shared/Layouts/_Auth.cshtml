@@ -19,24 +19,12 @@
         <script src="~/gsap/gsap.min.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="~/js/loading.js" asp-append-version="true"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/bouncy.js"></script>
     </head>
     <body>
     <div id="loader-overlay">
-        <div class="mascot-container">
-            <div class="mascot-body">
-                <div class="grad-cap">
-                    <div class="cap-top">
-                        <div class="tassel"></div>
-                    </div>
-                    <div class="cap-base"></div>
-                </div>
-                <div class="eye left"><div class="pupil"></div></div>
-                <div class="eye right"><div class="pupil"></div></div>
-                <div class="mouth"></div>
-            </div>
-            <div class="shadow-oval"></div>
-        </div>
-        <p class="loading-text">Chvilku strpení,<br><span style="color: #ff8a00">vystavujeme diplom...</span></p>
+        <l-bouncy size="55" speed="1.75" color="#ff8a00"></l-bouncy>
+        <p class="loader-text">Načítám...</p>
     </div>
     <div class="background layout">
         <div class="left ">

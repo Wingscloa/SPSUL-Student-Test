@@ -14,6 +14,15 @@ $(document).on('click', '#configModal .config-nav-item:not(.config-logout)', fun
     $(this).addClass('active');
 });
 
+// Close any open Select2 dropdowns when config modal opens
+$(document).on('show.bs.modal', '#configModal', function () {
+    $('.select2-hidden-accessible').each(function () {
+        if ($(this).data('select2')) {
+            $(this).select2('close');
+        }
+    });
+});
+
 // Mobile tab: highlight active
 $(document).on('click', '.config-tab', function () {
     $('.config-tab').removeClass('active');
@@ -76,24 +85,38 @@ document.addEventListener('click', function (e) {
     document.addEventListener('click', async function (e) {
         const submit = e.target.closest(".configSubmit")
         if (!submit) return;
-        const el = e.target;
-        const button = el.closest('button[data-form]');
-        const formId = button.getAttribute('data-form');
 
-        const isValid = validateDataAttributes(formId);
+        try {
+            const button = submit.closest('button[data-form]') || submit;
+            const formId = button.getAttribute('data-form');
 
-        if (!isValid) { return; }
+            if (!formId || !document.getElementById(formId)) {
+                toastr.error('Formulář nebyl nalezen.');
+                return;
+            }
 
-        const data = getDataFromForm(formId)
-        const url = document.getElementById('crudURL').value
+            const isValid = validateDataAttributes(formId);
+            if (!isValid) { return; }
 
-        if (editModeOn) {
-            await fetchDataForm(url, data, 'PUT')
-            await filterForm();
-        }
-        else {
-            await fetchDataForm(url, data, 'POST')
-            await filterForm();
+            const data = getDataFromForm(formId);
+            const crudEl = document.getElementById('crudURL');
+            if (!crudEl || !crudEl.value) {
+                toastr.error('URL pro uložení nebyla nalezena. Zkuste znovu načíst sekci.');
+                return;
+            }
+            const url = crudEl.value;
+
+            if (editModeOn) {
+                await fetchDataForm(url, data, 'PUT');
+                await filterForm();
+            } else {
+                await fetchDataForm(url, data, 'POST');
+                await filterForm();
+            }
+        } catch (error) {
+            loadingScreen(false);
+            console.error('Config save error:', error);
+            toastr.error('Nastala chyba při ukládání. Zkuste to znovu.');
         }
     })
 
