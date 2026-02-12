@@ -2,6 +2,9 @@ using SPSUL.Models;
 using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Infrastructure;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Data.SqlClient;
+using System.IO.Compression;
 
 namespace SPSUL
 {
@@ -34,6 +37,25 @@ namespace SPSUL
 
             builder.Services.AddScoped<CacheService>();
             builder.Services.AddScoped<SharedService>();
+
+            // In-memory cache for lookup data (classes, fields, types)
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSingleton<LookupCacheService>();
+
+            // Response compression (Brotli > GZip)
+            builder.Services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.Providers.Add<GzipCompressionProvider>();
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    ["application/javascript", "text/css", "application/json", "image/svg+xml"]);
+            });
+
+            builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+                options.Level = CompressionLevel.Fastest);
+            builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+                options.Level = CompressionLevel.Fastest);
 
             // Azurit - s nastavením kompatibilní API verze
             builder.Services.AddSingleton(x =>
@@ -69,11 +91,43 @@ namespace SPSUL
 
             var app = builder.Build();
 
-            // Auto-apply pending EF Core migrations (for Docker / production)
+            // Auto-apply pending EF Core migrations or EnsureCreated (for Docker)
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<SpsulContext>();
-                db.Database.Migrate();
+                var useEnsureCreated = builder.Configuration.GetValue<bool>("Database:EnsureCreated");
+
+                if (useEnsureCreated)
+                {
+                    db.Database.EnsureCreated();
+                }
+                else
+                {
+                    db.Database.Migrate();
+                }
+
+                // Ensure SQL Server cache table exists for sessions
+                var connStr = builder.Configuration.GetConnectionString("Default");
+                if (!string.IsNullOrWhiteSpace(connStr))
+                {
+                    using var conn = new SqlConnection(connStr);
+                    conn.Open();
+                    using var cmd = conn.CreateCommand();
+                    cmd.CommandText = @"
+IF OBJECT_ID(N'[dbo].[Sessions]', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[Sessions](
+        [Id] NVARCHAR(449) NOT NULL,
+        [Value] VARBINARY(MAX) NOT NULL,
+        [ExpiresAtTime] DATETIMEOFFSET NOT NULL,
+        [SlidingExpirationInSeconds] BIGINT NULL,
+        [AbsoluteExpiration] DATETIMEOFFSET NULL,
+        CONSTRAINT [PK_Sessions] PRIMARY KEY ([Id])
+    );
+    CREATE INDEX [IX_Sessions_ExpiresAtTime] ON [dbo].[Sessions] ([ExpiresAtTime]);
+END";
+                    cmd.ExecuteNonQuery();
+                }
             }
 
             // Configure the HTTP request pipeline.
@@ -86,6 +140,9 @@ namespace SPSUL
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
+
+            // Response compression — must be before static files and routing
+            app.UseResponseCompression();
 
             app.UseStaticFiles(new StaticFileOptions
             {

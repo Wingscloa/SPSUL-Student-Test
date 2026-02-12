@@ -1,21 +1,21 @@
 #!/bin/bash
 set -e
 
-CONNECTION_STRING="${ConnectionStrings__Default}"
-
-echo "==> Waiting for SQL Server to be ready..."
-for i in $(seq 1 30); do
-    if dotnet-sql-cache create "$CONNECTION_STRING" dbo Sessions 2>/dev/null; then
-        echo "==> Sessions table ensured."
+# ============================================
+# 1. Wait for SQL Server
+# ============================================
+echo "==> Waiting for SQL Server..."
+for i in $(seq 1 60); do
+    if timeout 1 bash -c '</dev/tcp/sqlserver/1433' >/dev/null 2>&1; then
+        echo "==> SQL Server is ready."
         break
     fi
-    echo "    SQL Server not ready yet (attempt $i/30)... waiting 2s"
+    echo "    SQL Server not ready yet (attempt $i/60)... waiting 2s"
     sleep 2
 done
 
-echo "==> Applying EF Core migrations..."
-# Use the EF bundle or just start the app — migrations are applied via the app
-# The app will start and connect to the DB
-
+# ============================================
+# 2. Start the application
+# ============================================
 echo "==> Starting SPSUL application..."
 exec dotnet SPSUL.dll

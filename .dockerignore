@@ -12,5 +12,4 @@
 .gitignore
 docker-compose.yml
 Dockerfile
-docker-entrypoint.sh
 .dockerignore

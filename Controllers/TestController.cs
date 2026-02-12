@@ -12,10 +12,12 @@ namespace SPSUL.Controllers
     {
         private readonly SpsulContext _ctx;
         private readonly PdfService _pdf;
-        public TestController(SpsulContext context, PdfService pdf)
+        private readonly LookupCacheService _lookup;
+        public TestController(SpsulContext context, PdfService pdf, LookupCacheService lookup)
         {
             _ctx = context;
             _pdf = pdf;
+            _lookup = lookup;
         }
 
         // ============================================
@@ -34,6 +36,7 @@ namespace SPSUL.Controllers
         public async Task<IActionResult> Index()
         {
             var tests = await _ctx.Tests
+                .AsNoTracking()
                 .Include(t => t.Creator)
                 .Include(t => t.StudentField)
                 .Include(t => t.StudentTests)
@@ -41,15 +44,13 @@ namespace SPSUL.Controllers
                 .ToListAsync();
 
             var students = await _ctx.Students
+                .AsNoTracking()
                 .Include(s => s.ClassesStudents)
                     .ThenInclude(cs => cs.Classes)
                 .Where(s => s.IsActive)
                 .ToListAsync();
 
-            var classes = await _ctx.Classes
-                .Include(c => c.ClassesStudents)
-                .Where(c => c.IsActive)
-                .ToListAsync();
+            var classes = await _lookup.GetActiveClassesAsync();
 
             ViewBag.Students = students;
             ViewBag.Classes = classes;
@@ -495,15 +496,16 @@ namespace SPSUL.Controllers
             {
                 CreateViewModel model = new()
                 {
-                    Classes = await _ctx.Classes.Include(e => e.ClassesStudents).ToListAsync(),
+                    Classes = await _lookup.GetAllClassesAsync(),
                     Questions = await _ctx.Questions
+                        .AsNoTracking()
                         .Include(e => e.QuestionType)
                         .Include(e => e.QuestionOptions)
                         .Where(e => e.IsActive == true)
                         .ToListAsync(),
-                    Fields = await _ctx.StudentFields.Where(e => e.IsActive == true).ToListAsync(),
-                    Students = await _ctx.Students.ToListAsync(),
-                    Types = await _ctx.QuestionTypes.Where(e => e.IsActive == true).ToListAsync()
+                    Fields = await _lookup.GetActiveFieldsAsync(),
+                    Students = await _ctx.Students.AsNoTracking().ToListAsync(),
+                    Types = await _lookup.GetActiveTypesAsync()
                 };
                 return View(model);
             }

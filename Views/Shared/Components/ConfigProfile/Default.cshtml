@@ -118,15 +118,39 @@ document.getElementById('btnSaveProfile')?.addEventListener('click', async funct
             })
         });
 
-        const text = await response.text();
-
         if (!response.ok) {
+            const text = await response.text();
             toastr.error(text);
             return;
         }
 
-        toastr.success(text);
+        const data = await response.json();
+        toastr.success(data.message);
         form.querySelector('#profileNewPassword').value = '';
+
+        // Update all visible name elements in the DOM
+        if (data.name) {
+            document.querySelectorAll('.config-sidebar-name, .TeacherName').forEach(el => {
+                // TeacherName also contains a .Nickname span — preserve it
+                var nickSpan = el.querySelector('.Nickname');
+                if (nickSpan) {
+                    el.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = ''; });
+                    el.insertBefore(document.createTextNode(data.name + ' '), nickSpan);
+                } else {
+                    el.textContent = data.name;
+                }
+            });
+            // Navbar user name
+            document.querySelectorAll('.user-name').forEach(el => el.textContent = data.name);
+            // Mobile config topbar name
+            var mobileNameEl = document.querySelector('.config-mobile-topbar strong');
+            if (mobileNameEl) mobileNameEl.textContent = data.name;
+        }
+        if (data.nickname) {
+            document.querySelectorAll('.config-sidebar-nick, .Nickname').forEach(el => el.textContent = data.nickname);
+            var mobileNickEl = document.querySelector('.config-mobile-topbar small');
+            if (mobileNickEl) mobileNickEl.textContent = data.nickname;
+        }
     } catch (error) {
         console.error(error);
         toastr.error('Nastala chyba při ukládání profilu.');

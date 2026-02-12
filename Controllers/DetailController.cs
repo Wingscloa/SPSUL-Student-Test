@@ -36,6 +36,7 @@ namespace SPSUL.Controllers
             int PageSize1 = 10)
         {
             var allItems = await _ctx.StudentTests
+                .AsNoTracking()
                 .Include(st => st.Test)
                 .Include(st => st.Student)
                 .Where(st => st.FinishedAt != DateTime.MinValue)

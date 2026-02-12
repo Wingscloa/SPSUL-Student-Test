@@ -19,15 +19,16 @@ namespace SPSUL.Controllers
         public async Task<IActionResult> Index()
         {
             var teacherId = (int?)HttpContext.Items["CurrentUserId"] ?? 0;
-            var teacher = await _ctx.Teachers.FindAsync(teacherId);
+            var teacher = await _ctx.Teachers.AsNoTracking().FirstOrDefaultAsync(t => t.TeacherId == teacherId);
 
-            // Stat cards
-            var activeTests = await _ctx.Tests.CountAsync(t => t.IsActive);
-            var totalStudents = await _ctx.Students.CountAsync(s => s.IsActive);
-            var totalQuestions = await _ctx.Questions.CountAsync(q => q.IsActive);
+            // Stat cards — count queries only, no data pulled
+            var activeTests = await _ctx.Tests.AsNoTracking().CountAsync(t => t.IsActive);
+            var totalStudents = await _ctx.Students.AsNoTracking().CountAsync(s => s.IsActive);
+            var totalQuestions = await _ctx.Questions.AsNoTracking().CountAsync(q => q.IsActive);
 
-            // Finished tests for average
+            // Finished tests for average — only load what's needed
             var finishedAssignments = await _ctx.StudentTests
+                .AsNoTracking()
                 .Include(st => st.Test)
                 .Where(st => st.FinishedAt != DateTime.MinValue)
                 .ToListAsync();
@@ -40,10 +41,12 @@ namespace SPSUL.Controllers
 
             // Pending (assigned but not started)
             var pendingCount = await _ctx.StudentTests
+                .AsNoTracking()
                 .CountAsync(st => st.StartedAt == DateTime.MinValue);
 
             // Recent activity - last 10 finished tests
             var recentFinished = await _ctx.StudentTests
+                .AsNoTracking()
                 .Include(st => st.Test)
                 .Include(st => st.Student)
                 .Where(st => st.FinishedAt != DateTime.MinValue)
@@ -53,6 +56,7 @@ namespace SPSUL.Controllers
 
             // Upcoming - active tests with pending students
             var upcomingTests = await _ctx.Tests
+                .AsNoTracking()
                 .Include(t => t.StudentField)
                 .Include(t => t.StudentTests)
                 .Where(t => t.IsActive && t.StudentTests.Any(st => st.StartedAt == DateTime.MinValue))

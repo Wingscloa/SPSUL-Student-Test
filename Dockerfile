@@ -10,7 +10,7 @@ RUN dotnet restore
 
 # Copy everything and publish
 COPY . ./
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish SPSUL.csproj -c Release -o /app/publish
 
 # ============================================
 # Stage 2: Runtime
@@ -18,13 +18,9 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-preview AS runtime
 WORKDIR /app
 
-# Install dotnet-sql-cache tool for session table creation
-RUN dotnet tool install --global dotnet-sql-cache
-ENV PATH="$PATH:/root/.dotnet/tools"
-
 COPY --from=build /app/publish ./
 COPY docker-entrypoint.sh ./
-RUN chmod +x docker-entrypoint.sh
+RUN sed -i 's/\r$//' docker-entrypoint.sh && chmod +x docker-entrypoint.sh
 
 EXPOSE 8080
 ENTRYPOINT ["./docker-entrypoint.sh"]

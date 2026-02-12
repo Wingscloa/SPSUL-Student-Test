@@ -10,15 +10,18 @@ namespace SPSUL.Controllers
     public class StudentsController : Controller
     {
         private readonly SpsulContext _ctx;
+        private readonly LookupCacheService _lookup;
 
-        public StudentsController(SpsulContext ctx)
+        public StudentsController(SpsulContext ctx, LookupCacheService lookup)
         {
             _ctx = ctx;
+            _lookup = lookup;
         }
 
         public async Task<IActionResult> Index(string? name, int? classId, int? fieldId, bool? active)
         {
             var query = _ctx.Students
+                .AsNoTracking()
                 .Include(e => e.ClassesStudents).ThenInclude(e => e.Classes)
                     .ThenInclude(c => c.ClassesFields).ThenInclude(cf => cf.StudentField)
                 .AsQueryable();
@@ -41,8 +44,8 @@ namespace SPSUL.Controllers
             var model = new StudentIndexVM
             {
                 Students = students,
-                Classes = await _ctx.Classes.Where(c => c.IsActive).OrderBy(c => c.Name).ToListAsync(),
-                Fields = await _ctx.StudentFields.Where(f => f.IsActive).OrderBy(f => f.Name).ToListAsync(),
+                Classes = await _lookup.GetActiveClassesAsync(),
+                Fields = await _lookup.GetActiveFieldsAsync(),
                 Name = name,
                 ClassId = classId,
                 FieldId = fieldId,

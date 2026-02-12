@@ -10,10 +10,12 @@ namespace SPSUL.Controllers.API
     {
         private readonly SpsulContext _ctx;
         private readonly IWebHostEnvironment _env;
-        public ConfigController(SpsulContext ctx, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment env)
+        private readonly CacheService _cacheService;
+        public ConfigController(SpsulContext ctx, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment env, CacheService cacheService)
         {
             _ctx = ctx;
             _env = env;
+            _cacheService = cacheService;
         }
 
         [HttpGet("/api/config/section/{sectionName}")]
@@ -165,7 +167,16 @@ namespace SPSUL.Controllers.API
             }
 
             await _ctx.SaveChangesAsync();
-            return Ok("Profil byl úspěšně aktualizován.");
+
+            // Invalidate cached teacher name so SharedService returns fresh data
+            _cacheService.Remove("TeacherName");
+
+            return Ok(new
+            {
+                message = "Profil byl úspěšně aktualizován.",
+                name = $"{teacher.FirstName} {teacher.LastName}",
+                nickname = teacher.NickName
+            });
         }
     }
 

@@ -2,27 +2,53 @@
 
 namespace SPSUL.Models
 {
-    public enum CacheKeys
-    {
-        TeacherName,
-    }
     public class CacheService
     {
         private readonly IMemoryCache _cache;
-        public CacheService(IMemoryCache cache)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public CacheService(IMemoryCache cache, IHttpContextAccessor httpContextAccessor)
         {
             _cache = cache;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task SetCacheAsync (CacheKeys key, string value, TimeSpan expiration)
+        /// <summary>
+        /// Sets a cache value scoped to the current teacher.
+        /// </summary>
+        public void Set(string key, string value, TimeSpan expiration)
         {
-            _cache.Set(key.ToString(), value, expiration);
+            var fullKey = BuildKey(key);
+            if (fullKey != null)
+                _cache.Set(fullKey, value, expiration);
         }
 
-        public async Task<string?> GetCacheValue(CacheKeys key)
+        /// <summary>
+        /// Gets a cache value scoped to the current teacher.
+        /// </summary>
+        public string? Get(string key)
         {
-            _cache.TryGetValue(key.ToString(), out string? value);
+            var fullKey = BuildKey(key);
+            if (fullKey == null) return null;
+
+            _cache.TryGetValue(fullKey, out string? value);
             return value;
+        }
+
+        /// <summary>
+        /// Removes a cache entry scoped to the current teacher.
+        /// </summary>
+        public void Remove(string key)
+        {
+            var fullKey = BuildKey(key);
+            if (fullKey != null)
+                _cache.Remove(fullKey);
+        }
+
+        private string? BuildKey(string key)
+        {
+            var teacherId = _httpContextAccessor.HttpContext?.Session.GetInt32("TeacherId");
+            return teacherId.HasValue ? $"teacher:{teacherId}:{key}" : null;
         }
     }
 }

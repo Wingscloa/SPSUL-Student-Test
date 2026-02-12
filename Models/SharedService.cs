@@ -1,6 +1,5 @@
 ﻿ using SPSUL.Models.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace SPSUL.Models
 {
@@ -21,11 +20,13 @@ namespace SPSUL.Models
             int? teacherId = session.GetInt32("TeacherId");
             if (teacherId == null) return null;
 
-            string? name = await _cacheService.GetCacheValue(CacheKeys.TeacherName);
+            string? name = _cacheService.Get("TeacherName");
 
             if (string.IsNullOrEmpty(name))
             {
-                Teacher? teacher = await _ctx.Teachers.Where(e => e.TeacherId == teacherId)
+                Teacher? teacher = await _ctx.Teachers
+                    .AsNoTracking()
+                    .Where(e => e.TeacherId == teacherId)
                     .Include(e => e.Titles).ThenInclude(e => e.Title)
                     .FirstOrDefaultAsync();
 
@@ -33,7 +34,7 @@ namespace SPSUL.Models
 
                 string titlePrefix = string.Join(' ', teacher.Titles.Select(e => e.Title.Shortcut));
                 name = string.IsNullOrWhiteSpace(titlePrefix) ? $"{teacher.FirstName} {teacher.LastName}" : $"{titlePrefix} {teacher.FirstName} {teacher.LastName}";
-                await _cacheService.SetCacheAsync(CacheKeys.TeacherName, name, TimeSpan.FromDays(7));
+                _cacheService.Set("TeacherName", name, TimeSpan.FromDays(7));
             }
 
             return name;
