@@ -198,7 +198,10 @@
                             <option value="">Všechny třídy</option>
                             @foreach (var c in classes)
                             {
-                                <option value="@c.ClassesId">@c.Name (@c.ClassesStudents.Count studentů)</option>
+                                if(c != null)
+                                {
+                                    <option value="@c.ClassesId">@c.Name (@c.ClassesStudents.Count studentů)</option>
+                                }
                             }
                         </select>
                     </div>

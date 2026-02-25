@@ -102,6 +102,44 @@ namespace SPSUL.Migrations
                     b.HasKey("PermissionId");
 
                     b.ToTable("Permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            PermissionId = 1,
+                            IsActive = true,
+                            Name = "All Permissions"
+                        },
+                        new
+                        {
+                            PermissionId = 2,
+                            IsActive = true,
+                            Name = "CURD"
+                        },
+                        new
+                        {
+                            PermissionId = 3,
+                            IsActive = true,
+                            Name = "CRUD Test"
+                        },
+                        new
+                        {
+                            PermissionId = 4,
+                            IsActive = true,
+                            Name = "CRUD Teacher"
+                        },
+                        new
+                        {
+                            PermissionId = 5,
+                            IsActive = true,
+                            Name = "CRUD Student"
+                        },
+                        new
+                        {
+                            PermissionId = 6,
+                            IsActive = true,
+                            Name = "View"
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Question", b =>
@@ -226,6 +264,50 @@ namespace SPSUL.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            Description = "Oprávnění uděluje plnou kontrolu nad systémem – správce může vytvářet, upravovat i mazat všechny účty.",
+                            IsActive = true,
+                            Name = "Administrátor"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            Description = "Oprávnění uděluje možnost vytváření, aktualizování a čtení všech systému v aplikaci, krom učitelů.",
+                            IsActive = true,
+                            Name = "Tvůrce"
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            Description = "Oprávnění uděluje možnost všechny operace pro systém testů.",
+                            IsActive = true,
+                            Name = "Testátor"
+                        },
+                        new
+                        {
+                            RoleId = 4,
+                            Description = "Oprávnění uděluje možnost všechny operace pro systém učitelů.",
+                            IsActive = true,
+                            Name = "Učitelátor"
+                        },
+                        new
+                        {
+                            RoleId = 5,
+                            Description = "Oprávnění uděluje možnost všechny operace pro systém studentů.",
+                            IsActive = true,
+                            Name = "Studentátor"
+                        },
+                        new
+                        {
+                            RoleId = 6,
+                            Description = "Oprávnění uděluje pohled na všechny systémy.",
+                            IsActive = true,
+                            Name = "Hledič"
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.RolePermission", b =>
@@ -241,6 +323,38 @@ namespace SPSUL.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("RolePermissions");
+
+                    b.HasData(
+                        new
+                        {
+                            PermissionId = 1,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            PermissionId = 2,
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            PermissionId = 3,
+                            RoleId = 3
+                        },
+                        new
+                        {
+                            PermissionId = 4,
+                            RoleId = 4
+                        },
+                        new
+                        {
+                            PermissionId = 5,
+                            RoleId = 5
+                        },
+                        new
+                        {
+                            PermissionId = 6,
+                            RoleId = 6
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Student", b =>
@@ -286,12 +400,296 @@ namespace SPSUL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.HasKey("StudentFieldId");
 
                     b.ToTable("StudentFields");
+
+                    b.HasData(
+                        new
+                        {
+                            StudentFieldId = 1,
+                            IsActive = true,
+                            Name = "Anglický jazyk"
+                        },
+                        new
+                        {
+                            StudentFieldId = 2,
+                            IsActive = true,
+                            Name = "Databáze"
+                        },
+                        new
+                        {
+                            StudentFieldId = 3,
+                            IsActive = true,
+                            Name = "Ekonomika"
+                        },
+                        new
+                        {
+                            StudentFieldId = 4,
+                            IsActive = true,
+                            Name = "Elektrotechnika"
+                        },
+                        new
+                        {
+                            StudentFieldId = 5,
+                            IsActive = true,
+                            Name = "Fyzika"
+                        },
+                        new
+                        {
+                            StudentFieldId = 6,
+                            IsActive = true,
+                            Name = "Kyberbezpečnost"
+                        },
+                        new
+                        {
+                            StudentFieldId = 7,
+                            IsActive = true,
+                            Name = "Matematický seminář"
+                        },
+                        new
+                        {
+                            StudentFieldId = 8,
+                            IsActive = true,
+                            Name = "Matematika"
+                        },
+                        new
+                        {
+                            StudentFieldId = 9,
+                            IsActive = true,
+                            Name = "Operační systémy"
+                        },
+                        new
+                        {
+                            StudentFieldId = 10,
+                            IsActive = true,
+                            Name = "Praxe"
+                        },
+                        new
+                        {
+                            StudentFieldId = 11,
+                            IsActive = true,
+                            Name = "Programování a vývoj aplikací"
+                        },
+                        new
+                        {
+                            StudentFieldId = 12,
+                            IsActive = true,
+                            Name = "Projekty"
+                        },
+                        new
+                        {
+                            StudentFieldId = 13,
+                            IsActive = true,
+                            Name = "Tělesná výchova"
+                        },
+                        new
+                        {
+                            StudentFieldId = 14,
+                            IsActive = true,
+                            Name = "Český jazyk a literatura"
+                        },
+                        new
+                        {
+                            StudentFieldId = 15,
+                            IsActive = true,
+                            Name = "Základy elektrotechniky"
+                        },
+                        new
+                        {
+                            StudentFieldId = 16,
+                            IsActive = true,
+                            Name = "Materiály a technologie"
+                        },
+                        new
+                        {
+                            StudentFieldId = 17,
+                            IsActive = true,
+                            Name = "Informační a komunikační technologie"
+                        },
+                        new
+                        {
+                            StudentFieldId = 18,
+                            IsActive = true,
+                            Name = "Nauka o společnosti"
+                        },
+                        new
+                        {
+                            StudentFieldId = 19,
+                            IsActive = true,
+                            Name = "Odborný výcvik"
+                        },
+                        new
+                        {
+                            StudentFieldId = 20,
+                            IsActive = true,
+                            Name = "Elektrické stroje a přístroje"
+                        },
+                        new
+                        {
+                            StudentFieldId = 21,
+                            IsActive = true,
+                            Name = "Technická dokumentace"
+                        },
+                        new
+                        {
+                            StudentFieldId = 22,
+                            IsActive = true,
+                            Name = "Dějepis"
+                        },
+                        new
+                        {
+                            StudentFieldId = 23,
+                            IsActive = true,
+                            Name = "Aplikační software"
+                        },
+                        new
+                        {
+                            StudentFieldId = 24,
+                            IsActive = true,
+                            Name = "Webové aplikace"
+                        },
+                        new
+                        {
+                            StudentFieldId = 25,
+                            IsActive = true,
+                            Name = "Základy přírodních věd"
+                        },
+                        new
+                        {
+                            StudentFieldId = 26,
+                            IsActive = true,
+                            Name = "Algoritmizace"
+                        },
+                        new
+                        {
+                            StudentFieldId = 27,
+                            IsActive = true,
+                            Name = "Datové sítě"
+                        },
+                        new
+                        {
+                            StudentFieldId = 28,
+                            IsActive = true,
+                            Name = "Logistika"
+                        },
+                        new
+                        {
+                            StudentFieldId = 29,
+                            IsActive = true,
+                            Name = "Doprava"
+                        },
+                        new
+                        {
+                            StudentFieldId = 30,
+                            IsActive = true,
+                            Name = "Německý jazyk"
+                        },
+                        new
+                        {
+                            StudentFieldId = 31,
+                            IsActive = true,
+                            Name = "Písemná a elektronická komunikace"
+                        },
+                        new
+                        {
+                            StudentFieldId = 32,
+                            IsActive = true,
+                            Name = "Občanská nauka"
+                        },
+                        new
+                        {
+                            StudentFieldId = 33,
+                            IsActive = true,
+                            Name = "Automatizace"
+                        },
+                        new
+                        {
+                            StudentFieldId = 34,
+                            IsActive = true,
+                            Name = "Elektronika"
+                        },
+                        new
+                        {
+                            StudentFieldId = 35,
+                            IsActive = true,
+                            Name = "Elektrotechnická měření"
+                        },
+                        new
+                        {
+                            StudentFieldId = 36,
+                            IsActive = true,
+                            Name = "Herní vývoj"
+                        },
+                        new
+                        {
+                            StudentFieldId = 37,
+                            IsActive = true,
+                            Name = "Marketing a management"
+                        },
+                        new
+                        {
+                            StudentFieldId = 38,
+                            IsActive = true,
+                            Name = "Účetnictví"
+                        },
+                        new
+                        {
+                            StudentFieldId = 39,
+                            IsActive = true,
+                            Name = "Webové technologie"
+                        },
+                        new
+                        {
+                            StudentFieldId = 40,
+                            IsActive = true,
+                            Name = "Zeměpis"
+                        },
+                        new
+                        {
+                            StudentFieldId = 41,
+                            IsActive = true,
+                            Name = "Strojnictví"
+                        },
+                        new
+                        {
+                            StudentFieldId = 42,
+                            IsActive = true,
+                            Name = "Programování"
+                        },
+                        new
+                        {
+                            StudentFieldId = 43,
+                            IsActive = true,
+                            Name = "Elektronika a sdělovací technika"
+                        },
+                        new
+                        {
+                            StudentFieldId = 44,
+                            IsActive = true,
+                            Name = "Číslicová technika"
+                        },
+                        new
+                        {
+                            StudentFieldId = 45,
+                            IsActive = true,
+                            Name = "Automatizace"
+                        },
+                        new
+                        {
+                            StudentFieldId = 46,
+                            IsActive = true,
+                            Name = "Mikroprocesorová technika"
+                        },
+                        new
+                        {
+                            StudentFieldId = 47,
+                            IsActive = true,
+                            Name = "Technické kreslení"
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.StudentTest", b =>
@@ -363,6 +761,35 @@ namespace SPSUL.Migrations
                     b.HasKey("TeacherId");
 
                     b.ToTable("Teachers");
+
+                    b.HasData(
+                        new
+                        {
+                            TeacherId = 1,
+                            FirstName = "Admin",
+                            IsActive = false,
+                            LastName = "Admin",
+                            NickName = "Admin",
+                            PasswordHash = "$2b$10$jErDDvlTESkhHfdiHuRFte9ojuRZNZST.gskJ4PVgp6h6q0VGmVxS"
+                        },
+                        new
+                        {
+                            TeacherId = 2,
+                            FirstName = "Filip",
+                            IsActive = false,
+                            LastName = "Eder",
+                            NickName = "FilipEder",
+                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                        },
+                        new
+                        {
+                            TeacherId = 3,
+                            FirstName = "Petr",
+                            IsActive = false,
+                            LastName = "Novák",
+                            NickName = "PetrNovak",
+                            PasswordHash = "$2b$10$YqPz7WEHhmjRpRuFqaVPVu505tO1z4KwGVnnj3T3J0S9SEnZMrZSG"
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.TeacherRole", b =>
@@ -378,6 +805,18 @@ namespace SPSUL.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("TeacherRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            TeacherId = 1,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            TeacherId = 2,
+                            RoleId = 6
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.TeacherTitle", b =>
@@ -463,6 +902,78 @@ namespace SPSUL.Migrations
                     b.HasKey("TitleId");
 
                     b.ToTable("Titles");
+
+                    b.HasData(
+                        new
+                        {
+                            TitleId = 1,
+                            IsActive = true,
+                            Name = "Bakalář",
+                            Shortcut = "Bc."
+                        },
+                        new
+                        {
+                            TitleId = 2,
+                            IsActive = true,
+                            Name = "Magistr",
+                            Shortcut = "Mgr."
+                        },
+                        new
+                        {
+                            TitleId = 3,
+                            IsActive = true,
+                            Name = "Inženýr",
+                            Shortcut = "Ing."
+                        },
+                        new
+                        {
+                            TitleId = 4,
+                            IsActive = true,
+                            Name = "Doktor filozofie",
+                            Shortcut = "PhDr."
+                        },
+                        new
+                        {
+                            TitleId = 5,
+                            IsActive = true,
+                            Name = "Doktor práv",
+                            Shortcut = "JUDr."
+                        },
+                        new
+                        {
+                            TitleId = 6,
+                            IsActive = true,
+                            Name = "Doktor přírodních věd",
+                            Shortcut = "RNDr."
+                        },
+                        new
+                        {
+                            TitleId = 7,
+                            IsActive = true,
+                            Name = "Doktor filozofie",
+                            Shortcut = "Ph.D."
+                        },
+                        new
+                        {
+                            TitleId = 8,
+                            IsActive = true,
+                            Name = "Doktor teologie",
+                            Shortcut = "Th.D."
+                        },
+                        new
+                        {
+                            TitleId = 9,
+                            IsActive = true,
+                            Name = "Magisterský titul obchodní administrativy",
+                            Shortcut = "MBA"
+                        },
+                        new
+                        {
+                            TitleId = 10,
+                            IsActive = true,
+                            Name = "Magistr práv",
+                            Shortcut = "LL.M."
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Display.QuestionModels.QuestionRow", b =>

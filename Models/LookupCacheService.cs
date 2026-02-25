@@ -81,10 +81,6 @@ namespace SPSUL.Models
             return await GetOrCreateAsync(KeyTitles, async ctx =>
                 await ctx.Titles.AsNoTracking().ToListAsync());
         }
-
-        /// <summary>
-        /// Call after any write operation that changes lookup data (classes, fields, types, etc.).
-        /// </summary>
         public void InvalidateAll()
         {
             _cache.Remove(KeyActiveClasses);

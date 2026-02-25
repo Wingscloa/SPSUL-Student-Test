@@ -19,7 +19,23 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
-
+  # ============================================
+  # Import Sql 
+  # ============================================
+  mssql-init:
+    image: mcr.microsoft.com/mssql-tools
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    volumes:
+      - ./import.sql:/import.sql:ro
+    entrypoint: >
+      /bin/bash -c "
+      echo 'Importing database...';
+      /opt/mssql-tools/bin/sqlcmd -S mssql -U sa -P 'Spsul_Strong!Pass123' -i /import.sql;
+      echo 'Done.'
+      "
+    restart: "no"
   # ============================================
   # Azurite (Azure Blob Storage emulator)
   # ============================================
@@ -48,6 +64,7 @@ services:
       Database__EnsureCreated: "true"
       ConnectionStrings__Default: "Server=tcp:sqlserver,1433;Database=SpsulTesty;User Id=sa;Password=Spsul_Strong!Pass123;TrustServerCertificate=True;Encrypt=False;"
       ConnectionStrings__Azurit: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
+      Logging___LogLevel__Default: "Warning"
     ports:
       - "8080:8080"
     depends_on:

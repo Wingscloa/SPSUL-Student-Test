@@ -32,7 +32,7 @@ namespace SPSUL.Controllers
             {
                 try
                 {
-                    Teacher teacher = _ctx.Teachers.FirstOrDefault(e => e.NickName == model.NickName);
+                    Teacher? teacher = _ctx.Teachers.FirstOrDefault(e => e.NickName == model.NickName);
 
                     if (teacher != null && BCrypt.Net.BCrypt.Verify(model.Password, teacher.PasswordHash))
                     {
@@ -60,7 +60,6 @@ namespace SPSUL.Controllers
         {
             var x = HttpContext.Session.GetInt32("TeacherId");
             _cache.Remove($"TeacherName");
-
             HttpContext.Session.Clear(); 
             return RedirectToAction("Login");
         }
