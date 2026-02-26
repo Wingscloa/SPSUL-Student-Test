@@ -15,11 +15,13 @@ namespace SPSUL.Controllers
         private readonly SpsulContext _ctx;
         private readonly AzureBlobService _blobService;
         private readonly SharedService _sharedService;
-        public QuestionController(SpsulContext ctx, AzureBlobService blobService, SharedService sharedService)
+        private readonly ILogger<QuestionController> _logger;
+        public QuestionController(SpsulContext ctx, AzureBlobService blobService, SharedService sharedService, ILogger<QuestionController> logger)
         {
             _ctx = ctx;
             _blobService = blobService;
             _sharedService = sharedService;
+            _logger = logger;
         }
         
         public async Task<IActionResult> Index(string? Name,bool? IsActive, int? FieldId, int? QuestionTypeId, int? CreatorId, int pageNumber = 1, int pageSize = 13)
@@ -76,6 +78,7 @@ namespace SPSUL.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Chyba při načítání otázek pro index.");
                 return View("Error");
             }
         }
@@ -250,7 +253,7 @@ namespace SPSUL.Controllers
         public async Task<IActionResult> CreateQuestion([FromBody] QuestionCreateDto dto)
         {
             // Validace pomocí ModelState (Data Annotations z DTO)
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid)    
             {
                 var errors = ModelState
                     .Where(e => e.Value?.Errors.Count > 0)

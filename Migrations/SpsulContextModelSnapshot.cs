@@ -48,7 +48,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("ClassesId");
 
-                    b.ToTable("Classes");
+                    b.ToTable("Classes", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.ClassesFields", b =>
@@ -63,7 +63,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("StudentFieldId");
 
-                    b.ToTable("ClassesFields");
+                    b.ToTable("ClassesFields", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.ClassesStudent", b =>
@@ -78,7 +78,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("ClassesStudents");
+                    b.ToTable("ClassesStudents", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Permission", b =>
@@ -101,7 +101,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("PermissionId");
 
-                    b.ToTable("Permissions");
+                    b.ToTable("Permissions", (string)null);
 
                     b.HasData(
                         new
@@ -182,7 +182,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("QuestionTypeId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.QuestionOption", b =>
@@ -212,7 +212,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionOptions");
+                    b.ToTable("QuestionOptions", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.QuestionType", b =>
@@ -235,7 +235,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("QuestionTypeId");
 
-                    b.ToTable("QuestionTypes");
+                    b.ToTable("QuestionTypes", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Role", b =>
@@ -263,7 +263,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -322,7 +322,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RolePermissions");
+                    b.ToTable("RolePermissions", (string)null);
 
                     b.HasData(
                         new
@@ -382,7 +382,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("StudentId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.StudentField", b =>
@@ -405,7 +405,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("StudentFieldId");
 
-                    b.ToTable("StudentFields");
+                    b.ToTable("StudentFields", (string)null);
 
                     b.HasData(
                         new
@@ -722,7 +722,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("StudentTests");
+                    b.ToTable("StudentTests", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Teacher", b =>
@@ -760,7 +760,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("TeacherId");
 
-                    b.ToTable("Teachers");
+                    b.ToTable("Teachers", (string)null);
 
                     b.HasData(
                         new
@@ -804,7 +804,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("TeacherRoles");
+                    b.ToTable("TeacherRoles", (string)null);
 
                     b.HasData(
                         new
@@ -831,7 +831,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("TitleId");
 
-                    b.ToTable("TeacherTitles");
+                    b.ToTable("TeacherTitles", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Test", b =>
@@ -873,7 +873,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("StudentFieldId");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Tests", (string)null);
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Title", b =>
@@ -901,7 +901,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("TitleId");
 
-                    b.ToTable("Titles");
+                    b.ToTable("Titles", (string)null);
 
                     b.HasData(
                         new

@@ -17,7 +17,7 @@
     <link href="~/css/Loading.css" rel="stylesheet" asp-append-version="true"/>
     <link href="~/css/configuration.css" rel="stylesheet" asp-append-version="true" />
     <!-- JS libraries -->
-    <script src="~/js/loading.js" asp-append-version="true"></script>
+    <script src="~/js/Loading.js" asp-append-version="true"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/bouncy.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/select2/js/select2.min.js" asp-append-version="true"></script>
@@ -87,7 +87,6 @@
                         </a>
                     </li>
                 </ul>
-                
                 <!-- User Component -->
                 @await Component.InvokeAsync("User")
             </div>
@@ -95,7 +94,6 @@
     </nav>
     @await Component.InvokeAsync("Config")
     @RenderBody()
-    
     <script src="~/js/navbar.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/tabbar.js" asp-append-version="true"></script>

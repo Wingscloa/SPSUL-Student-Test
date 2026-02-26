@@ -96,7 +96,6 @@ namespace SPSUL
             {
                 var db = scope.ServiceProvider.GetRequiredService<SpsulContext>();
                 var useEnsureCreated = builder.Configuration.GetValue<bool>("Database:EnsureCreated");
-
                 if (useEnsureCreated)
                 {
                     db.Database.EnsureCreated();
@@ -104,29 +103,6 @@ namespace SPSUL
                 else
                 {
                     db.Database.Migrate();
-                }
-
-                // Ensure SQL Server cache table exists for sessions
-                var connStr = builder.Configuration.GetConnectionString("Default");
-                if (!string.IsNullOrWhiteSpace(connStr))
-                {
-                    using var conn = new SqlConnection(connStr);
-                    conn.Open();
-                    using var cmd = conn.CreateCommand();
-                    cmd.CommandText = @"
-IF OBJECT_ID(N'[dbo].[Sessions]', N'U') IS NULL
-BEGIN
-    CREATE TABLE [dbo].[Sessions](
-        [Id] NVARCHAR(449) NOT NULL,
-        [Value] VARBINARY(MAX) NOT NULL,
-        [ExpiresAtTime] DATETIMEOFFSET NOT NULL,
-        [SlidingExpirationInSeconds] BIGINT NULL,
-        [AbsoluteExpiration] DATETIMEOFFSET NULL,
-        CONSTRAINT [PK_Sessions] PRIMARY KEY ([Id])
-    );
-    CREATE INDEX [IX_Sessions_ExpiresAtTime] ON [dbo].[Sessions] ([ExpiresAtTime]);
-END";
-                    cmd.ExecuteNonQuery();
                 }
             }
 

@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\Image\Hero-Stribrniky.jpg" />
+    <None Include="wwwroot\js\pages\Login.js" />
   </ItemGroup>
 
 </Project>
