@@ -7,15 +7,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SPSUL.Controllers.API
 {
+    /// <summary>
+    /// REST API pro CRUD operace nad třídami v konfiguračním modálu.
+    ///
+    /// Endpointy:
+    ///   GET  /api/classes/content/   – filtrovaný seznam tříd (HTML partial)
+    ///   POST /api/classes            – vytvoří třídu
+    ///   PUT  /api/classes            – upravuje třídu
+    ///   POST /api/classes/delete     – bulk mazání tříd dle ID
+    ///
+    /// Zabezpečení:
+    ///   [AutoValidateAntiforgeryToken] – chrání před CSRF útoky
+    ///   [RequirePermission(ManageClasses)] – jen Administrátor nebo Tvůrce
+    ///   Všechny CUD operace píší do AuditLog.
+    /// </summary>
+    [AutoValidateAntiforgeryToken]
     public class ClassesController : Controller
     {
         private readonly SpsulContext _ctx;
         private readonly ILogger<ClassesController> _logger;
+        private readonly AuditService _audit;
 
-        public ClassesController(SpsulContext ctx, ILogger<ClassesController> logger)
+        public ClassesController(SpsulContext ctx, ILogger<ClassesController> logger, AuditService audit)
         {
             _ctx = ctx;
             _logger = logger;
+            _audit = audit;
         }
 
         [Route("api/[controller]/row")]
@@ -94,6 +111,7 @@ namespace SPSUL.Controllers.API
 
         [Route("api/[controller]")]
         [HttpPost]
+        [RequirePermission(AppPermissions.ManageClasses, AppPermissions.All)]
         public async Task<IActionResult> Post([FromBody] ClassesCreate model)
         {
             if (ModelState.IsValid)
@@ -120,6 +138,7 @@ namespace SPSUL.Controllers.API
                     await _ctx.ClassesFields.AddRangeAsync(classFields);
                     await _ctx.SaveChangesAsync();
 
+                    await _audit.LogAsync("Vytvořena", "Třída", newClass.ClassesId.ToString(), newClass.Name);
                     return Ok("Vytvoření třídy proběhlo v pořádku");
                 }
                 catch (Exception ex)
@@ -137,6 +156,7 @@ namespace SPSUL.Controllers.API
 
         [HttpPut]
         [Route("api/[controller]")]
+        [RequirePermission(AppPermissions.ManageClasses, AppPermissions.All)]
         public async Task<IActionResult> Put([FromBody] ClassesUpdate model)
         {
             if (ModelState.IsValid)
@@ -165,6 +185,7 @@ namespace SPSUL.Controllers.API
 
                     await _ctx.ClassesFields.AddRangeAsync(updatedFields);
                     await _ctx.SaveChangesAsync();
+                    await _audit.LogAsync("Upravena", "Třída", model.ClassesId.ToString(), model.Name);
                     return Ok("Aktualizace třídy proběhla v pořádku");
                 }
                 catch (Exception ex)
@@ -181,6 +202,7 @@ namespace SPSUL.Controllers.API
 
         [HttpPost]
         [Route("api/[controller]/delete")]
+        [RequirePermission(AppPermissions.ManageClasses, AppPermissions.All)]
         public async Task<IActionResult> Delete([FromBody] List<int>? Ids)
         {
             try
@@ -199,6 +221,7 @@ namespace SPSUL.Controllers.API
 
                 _ctx.Classes.RemoveRange(classes);
                 await _ctx.SaveChangesAsync();
+                await _audit.LogAsync("Smazána", "Třída", string.Join(",", Ids), $"{classes.Count} tříd");
                 return NoContent();
             }
             catch (Exception ex)

@@ -1,7 +1,6 @@
-﻿@if (TempData["Notification"] != null)
+﻿@if (TempData["NotificationMessage"] != null)
 {
-    var alert = TempData["Notification"] as dynamic;
     <script>
-        toastr["@alert.type.ToString().ToLower()"]("@alert.message");
+        toastr[@Html.Raw(Json.Serialize(TempData["NotificationType"]))](@Html.Raw(Json.Serialize(TempData["NotificationMessage"])));
     </script>
 }

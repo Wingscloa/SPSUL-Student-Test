@@ -23,8 +23,8 @@
     // Success rate chart
     const ctx = document.getElementById('successRateChart');
     if (ctx) {
-        const labels = @Html.Raw(monthlyLabels);
-        const values = @Html.Raw(monthlyValues);
+        const labels = @Html.Raw(Model.MonthlyLabels);
+        const values = @Html.Raw(Model.MonthlyValues);
 
         new Chart(ctx, {
             type: 'line',

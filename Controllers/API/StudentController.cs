@@ -7,15 +7,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SPSUL.Controllers.API
 {
+    /// <summary>
+    /// REST API pro CRUD operace nad studenty, včetně aktivace/deaktivace a hromadného vytvoření.
+    ///
+    /// Endpointy:
+    ///   GET  /api/student/content/         – filtrovaný seznam studentů (HTML partial)
+    ///   POST /api/student                  – vytvoří studenta
+    ///   PUT  /api/student                  – upravuje studenta
+    ///   POST /api/student/delete           – bulk mazání studentů dle ID
+    ///   POST /Students/Activate/{id}       – aktivuje studenta
+    ///   POST /Students/Deactivate/{id}     – deaktivuje studenta
+    ///   POST /api/student/bulk             – hromadné vytvoření studentů (CSV-like vstup)
+    ///
+    /// Zabezpečení:
+    ///   [AutoValidateAntiforgeryToken] – chrání před CSRF útoky
+    ///   [RequirePermission(CrudStudents)] – jen Administrátor, Tvůrce nebo Studentátor
+    ///   Všechny CUD operace píší do AuditLog.
+    /// </summary>
+    [AutoValidateAntiforgeryToken]
     public class StudentController : Controller
     {
         private readonly SpsulContext _ctx;
         private readonly ILogger<StudentController> _logger;
+        private readonly AuditService _audit;
 
-        public StudentController(SpsulContext ctx, ILogger<StudentController> logger)
+        public StudentController(SpsulContext ctx, ILogger<StudentController> logger, AuditService audit)
         {
             _ctx = ctx;
             _logger = logger;
+            _audit = audit;
         }
 
         [Route("api/[controller]/row")]
@@ -98,6 +118,7 @@ namespace SPSUL.Controllers.API
 
         [Route("api/[controller]")]
         [HttpPost]
+        [RequirePermission(AppPermissions.CrudStudents, AppPermissions.ManageStudents, AppPermissions.All)]
         public async Task<IActionResult> Post([FromBody] StudentCreate model)
         {
             if (ModelState.IsValid)
@@ -122,9 +143,10 @@ namespace SPSUL.Controllers.API
                             ClassesId = t,
                         }).ToList();
                         await _ctx.AddRangeAsync(classesStudents);
-                        await _ctx.SaveChangesAsync();
+                    await _ctx.SaveChangesAsync();
                     }
                    
+                    await _audit.LogAsync("Vytvořen", "Student", student.StudentId.ToString(), $"{student.FirstName} {student.LastName}");
                     return Ok("Vytvoření studenta proběhlo v pořádku");
                 }
                 catch (Exception ex)
@@ -142,6 +164,7 @@ namespace SPSUL.Controllers.API
 
         [HttpPut]
         [Route("api/[controller]")]
+        [RequirePermission(AppPermissions.CrudStudents, AppPermissions.ManageStudents, AppPermissions.All)]
         public async Task<IActionResult> Put([FromBody] StudentUpdate model)
         {
             if (ModelState.IsValid)
@@ -174,6 +197,7 @@ namespace SPSUL.Controllers.API
 
                     await _ctx.SaveChangesAsync();
 
+                    await _audit.LogAsync("Upraven", "Student", model.StudentId.ToString(), $"{model.FirstName} {model.LastName}");
                     return Ok("Aktualizace studenta proběhla v pořádku");
                 }
                 catch (Exception ex)
@@ -190,6 +214,7 @@ namespace SPSUL.Controllers.API
 
         [HttpPost]
         [Route("api/[controller]/delete")]
+        [RequirePermission(AppPermissions.CrudStudents, AppPermissions.ManageStudents, AppPermissions.All)]
         public async Task<IActionResult> Delete([FromBody] List<int>? Ids)
         {
             try
@@ -208,6 +233,7 @@ namespace SPSUL.Controllers.API
 
                 _ctx.Students.RemoveRange(students);
                 await _ctx.SaveChangesAsync();
+                await _audit.LogAsync("Smazán", "Student", string.Join(",", Ids), $"{students.Count} studentů");
                 return NoContent();
             }
             catch (Exception ex)

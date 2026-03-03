@@ -11,6 +11,20 @@ using System.Text.Json;
 
 namespace SPSUL.Controllers
 {
+    /// <summary>
+    /// Zobrazování výsledkù testù a statistik.
+    ///
+    /// Funkce:
+    ///   Index   – tabulka všech dokonèených StudentTest záznamù s filtrováním a stránkováním
+    ///   View    – detail jednoho konkrétního výsledku testu (odpovìdi studenta vs. správné)
+    ///   Stats   – agregované statistiky (prùmìry, rozdìlení úspìšnosti)
+    ///   History – historie otázek/testù konkrétního studenta
+    ///
+    /// Jak se vypoèítává úspìšnost:
+    ///   Ze StudentTest.ResultSnapshot (JSON) se extrahují odpovìdi studenta.
+    ///   Porovnají se se správnými možnostmi z Test.QuestionSnapshot (JSON).
+    ///   Výsledek je procento správných odpovìdí.
+    /// </summary>
     [LoginRequired]
     public class DetailController : Controller
     {

@@ -7,6 +7,22 @@ using System.Text.Json;
 
 namespace SPSUL.Controllers
 {
+    /// <summary>
+    /// Správa testù ze strany uèitele.
+    ///
+    /// Funkce:
+    ///   Index      – seznam všech testù s filtrem a rychlými statistikami
+    ///   Create     – tvorba nového testu (výbìr otázek ze snapshotu)
+    ///   Edit       – úprava existujícího testu
+    ///   Assignments – pøehled pøiøazení studentù ke konkrétnímu testu
+    ///   Example    – demo test (dostupný bez pøihlášení, [AllowAnonymousTest])
+    ///   Take       – stránka pro studenta pøi psaní testu (pøes LoginId)
+    ///   PrintCodes – tisk pøihlašovacích kódù studentù
+    ///
+    /// Klíèový koncept – QuestionSnapshot:
+    ///   Pøi uložení testu se otázky zkopírují jako JSON snapshot.
+    ///   Díky tomu pozdìjší editace otázek neovlivní již vytvoøené testy.
+    /// </summary>
     [LoginRequired]
     public class TestController : Controller
     {

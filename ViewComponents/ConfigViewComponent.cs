@@ -6,6 +6,16 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace SPSUL.ViewComponents
 {
+    /// <summary>
+    /// ViewComponent renderující celý konfigurační modál (ozubené kolo v navbaru).
+    ///
+    /// Co dělá:
+    ///   Nahrává jméno a přezdívku aktuálně přihlášeného učitele a předá je do
+    ///   Views/Shared/Components/Config/Default.cshtml, který renderuje celý modal.
+    ///
+    /// Vyvolání v layoutu:
+    ///   @await Component.InvokeAsync("Config")
+    /// </summary>
     public class ConfigViewComponent : ViewComponent
     {
         private readonly SpsulContext _ctx;

@@ -13,12 +13,24 @@ services:
       - "1450:1433"
     volumes:
       - sqlserver-data:/var/opt/mssql
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
     healthcheck:
       test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "Spsul_Strong!Pass123" -C -Q "SELECT 1" || exit 1
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 30s
+    networks:
+      - spsul-network
+
   # ============================================
   # Azurite (Azure Blob Storage emulator)
   # ============================================
@@ -31,7 +43,18 @@ services:
       - "10002:10002"
     volumes:
       - azurite-data:/data
+    restart: unless-stopped
     command: azurite-blob --blobHost 0.0.0.0 --location /data --skipApiVersionCheck
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - spsul-network
 
   # ============================================
   # SPSUL Web Application
@@ -47,7 +70,7 @@ services:
       Database__EnsureCreated: "false"
       ConnectionStrings__Default: "Server=tcp:sqlserver,1433;Database=SpsulTesty;User Id=sa;Password=Spsul_Strong!Pass123;TrustServerCertificate=True;Encrypt=False;"
       ConnectionStrings__Azurit: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
-      Logging___LogLevel__Default: "Warning"
+      Logging__LogLevel__Default: "Warning"
     ports:
       - "8080:8080"
     depends_on:
@@ -55,11 +78,45 @@ services:
         condition: service_healthy
       azurite:
         condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 512M
+    networks:
+      - spsul-network
+    security_opt:
+      - no-new-privileges:true
 
 volumes:
   sqlserver-data:
+    driver: local
   azurite-data:
+    driver: local
+
+networks:
+  spsul-network:
+    driver: bridge
 
 # web      - http://localhost:8080
 # SSMS     - localhost,1450 (sa / Spsul_Strong!Pass123)
 # azurite  - http://localhost:10000
+#
+# PRODUCTION NOTES:
+# 1. Replace passwords with secrets from environment or Docker secrets
+# 2. Change database from "Developer" to actual license
+# 3. Configure external reverse proxy (nginx/traefik) for HTTPS
+# 4. Use managed database service (Azure SQL) instead of containerized SQL Server
+# 5. Move to real Azure Storage instead of Azurite
+# 6. Set appropriate resource limits based on your infrastructure
+# 7. Use docker compose up --pull always to ensure latest images

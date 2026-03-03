@@ -6,6 +6,19 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Data.SqlClient;
 using System.IO.Compression;
 
+/// <summary>
+/// Vstupní bod aplikace – konfiguruje všechny služby (DI kontejner) a HTTP pipeline.
+///
+/// Základní pojmy:
+///   builder.Services.AddXxx() – registrace služeb do DI kontejneru (pøed spuštìním aplikace)
+///   app.UseXxx()              – pøidání middleware do HTTP pipeline (poøadí záleží!)
+///
+/// Životnosti DI služeb:
+///   Singleton  – jedna instance pro celou dobu bìhu aplikace (sdílená mezi všemi uživateli)
+///   Scoped     – jedna instance per HTTP request
+///   Transient  – nová instance pøi každém injectování
+/// </summary>
+
 namespace SPSUL
 {
     public class Program
@@ -21,6 +34,7 @@ namespace SPSUL
 
             builder.Services.AddHttpContextAccessor();
 
+            // Distribuovaná session ukládaná do SQL Server tabulky "Sessions" (funguje ve více instancích)
             builder.Services.AddDistributedSqlServerCache(options =>
             {
                 options.ConnectionString = builder.Configuration.GetConnectionString("Default");
@@ -28,6 +42,7 @@ namespace SPSUL
                 options.TableName = "Sessions";
             });
 
+            // Session konfigurace – cookie pøežije 7 dní a je HttpOnly (JavaScript k ní nemá pøístup)
             builder.Services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromDays(7);
@@ -35,14 +50,18 @@ namespace SPSUL
                 options.Cookie.IsEssential = true;
             });
 
-            builder.Services.AddScoped<CacheService>();
-            builder.Services.AddScoped<SharedService>();
+            // Scoped služby – nová instance per request
+            builder.Services.AddScoped<CacheService>();        // per-teacher IMemoryCache wrapper
+            builder.Services.AddScoped<SharedService>();       // jméno/ID pøihlášeného uèitele
 
-            // In-memory cache for lookup data (classes, fields, types)
+            // In-memory cache pro èíselníková data (tøídy, pøedmìty, typy) – sdílená singleton
             builder.Services.AddMemoryCache();
-            builder.Services.AddSingleton<LookupCacheService>();
+            builder.Services.AddSingleton<LookupCacheService>(); // singleton, cachuje lookup data 5 min
+            builder.Services.AddScoped<AuthorizationService>();   // role ? oprávnìní mapping
+            builder.Services.AddScoped<AuditService>();           // záznam CUD operací do AuditLogs
 
-            // Response compression (Brotli > GZip)
+            // Response compression (Brotli > GZip) – komprimuje odpovìdi a šetøí bandwidth
+            // Brotli dosahuje lepší komprese než GZip, prohlížeèe ho podporují
             builder.Services.AddResponseCompression(options =>
             {
                 options.EnableForHttps = true;
@@ -57,7 +76,8 @@ namespace SPSUL
             builder.Services.Configure<GzipCompressionProviderOptions>(options =>
                 options.Level = CompressionLevel.Fastest);
 
-            // Azurit - s nastavením kompatibilní API verze
+            // Azurite (lokální emulátor Azure Blob Storage v Dockeru)
+            // V produkci: nahradit connection stringem skuteèného Azure Storage úètu
             builder.Services.AddSingleton(x =>
             {
                 var options = new BlobClientOptions()
@@ -78,6 +98,14 @@ namespace SPSUL
 
             builder.Services.AddScoped<AzureBlobService>();
             builder.Services.AddScoped<PdfService>();
+            builder.Services.AddScoped<AuditService>();
+
+            // Anti-forgery ochrana – generuje XSRF token, který musí být pøiložen ke každému POST/PUT/DELETE
+            // Header name "X-XSRF-TOKEN" je èten JavaScriptem z cookie a pøikládán k AJAX requestùm
+            builder.Services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-XSRF-TOKEN";
+            });
 
             // Add services to the container.
             builder.Services.AddDbContext<SpsulContext>(e => e.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
@@ -117,8 +145,12 @@ namespace SPSUL
                 app.UseHttpsRedirection();
             }
 
-            // Response compression — must be before static files and routing
-            app.UseResponseCompression();
+            // Response compression — only in production; in development it causes
+            // ERR_CONTENT_DECODING_FAILED when a view-rendering exception corrupts the Brotli stream
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseResponseCompression();
+            }
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -132,6 +164,16 @@ namespace SPSUL
             app.UseRouting();
 
             app.UseSession();
+
+            // Set XSRF token cookie for AJAX requests
+            app.Use(async (context, next) =>
+            {
+                var antiforgery = context.RequestServices.GetRequiredService<Microsoft.AspNetCore.Antiforgery.IAntiforgery>();
+                var tokens = antiforgery.GetAndStoreTokens(context);
+                context.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken ?? "",
+                    new CookieOptions { HttpOnly = false, SameSite = SameSiteMode.Strict });
+                await next();
+            });
 
             app.UseAuthorization();
 

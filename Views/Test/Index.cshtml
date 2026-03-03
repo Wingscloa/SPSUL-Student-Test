@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
     var students = ViewBag.Students as List<Student> ?? new();
     var classes = ViewBag.Classes as List<Classes> ?? new();
+
+    var canCrudTests = Context.HasAnyPermission(AppPermissions.CrudTests, AppPermissions.ManageTests, AppPermissions.All);
 }
 <link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
 
@@ -21,10 +23,13 @@
                             <i class="bi bi-file-earmark-pdf"></i>
                             Export PDF
                         </a>
+                        @if (canCrudTests)
+                        {
                         <a class="iconLink mode" asp-action="Create" asp-controller="Test" title="Vytvořit test">
                             <i class="bi bi-plus-circle"></i>
                             Vytvořit
                         </a>
+                        }
                     </div>
                 </div>
                 <div class="table-responsive tableContent">
@@ -38,11 +43,14 @@
                                 <th>Otázek</th>
                                 <th>Přiřazeno</th>
                                 <th>Aktivní</th>
+                                @if (canCrudTests)
+                                {
                                 <th class="text-center">Přiřadit</th>
                                 <th class="text-center">Přiřazení</th>
                                 <th class="text-center">Edit</th>
                                 <th class="text-center">Stav</th>
                                 <th class="text-center">Smazat</th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -64,6 +72,8 @@
                                             @(t.IsActive ? "Aktivní" : "Neaktivní")
                                         </span>
                                     </td>
+                                    @if (canCrudTests)
+                                    {
                                     <td class="text-center">
                                         @if (t.IsActive)
                                         {
@@ -109,6 +119,7 @@
                                             <i class="bi bi-trash text-danger"></i>
                                         </button>
                                     </td>
+                                    }
                                 </tr>
                             }
                             @if (!Model.Any())
@@ -117,9 +128,12 @@
                                     <td colspan="12" class="text-center py-5">
                                         <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
                                         <p class="text-muted mt-3">Zatím žádné testy</p>
+                                        @if (canCrudTests)
+                                        {
                                         <a asp-action="Create" class="btn btn-orange">
                                             <i class="bi bi-plus-circle me-2"></i>Vytvořit první test
                                         </a>
+                                        }
                                     </td>
                                 </tr>
                             }

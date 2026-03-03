@@ -29,6 +29,7 @@ async function UpdateQuestion() {
         const result = await response.json();
 
         if (response.ok) {
+            loadingScreen(false);
             toastr.success(result.message || 'Otázka aktualizovaná!', 'Úspěch');
             setTimeout(() => {
                 window.location.href = '/Question/Index';
@@ -53,23 +54,29 @@ async function UpdateQuestion() {
 }
 
 async function generateOptions() {
-    const el = document.getElementById('optionCount')
-    const count = el.value ?? 0
+const el = document.getElementById('optionCount')
+if (!el) { return; }
+const count = parseInt(el.value) || 0
 
-    const optionsContainer = document.querySelectorAll('.previewOption')
-    if (!el) { return; }
-    if (count <= 0) { return; }
+const optionsContainer = document.querySelectorAll('.previewOption')
+if (count <= 0) { return; }
 
-    var fetchOptions = count > optionsContainer.length;
+const questionTypeId = parseInt(document.getElementById('QuestionTypeId').value);
+if (isNaN(questionTypeId) || questionTypeId <= 0) {
+    toastr.warning('Vyberte typ otázky', 'Chyba');
+    return;
+}
 
-    if (fetchOptions) {
-        const toFetch = count - optionsContainer.length;
+var fetchOptions = count > optionsContainer.length;
 
-        const data = {
-            QuestionTypeId: parseInt(document.getElementById('QuestionTypeId').value),
-            QuestionCount: parseInt(toFetch),
-            CurrentCount: parseInt(optionsContainer.length)
-        };
+if (fetchOptions) {
+    const toFetch = count - optionsContainer.length;
+
+    const data = {
+        QuestionTypeId: questionTypeId,
+        QuestionCount: toFetch,
+        CurrentCount: optionsContainer.length
+    };
 
         const responseOption = await fetch(`/api/QuestionView/AnswerOption/`, {
             method: 'POST',
@@ -232,6 +239,7 @@ async function CreateQuestion() {
         const result = await response.json();
 
         if (response.ok) {
+            loadingScreen(false);
             toastr.success(result.message || 'Otázka vytvořena!', 'Úspěch');
             setTimeout(() => {
                 window.location.href = '/Question/Index';
@@ -511,15 +519,18 @@ descriptionInput.addEventListener('input', (e) => {
 
     $(questionTypeSelect).on('change', async (e) => {
 
+        var questionTypeId = parseInt(e.target.value);
+        var count = parseInt($("#optionCount").val());
+
+        if (isNaN(questionTypeId) || questionTypeId <= 0) { return; }
+        if (isNaN(count) || count <= 0) { count = 4; }
+
         // clear
         $("#previewContainer").remove()
         var optionsAnswer = $(".option-card").toArray();
         optionsAnswer.forEach((option) => {
             option.remove()
         })
-
-        var questionTypeId = parseInt(e.target.value);
-        var count = parseInt($("#optionCount").val());
 
         // Preview
         var optionsPreviewFetch = await fetch('/questionview/preview',{

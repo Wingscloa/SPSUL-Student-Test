@@ -22,6 +22,50 @@ namespace SPSUL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SPSUL.Models.Data.AuditLog", b =>
+                {
+                    b.Property<long>("AuditLogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("AuditLogId"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Detail")
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.Property<string>("Entity")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("EntityId")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<int?>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeacherName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("AuditLogId");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.ToTable("AuditLogs");
+                });
+
             modelBuilder.Entity("SPSUL.Models.Data.Classes", b =>
                 {
                     b.Property<int>("ClassesId")
@@ -48,7 +92,57 @@ namespace SPSUL.Migrations
 
                     b.HasKey("ClassesId");
 
-                    b.ToTable("Classes", (string)null);
+                    b.ToTable("Classes");
+
+                    b.HasData(
+                        new
+                        {
+                            ClassesId = 1,
+                            EndTo = 2029,
+                            IsActive = true,
+                            Name = "1.A",
+                            StartFrom = 2025
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            EndTo = 2029,
+                            IsActive = true,
+                            Name = "1.B",
+                            StartFrom = 2025
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            EndTo = 2028,
+                            IsActive = true,
+                            Name = "2.A",
+                            StartFrom = 2024
+                        },
+                        new
+                        {
+                            ClassesId = 4,
+                            EndTo = 2028,
+                            IsActive = true,
+                            Name = "2.B",
+                            StartFrom = 2024
+                        },
+                        new
+                        {
+                            ClassesId = 5,
+                            EndTo = 2027,
+                            IsActive = true,
+                            Name = "3.A",
+                            StartFrom = 2023
+                        },
+                        new
+                        {
+                            ClassesId = 6,
+                            EndTo = 2026,
+                            IsActive = false,
+                            Name = "4.A",
+                            StartFrom = 2022
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.ClassesFields", b =>
@@ -63,7 +157,144 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("StudentFieldId");
 
-                    b.ToTable("ClassesFields", (string)null);
+                    b.ToTable("ClassesFields");
+
+                    b.HasData(
+                        new
+                        {
+                            ClassesId = 1,
+                            StudentFieldId = 11
+                        },
+                        new
+                        {
+                            ClassesId = 1,
+                            StudentFieldId = 26
+                        },
+                        new
+                        {
+                            ClassesId = 1,
+                            StudentFieldId = 8
+                        },
+                        new
+                        {
+                            ClassesId = 1,
+                            StudentFieldId = 1
+                        },
+                        new
+                        {
+                            ClassesId = 1,
+                            StudentFieldId = 17
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            StudentFieldId = 4
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            StudentFieldId = 15
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            StudentFieldId = 8
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            StudentFieldId = 5
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            StudentFieldId = 1
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            StudentFieldId = 2
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            StudentFieldId = 11
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            StudentFieldId = 24
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            StudentFieldId = 9
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            StudentFieldId = 8
+                        },
+                        new
+                        {
+                            ClassesId = 4,
+                            StudentFieldId = 34
+                        },
+                        new
+                        {
+                            ClassesId = 4,
+                            StudentFieldId = 33
+                        },
+                        new
+                        {
+                            ClassesId = 4,
+                            StudentFieldId = 4
+                        },
+                        new
+                        {
+                            ClassesId = 4,
+                            StudentFieldId = 8
+                        },
+                        new
+                        {
+                            ClassesId = 5,
+                            StudentFieldId = 6
+                        },
+                        new
+                        {
+                            ClassesId = 5,
+                            StudentFieldId = 27
+                        },
+                        new
+                        {
+                            ClassesId = 5,
+                            StudentFieldId = 42
+                        },
+                        new
+                        {
+                            ClassesId = 5,
+                            StudentFieldId = 12
+                        },
+                        new
+                        {
+                            ClassesId = 6,
+                            StudentFieldId = 12
+                        },
+                        new
+                        {
+                            ClassesId = 6,
+                            StudentFieldId = 10
+                        },
+                        new
+                        {
+                            ClassesId = 6,
+                            StudentFieldId = 42
+                        },
+                        new
+                        {
+                            ClassesId = 6,
+                            StudentFieldId = 39
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.ClassesStudent", b =>
@@ -78,7 +309,129 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("ClassesStudents", (string)null);
+                    b.ToTable("ClassesStudents");
+
+                    b.HasData(
+                        new
+                        {
+                            ClassesId = 1,
+                            StudentId = 1
+                        },
+                        new
+                        {
+                            ClassesId = 1,
+                            StudentId = 2
+                        },
+                        new
+                        {
+                            ClassesId = 1,
+                            StudentId = 3
+                        },
+                        new
+                        {
+                            ClassesId = 1,
+                            StudentId = 4
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            StudentId = 5
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            StudentId = 6
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            StudentId = 7
+                        },
+                        new
+                        {
+                            ClassesId = 2,
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            StudentId = 10
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            StudentId = 11
+                        },
+                        new
+                        {
+                            ClassesId = 3,
+                            StudentId = 12
+                        },
+                        new
+                        {
+                            ClassesId = 4,
+                            StudentId = 13
+                        },
+                        new
+                        {
+                            ClassesId = 4,
+                            StudentId = 14
+                        },
+                        new
+                        {
+                            ClassesId = 4,
+                            StudentId = 15
+                        },
+                        new
+                        {
+                            ClassesId = 4,
+                            StudentId = 16
+                        },
+                        new
+                        {
+                            ClassesId = 5,
+                            StudentId = 17
+                        },
+                        new
+                        {
+                            ClassesId = 5,
+                            StudentId = 18
+                        },
+                        new
+                        {
+                            ClassesId = 5,
+                            StudentId = 19
+                        },
+                        new
+                        {
+                            ClassesId = 5,
+                            StudentId = 20
+                        },
+                        new
+                        {
+                            ClassesId = 6,
+                            StudentId = 21
+                        },
+                        new
+                        {
+                            ClassesId = 6,
+                            StudentId = 22
+                        },
+                        new
+                        {
+                            ClassesId = 6,
+                            StudentId = 23
+                        },
+                        new
+                        {
+                            ClassesId = 6,
+                            StudentId = 24
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Permission", b =>
@@ -101,7 +454,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("PermissionId");
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
 
                     b.HasData(
                         new
@@ -182,7 +535,129 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("QuestionTypeId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
+
+                    b.HasData(
+                        new
+                        {
+                            QuestionId = 1,
+                            CreatorId = 4,
+                            Description = "Základní koncept programování — vysvětlete, co znamená pojem proměnná.",
+                            FieldId = 11,
+                            Header = "Co je to proměnná?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 2,
+                            CreatorId = 4,
+                            Description = "Datové typy v jazyce C# — vyberte správný celočíselný typ.",
+                            FieldId = 11,
+                            Header = "Který datový typ je celočíselný v C#?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 3,
+                            CreatorId = 4,
+                            Description = "Řídicí struktury v programování — podmíněné větvení.",
+                            FieldId = 11,
+                            Header = "Co dělá příkaz 'if'?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 4,
+                            CreatorId = 7,
+                            Description = "Cykly v programování — opakování bloku kódu.",
+                            FieldId = 11,
+                            Header = "Co je to cyklus 'for'?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 5,
+                            CreatorId = 7,
+                            Description = "Základy databázových jazyků — původ zkratky SQL.",
+                            FieldId = 2,
+                            Header = "Co znamená zkratka SQL?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 6,
+                            CreatorId = 7,
+                            Description = "SQL příkazy pro čtení dat z databáze.",
+                            FieldId = 2,
+                            Header = "Který příkaz slouží k výběru dat?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 7,
+                            CreatorId = 7,
+                            Description = "Integritní omezení v relačních databázích.",
+                            FieldId = 2,
+                            Header = "Co je primární klíč?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 8,
+                            CreatorId = 4,
+                            Description = "Spojování tabulek v SQL dotazech.",
+                            FieldId = 2,
+                            Header = "Co dělá příkaz JOIN?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 9,
+                            CreatorId = 4,
+                            Description = "Sociální inženýrství — rozpoznávání phishingových útoků.",
+                            FieldId = 6,
+                            Header = "Co je phishing?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 10,
+                            CreatorId = 4,
+                            Description = "Síťová bezpečnost — ochrana perimetru sítě.",
+                            FieldId = 6,
+                            Header = "Co je to firewall?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 11,
+                            CreatorId = 1,
+                            Description = "Mocniny — výpočet třetí mocniny čísla 2.",
+                            FieldId = 8,
+                            Header = "Kolik je 2³?",
+                            IsActive = true,
+                            QuestionTypeId = 1
+                        },
+                        new
+                        {
+                            QuestionId = 12,
+                            CreatorId = 4,
+                            Description = "Tato otázka byla deaktivována a neměla by se zobrazovat v testech.",
+                            FieldId = 11,
+                            Header = "Zastaralá otázka",
+                            IsActive = false,
+                            QuestionTypeId = 1
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.QuestionOption", b =>
@@ -212,7 +687,393 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionOptions", (string)null);
+                    b.ToTable("QuestionOptions");
+
+                    b.HasData(
+                        new
+                        {
+                            QuestionOptionId = 1,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 1,
+                            Text = "Funkce pro výpočet"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 2,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 1,
+                            Text = "Pojmenované místo v paměti pro uložení hodnoty"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 3,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 1,
+                            Text = "Typ souboru"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 4,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 1,
+                            Text = "Příkaz pro výstup na obrazovku"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 5,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 2,
+                            Text = "number"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 6,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 2,
+                            Text = "text"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 7,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 2,
+                            Text = "int"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 8,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 2,
+                            Text = "letra"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 9,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 3,
+                            Text = "Opakuje blok kódu"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 10,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 3,
+                            Text = "Definuje novou funkci"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 11,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 3,
+                            Text = "Vykoná kód pouze pokud je podmínka pravdivá"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 12,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 3,
+                            Text = "Ukončí program"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 13,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 4,
+                            Text = "Podmíněný příkaz"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 14,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 4,
+                            Text = "Cyklus s předem daným počtem opakování"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 15,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 4,
+                            Text = "Deklarace proměnné"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 16,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 4,
+                            Text = "Import knihovny"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 17,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 5,
+                            Text = "Standard Query Language"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 18,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 5,
+                            Text = "Structured Query Language"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 19,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 5,
+                            Text = "System Query Logic"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 20,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 5,
+                            Text = "Simple Question Language"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 21,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 6,
+                            Text = "INSERT"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 22,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 6,
+                            Text = "UPDATE"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 23,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 6,
+                            Text = "SELECT"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 24,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 6,
+                            Text = "DELETE"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 25,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 7,
+                            Text = "Heslo do databáze"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 26,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 7,
+                            Text = "Unikátní identifikátor záznamu v tabulce"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 27,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 7,
+                            Text = "Název tabulky"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 28,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 7,
+                            Text = "Typ sloupce"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 29,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 8,
+                            Text = "Maže data ze dvou tabulek"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 30,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 8,
+                            Text = "Spojuje data z více tabulek na základě podmínky"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 31,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 8,
+                            Text = "Vytváří novou tabulku"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 32,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 8,
+                            Text = "Řadí výsledky vzestupně"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 33,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 9,
+                            Text = "Antivirový program"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 34,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 9,
+                            Text = "Podvodný pokus o získání citlivých údajů"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 35,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 9,
+                            Text = "Šifrovací algoritmus"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 36,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 9,
+                            Text = "Typ síťového kabelu"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 37,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 10,
+                            Text = "Hardware pro tisk"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 38,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 10,
+                            Text = "Zařízení/software filtrující síťový provoz"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 39,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 10,
+                            Text = "Typ operačního systému"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 40,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 10,
+                            Text = "Programovací jazyk"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 41,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 11,
+                            Text = "6"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 42,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 11,
+                            Text = "8"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 43,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 11,
+                            Text = "9"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 44,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 11,
+                            Text = "4"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 45,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 12,
+                            Text = "Odpověď A"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 46,
+                            ImageKey = "",
+                            IsCorrect = true,
+                            QuestionId = 12,
+                            Text = "Odpověď B"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 47,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 12,
+                            Text = "Odpověď C"
+                        },
+                        new
+                        {
+                            QuestionOptionId = 48,
+                            ImageKey = "",
+                            IsCorrect = false,
+                            QuestionId = 12,
+                            Text = "Odpověď D"
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.QuestionType", b =>
@@ -235,7 +1096,21 @@ namespace SPSUL.Migrations
 
                     b.HasKey("QuestionTypeId");
 
-                    b.ToTable("QuestionTypes", (string)null);
+                    b.ToTable("QuestionTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            QuestionTypeId = 1,
+                            IsActive = true,
+                            Name = "Výběr z možností"
+                        },
+                        new
+                        {
+                            QuestionTypeId = 2,
+                            IsActive = true,
+                            Name = "Uzavřená otázka s obrázky"
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Role", b =>
@@ -263,7 +1138,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -322,7 +1197,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RolePermissions", (string)null);
+                    b.ToTable("RolePermissions");
 
                     b.HasData(
                         new
@@ -382,7 +1257,177 @@ namespace SPSUL.Migrations
 
                     b.HasKey("StudentId");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
+
+                    b.HasData(
+                        new
+                        {
+                            StudentId = 1,
+                            FirstName = "Jakub",
+                            IsActive = true,
+                            LastName = "Horák"
+                        },
+                        new
+                        {
+                            StudentId = 2,
+                            FirstName = "Tereza",
+                            IsActive = true,
+                            LastName = "Marková"
+                        },
+                        new
+                        {
+                            StudentId = 3,
+                            FirstName = "Martin",
+                            IsActive = true,
+                            LastName = "Jelínek"
+                        },
+                        new
+                        {
+                            StudentId = 4,
+                            FirstName = "Lucie",
+                            IsActive = true,
+                            LastName = "Pokorná"
+                        },
+                        new
+                        {
+                            StudentId = 5,
+                            FirstName = "David",
+                            IsActive = true,
+                            LastName = "Růžička"
+                        },
+                        new
+                        {
+                            StudentId = 6,
+                            FirstName = "Anna",
+                            IsActive = true,
+                            LastName = "Benešová"
+                        },
+                        new
+                        {
+                            StudentId = 7,
+                            FirstName = "Ondřej",
+                            IsActive = true,
+                            LastName = "Fiala"
+                        },
+                        new
+                        {
+                            StudentId = 8,
+                            FirstName = "Karolína",
+                            IsActive = true,
+                            LastName = "Šťastná"
+                        },
+                        new
+                        {
+                            StudentId = 9,
+                            FirstName = "Vojtěch",
+                            IsActive = true,
+                            LastName = "Kučera"
+                        },
+                        new
+                        {
+                            StudentId = 10,
+                            FirstName = "Eliška",
+                            IsActive = true,
+                            LastName = "Veselá"
+                        },
+                        new
+                        {
+                            StudentId = 11,
+                            FirstName = "Matěj",
+                            IsActive = true,
+                            LastName = "Marek"
+                        },
+                        new
+                        {
+                            StudentId = 12,
+                            FirstName = "Natálie",
+                            IsActive = false,
+                            LastName = "Kopecká"
+                        },
+                        new
+                        {
+                            StudentId = 13,
+                            FirstName = "Štěpán",
+                            IsActive = true,
+                            LastName = "Havlíček"
+                        },
+                        new
+                        {
+                            StudentId = 14,
+                            FirstName = "Michaela",
+                            IsActive = true,
+                            LastName = "Vlčková"
+                        },
+                        new
+                        {
+                            StudentId = 15,
+                            FirstName = "Adam",
+                            IsActive = true,
+                            LastName = "Bartoš"
+                        },
+                        new
+                        {
+                            StudentId = 16,
+                            FirstName = "Barbora",
+                            IsActive = true,
+                            LastName = "Urbanová"
+                        },
+                        new
+                        {
+                            StudentId = 17,
+                            FirstName = "Daniel",
+                            IsActive = true,
+                            LastName = "Blažek"
+                        },
+                        new
+                        {
+                            StudentId = 18,
+                            FirstName = "Kristýna",
+                            IsActive = true,
+                            LastName = "Sedláčková"
+                        },
+                        new
+                        {
+                            StudentId = 19,
+                            FirstName = "Filip",
+                            IsActive = true,
+                            LastName = "Kratochvíl"
+                        },
+                        new
+                        {
+                            StudentId = 20,
+                            FirstName = "Simona",
+                            IsActive = true,
+                            LastName = "Němcová"
+                        },
+                        new
+                        {
+                            StudentId = 21,
+                            FirstName = "Lukáš",
+                            IsActive = true,
+                            LastName = "Pospíšil"
+                        },
+                        new
+                        {
+                            StudentId = 22,
+                            FirstName = "Veronika",
+                            IsActive = true,
+                            LastName = "Holubová"
+                        },
+                        new
+                        {
+                            StudentId = 23,
+                            FirstName = "Dominik",
+                            IsActive = true,
+                            LastName = "Šimek"
+                        },
+                        new
+                        {
+                            StudentId = 24,
+                            FirstName = "Klára",
+                            IsActive = true,
+                            LastName = "Dostálová"
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.StudentField", b =>
@@ -405,7 +1450,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("StudentFieldId");
 
-                    b.ToTable("StudentFields", (string)null);
+                    b.ToTable("StudentFields");
 
                     b.HasData(
                         new
@@ -722,7 +1767,81 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("StudentTests", (string)null);
+                    b.ToTable("StudentTests");
+
+                    b.HasData(
+                        new
+                        {
+                            StudentId = 1,
+                            TestId = 1,
+                            FinishedAt = new DateTime(2026, 3, 10, 8, 12, 0, 0, DateTimeKind.Utc),
+                            LoginId = "PVA-HOR-001",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":1,\"SelectedOptions\":[\"Pojmenované místo v paměti pro uložení hodnoty\"]},{\"QuestionId\":2,\"SelectedOptions\":[\"int\"]},{\"QuestionId\":3,\"SelectedOptions\":[\"Vykoná kód pouze pokud je podmínka pravdivá\"]},{\"QuestionId\":4,\"SelectedOptions\":[\"Cyklus s předem daným počtem opakování\"]}],\"CurrentQuestionIndex\":3}",
+                            StartedAt = new DateTime(2026, 3, 10, 8, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            StudentId = 2,
+                            TestId = 1,
+                            FinishedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoginId = "PVA-MAR-002",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":1,\"SelectedOptions\":[\"Pojmenované místo v paměti pro uložení hodnoty\"]},{\"QuestionId\":2,\"SelectedOptions\":[\"text\"]}],\"CurrentQuestionIndex\":2}",
+                            StartedAt = new DateTime(2026, 3, 10, 8, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            StudentId = 3,
+                            TestId = 1,
+                            FinishedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoginId = "PVA-JEL-003",
+                            ResultSnapshot = "{\"Answers\":[],\"CurrentQuestionIndex\":0}",
+                            StartedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            StudentId = 9,
+                            TestId = 2,
+                            FinishedAt = new DateTime(2026, 3, 12, 10, 18, 0, 0, DateTimeKind.Utc),
+                            LoginId = "SQL-KUC-009",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":5,\"SelectedOptions\":[\"Structured Query Language\"]},{\"QuestionId\":6,\"SelectedOptions\":[\"SELECT\"]},{\"QuestionId\":7,\"SelectedOptions\":[\"Název tabulky\"]},{\"QuestionId\":8,\"SelectedOptions\":[\"Spojuje data z více tabulek na základě podmínky\"]}],\"CurrentQuestionIndex\":3}",
+                            StartedAt = new DateTime(2026, 3, 12, 10, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            StudentId = 10,
+                            TestId = 2,
+                            FinishedAt = new DateTime(2026, 3, 12, 10, 15, 0, 0, DateTimeKind.Utc),
+                            LoginId = "SQL-VES-010",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":5,\"SelectedOptions\":[\"Structured Query Language\"]},{\"QuestionId\":6,\"SelectedOptions\":[\"SELECT\"]},{\"QuestionId\":7,\"SelectedOptions\":[\"Unikátní identifikátor záznamu v tabulce\"]},{\"QuestionId\":8,\"SelectedOptions\":[\"Spojuje data z více tabulek na základě podmínky\"]}],\"CurrentQuestionIndex\":3}",
+                            StartedAt = new DateTime(2026, 3, 12, 10, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            StudentId = 11,
+                            TestId = 2,
+                            FinishedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoginId = "SQL-MAR-011",
+                            ResultSnapshot = "{\"Answers\":[],\"CurrentQuestionIndex\":0}",
+                            StartedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            StudentId = 17,
+                            TestId = 3,
+                            FinishedAt = new DateTime(2026, 2, 20, 9, 8, 0, 0, DateTimeKind.Utc),
+                            LoginId = "KYB-BLA-017",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":9,\"SelectedOptions\":[\"Podvodný pokus o získání citlivých údajů\"]},{\"QuestionId\":10,\"SelectedOptions\":[\"Zařízení/software filtrující síťový provoz\"]}],\"CurrentQuestionIndex\":1}",
+                            StartedAt = new DateTime(2026, 2, 20, 9, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            StudentId = 18,
+                            TestId = 3,
+                            FinishedAt = new DateTime(2026, 2, 20, 9, 5, 0, 0, DateTimeKind.Utc),
+                            LoginId = "KYB-SED-018",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":9,\"SelectedOptions\":[\"Šifrovací algoritmus\"]},{\"QuestionId\":10,\"SelectedOptions\":[\"Zařízení/software filtrující síťový provoz\"]}],\"CurrentQuestionIndex\":1}",
+                            StartedAt = new DateTime(2026, 2, 20, 9, 0, 0, 0, DateTimeKind.Utc)
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Teacher", b =>
@@ -760,7 +1879,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("TeacherId");
 
-                    b.ToTable("Teachers", (string)null);
+                    b.ToTable("Teachers");
 
                     b.HasData(
                         new
@@ -789,6 +1908,51 @@ namespace SPSUL.Migrations
                             LastName = "Novák",
                             NickName = "PetrNovak",
                             PasswordHash = "$2b$10$YqPz7WEHhmjRpRuFqaVPVu505tO1z4KwGVnnj3T3J0S9SEnZMrZSG"
+                        },
+                        new
+                        {
+                            TeacherId = 4,
+                            FirstName = "Jana",
+                            IsActive = false,
+                            LastName = "Svobodová",
+                            NickName = "JanaSvobodova",
+                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                        },
+                        new
+                        {
+                            TeacherId = 5,
+                            FirstName = "Tomáš",
+                            IsActive = false,
+                            LastName = "Dvořák",
+                            NickName = "TomasDvorak",
+                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                        },
+                        new
+                        {
+                            TeacherId = 6,
+                            FirstName = "Marie",
+                            IsActive = false,
+                            LastName = "Černá",
+                            NickName = "MarieCerna",
+                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                        },
+                        new
+                        {
+                            TeacherId = 7,
+                            FirstName = "Jan",
+                            IsActive = false,
+                            LastName = "Procházka",
+                            NickName = "JanProchazka",
+                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                        },
+                        new
+                        {
+                            TeacherId = 8,
+                            FirstName = "Eva",
+                            IsActive = false,
+                            LastName = "Krejčí",
+                            NickName = "EvaKrejci",
+                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
                         });
                 });
 
@@ -804,7 +1968,7 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("TeacherRoles", (string)null);
+                    b.ToTable("TeacherRoles");
 
                     b.HasData(
                         new
@@ -816,6 +1980,31 @@ namespace SPSUL.Migrations
                         {
                             TeacherId = 2,
                             RoleId = 6
+                        },
+                        new
+                        {
+                            TeacherId = 4,
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            TeacherId = 5,
+                            RoleId = 3
+                        },
+                        new
+                        {
+                            TeacherId = 6,
+                            RoleId = 5
+                        },
+                        new
+                        {
+                            TeacherId = 7,
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            TeacherId = 8,
+                            RoleId = 4
                         });
                 });
 
@@ -831,7 +2020,39 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("TitleId");
 
-                    b.ToTable("TeacherTitles", (string)null);
+                    b.ToTable("TeacherTitles");
+
+                    b.HasData(
+                        new
+                        {
+                            TeacherId = 4,
+                            TitleId = 2
+                        },
+                        new
+                        {
+                            TeacherId = 5,
+                            TitleId = 3
+                        },
+                        new
+                        {
+                            TeacherId = 6,
+                            TitleId = 1
+                        },
+                        new
+                        {
+                            TeacherId = 7,
+                            TitleId = 3
+                        },
+                        new
+                        {
+                            TeacherId = 7,
+                            TitleId = 7
+                        },
+                        new
+                        {
+                            TeacherId = 8,
+                            TitleId = 2
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Test", b =>
@@ -873,7 +2094,41 @@ namespace SPSUL.Migrations
 
                     b.HasIndex("StudentFieldId");
 
-                    b.ToTable("Tests", (string)null);
+                    b.ToTable("Tests");
+
+                    b.HasData(
+                        new
+                        {
+                            TestId = 1,
+                            CreatorId = 4,
+                            IsActive = true,
+                            Name = "PVA — Základy programování",
+                            QuestionSnapshot = "[{\"QuestionId\":1,\"Header\":\"Co je to proměnná?\",\"Description\":\"Základní koncept programování.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Funkce pro výpočet\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Pojmenované místo v paměti pro uložení hodnoty\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Typ souboru\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Příkaz pro výstup na obrazovku\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":2,\"Header\":\"Který datový typ je celočíselný v C#?\",\"Description\":\"Datové typy v jazyce C#.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"number\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"text\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"int\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"letra\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":3,\"Header\":\"Co dělá příkaz 'if'?\",\"Description\":\"Řídicí struktury.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Opakuje blok kódu\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Definuje novou funkci\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Vykoná kód pouze pokud je podmínka pravdivá\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Ukončí program\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":4,\"Header\":\"Co je to cyklus 'for'?\",\"Description\":\"Cykly v programování.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Podmíněný příkaz\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Cyklus s předem daným počtem opakování\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Deklarace proměnné\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Import knihovny\",\"ImageKey\":null,\"IsCorrect\":false}]}]",
+                            ShuffleQuestions = true,
+                            StudentFieldId = 11,
+                            TimeLimitMinutes = 15
+                        },
+                        new
+                        {
+                            TestId = 2,
+                            CreatorId = 7,
+                            IsActive = true,
+                            Name = "Databáze — SQL základy",
+                            QuestionSnapshot = "[{\"QuestionId\":5,\"Header\":\"Co znamená zkratka SQL?\",\"Description\":\"Základy databázových jazyků.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Standard Query Language\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Structured Query Language\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"System Query Logic\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Simple Question Language\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":6,\"Header\":\"Který příkaz slouží k výběru dat?\",\"Description\":\"SQL příkazy.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"INSERT\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"UPDATE\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"SELECT\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"DELETE\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":7,\"Header\":\"Co je primární klíč?\",\"Description\":\"Integritní omezení.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Heslo do databáze\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Unikátní identifikátor záznamu v tabulce\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Název tabulky\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Typ sloupce\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":8,\"Header\":\"Co dělá příkaz JOIN?\",\"Description\":\"Spojování tabulek.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Maže data ze dvou tabulek\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Spojuje data z více tabulek na základě podmínky\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Vytváří novou tabulku\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Řadí výsledky vzestupně\",\"ImageKey\":null,\"IsCorrect\":false}]}]",
+                            ShuffleQuestions = false,
+                            StudentFieldId = 2,
+                            TimeLimitMinutes = 20
+                        },
+                        new
+                        {
+                            TestId = 3,
+                            CreatorId = 4,
+                            IsActive = false,
+                            Name = "Kyberbezpečnost — Úvod",
+                            QuestionSnapshot = "[{\"QuestionId\":9,\"Header\":\"Co je phishing?\",\"Description\":\"Sociální inženýrství.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Antivirový program\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Podvodný pokus o získání citlivých údajů\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Šifrovací algoritmus\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Typ síťového kabelu\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":10,\"Header\":\"Co je to firewall?\",\"Description\":\"Síťová bezpečnost.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Hardware pro tisk\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Zařízení/software filtrující síťový provoz\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Typ operačního systému\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Programovací jazyk\",\"ImageKey\":null,\"IsCorrect\":false}]}]",
+                            ShuffleQuestions = true,
+                            StudentFieldId = 6
+                        });
                 });
 
             modelBuilder.Entity("SPSUL.Models.Data.Title", b =>
@@ -901,7 +2156,7 @@ namespace SPSUL.Migrations
 
                     b.HasKey("TitleId");
 
-                    b.ToTable("Titles", (string)null);
+                    b.ToTable("Titles");
 
                     b.HasData(
                         new

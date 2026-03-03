@@ -3,6 +3,14 @@
 
 namespace SPSUL.Controllers.Attribute
 {
+    /// <summary>
+    /// Validace, že string obsahuje platný Base64 obrázek.
+    ///
+    /// Použití:
+    ///   Používá se v DTO pro nahrávání obrázků k možnostem otázek.
+    ///   Obrázek přichází z frontendu jako data URI (např. "data:image/png;base64,ABC...").
+    ///   Tento atribut ověří, že format je správný, než se pokusí o upload do Azure.
+    /// </summary>
     public class Base64ImageAttribute : ValidationAttribute
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)

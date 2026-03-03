@@ -10,13 +10,11 @@
             <div class="radio-note">Vyber správnou odpověď</div>
             <div class="radio-group" id="previewOptionContainer">
                 @{
-                    List<OptionBase> opts = new()
+                    List<OptionBase> opts = new();
+                    for (int i = 0; i < Model; i++)
                     {
-                        new(){Index = 0, PlaceHolder = "A"},
-                        new(){Index = 1, PlaceHolder = "B"},
-                        new(){Index = 2, PlaceHolder = "C"},
-                        new(){Index = 3, PlaceHolder = "D"}
-                    };
+                        opts.Add(new OptionBase { Index = i, PlaceHolder = $"{(char)(65 + i)}" });
+                    }
                 }
                 @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Create/_SelectTextPreviewOption.cshtml", opts)
             </div>

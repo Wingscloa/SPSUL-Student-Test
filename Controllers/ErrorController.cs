@@ -14,11 +14,12 @@ namespace SPSUL.Controllers
         [Route("{statusCode}")]
         public IActionResult HttpStatusCodeHandler(int statusCode)
         {
-            if(statusCode == 404)
+            return statusCode switch
             {
-                return View("NotFound");
-            }
-            return View("Error500");
+                403 => View("Forbidden"),
+                404 => View("NotFound"),
+                _ => View("Error500")
+            };
         }
     }
 }

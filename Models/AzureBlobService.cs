@@ -4,10 +4,29 @@ using SixLabors.ImageSharp.Processing;
 
 namespace SPSUL.Models
 {
+    /// <summary>Výčet dostupných kontejnerů v Azure Blob Storage (Azurite v Dockeru).</summary>
     public enum BlobContainers
     {
+        /// <summary>Kontejner pro obrázky k možnostem otázek.</summary>
         QuestionImage
     }
+
+    /// <summary>
+    /// Služba pro práci s Azure Blob Storage (lokálně emulovanou přes Azurite v Dockeru).
+    ///
+    /// Co dělá:
+    ///   - Přijme obrázek (jako IFormFile nebo Base64 string).
+    ///   - Automaticky ho optimalizuje: zmenší na max. 1200px šířky a převede do WebP formátu.
+    ///   - Nahraje optimalizovaný obrázek do Blob Storage pod zadaným názvem.
+    ///
+    /// Proč WebP:
+    ///   WebP je modernější formát než JPEG/PNG – stejná kvalita, ale menší velikost souboru.
+    ///   Ušetří místo v úložišti a zrychlí načítání stránky.
+    ///
+    /// Konfigurace:
+    ///   Connection string: appsettings.json → ConnectionStrings:Azurit
+    ///   V produkci by se nahradil skutečným Azure Storage účtem.
+    /// </summary>
     public class AzureBlobService
     {
         private readonly BlobServiceClient _blobServiceClient;

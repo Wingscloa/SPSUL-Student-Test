@@ -9,6 +9,19 @@ using System.Net;
 
 namespace SPSUL.Controllers.API
 {
+    /// <summary>
+    /// API controller pro dynamické generování náhledu možností otázky při její tvorbě.
+    ///
+    /// Jak funguje náhled:
+    ///   Učitel při tvorbě otázky vybere počet možností a typ otázky.
+    ///   JavaScript zavolá POST /api/QuestionView/Preview s těmito hodnotami.
+    ///   Server vygeneruje HTML náhled (partial view) s prázdnými polími pro možnosti.
+    ///   JavaScript HTML vloží do stránky – učitel může okamžitě vidět, jak otázka bude vypadat.
+    ///
+    /// Typy náhledů:
+    ///   - SelectText  – textové možnosti (A, B, C...)
+    ///   - SelectImage – možnosti s obrázkem (nahrávání přes Base64)
+    /// </summary>
     public class QuestionViewController : Controller
     {
         private readonly SpsulContext _ctx;
@@ -36,8 +49,9 @@ namespace SPSUL.Controllers.API
         }   
 
         [HttpPost]
-        public async Task<IActionResult> Preview([FromBody] PreviewRequest model)
+        public async Task<IActionResult> Preview([FromBody] PreviewRequest? model)
         {
+            if (model == null) { return BadRequest("Neplatná data."); }
             if (model.OptionCount == 0) { return BadRequest("Počet nemůže být nula."); }
             try
             {
@@ -66,9 +80,9 @@ namespace SPSUL.Controllers.API
 
         [HttpPost]
         [Route("api/QuestionView/AnswerOption")]
-        public async Task<IActionResult> AnswerOption([FromBody] OptionRequest model)
+        public async Task<IActionResult> AnswerOption([FromBody] OptionRequest? model)
         {
-            if (ModelState.IsValid == false)
+            if (model == null || !ModelState.IsValid)
             {
                 return BadRequest("Neplatná data.");
             }
@@ -116,8 +130,9 @@ namespace SPSUL.Controllers.API
 
         [HttpPost]
         [Route("api/QuestionView/PreviewOptions")]
-        public async Task<IActionResult> PreviewOptions([FromBody] OptionRequest model)
+        public async Task<IActionResult> PreviewOptions([FromBody] OptionRequest? model)
         {
+            if (model == null) { return BadRequest("Neplatná data."); }
             if (model.QuestionCount == 0) { return BadRequest("Počet nemůže být nula."); }
 
             try

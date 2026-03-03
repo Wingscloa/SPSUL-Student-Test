@@ -7,15 +7,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SPSUL.Controllers.API
 {
+    /// <summary>
+    /// REST API pro CRUD operace nad učiteli v konfiguračním modálu.
+    ///
+    /// Endpointy:
+    ///   GET  /api/teacher/row         – stránkovaný seznam učitelů (vrátí HTML partial)
+    ///   GET  /api/teacher/content/    – filtrovaný obsah tabulky
+    ///   POST /api/teacher             – vytvoří nového učitele
+    ///   PUT  /api/teacher             – upravuje existujícího učitele
+    ///   POST /api/teacher/delete      – bulk mazání učitelů dle ID
+    ///
+    /// Zabezpečení:
+    ///   [AutoValidateAntiforgeryToken] – chrání před CSRF útoky
+    ///   [RequirePermission(CrudTeachers)] – jen učitelé s rolí Administrátor nebo Učitelátor
+    ///   Všechny CUD operace píší do AuditLog.
+    /// </summary>
+    [AutoValidateAntiforgeryToken]
     public class TeacherController : Controller
     {
         private readonly SpsulContext _ctx;
         private readonly ILogger<TeacherController> _logger;
+        private readonly AuditService _audit;
 
-        public TeacherController(SpsulContext ctx, ILogger<TeacherController> logger)
+        public TeacherController(SpsulContext ctx, ILogger<TeacherController> logger, AuditService audit)
         {
             _ctx = ctx;
             _logger = logger;
+            _audit = audit;
         }
 
         [Route("api/[controller]/row")]
@@ -100,6 +118,7 @@ namespace SPSUL.Controllers.API
 
         [Route("api/[controller]")]
         [HttpPost]
+        [RequirePermission(AppPermissions.CrudTeachers, AppPermissions.All)]
         public async Task<IActionResult> Post([FromBody] TeacherCreate model)
         {
             if(ModelState.IsValid)
@@ -134,6 +153,7 @@ namespace SPSUL.Controllers.API
                     await _ctx.AddRangeAsync(teacherTitles);
                     await _ctx.AddRangeAsync(teacherRoles);
                     await _ctx.SaveChangesAsync();
+                    await _audit.LogAsync("Vytvořen", "Učitel", teacher.TeacherId.ToString(), $"{teacher.FirstName} {teacher.LastName}");
                     return Ok("Vytvoření učitele proběhlo v pořádku");
                 }
                 catch (Exception ex)
@@ -151,6 +171,7 @@ namespace SPSUL.Controllers.API
 
         [HttpPut]
         [Route("api/[controller]")]
+        [RequirePermission(AppPermissions.CrudTeachers, AppPermissions.All)]
         public async Task<IActionResult> Put([FromBody] TeacherUpdate model)
         {
             if(ModelState.IsValid)
@@ -196,6 +217,7 @@ namespace SPSUL.Controllers.API
 
                     await _ctx.SaveChangesAsync();
 
+                    await _audit.LogAsync("Upraven", "Učitel", model.TeacherId.ToString(), $"{model.FirstName} {model.LastName}");
                     return Ok("Aktualizace učitele proběhla v pořádku");
                 }
                 catch (Exception ex)
@@ -212,6 +234,7 @@ namespace SPSUL.Controllers.API
 
         [HttpPost]
         [Route("api/[controller]/delete")]
+        [RequirePermission(AppPermissions.All)]
         public async Task<IActionResult> Delete([FromBody] List<int>? Ids)
         {
             try
@@ -230,6 +253,7 @@ namespace SPSUL.Controllers.API
 
                 _ctx.Teachers.RemoveRange(teachers);
                 await _ctx.SaveChangesAsync();
+                await _audit.LogAsync("Smazán", "Učitel", string.Join(",", Ids), $"{teachers.Count} učitelů");
                 return NoContent();
             }
             catch(Exception ex)

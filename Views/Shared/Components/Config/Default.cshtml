@@ -1,6 +1,12 @@
 ﻿@using SPSUL.ViewComponents
 @model ConfigurationViewModel
 
+@{
+    var canCrudTeachers = Context.HasAnyPermission(AppPermissions.CrudTeachers, AppPermissions.All);
+    var canCrudStudents = Context.HasAnyPermission(AppPermissions.CrudStudents, AppPermissions.ManageStudents, AppPermissions.All);
+    var canCrudClasses = Context.HasAnyPermission(AppPermissions.ManageClasses, AppPermissions.All);
+}
+
 <!-- ============================================
      CONFIG: fullscreen modal with sidebar
      ============================================ -->
@@ -21,18 +27,27 @@
                         <i class="bi bi-person-circle"></i>
                         <span>Profil a oprávnění</span>
                     </li>
+                    @if (canCrudClasses)
+                    {
                     <li class="config-nav-item" onclick="loadConfig('ConfigClass', this)">
                         <i class="bi bi-building"></i>
                         <span>Třídy</span>
                     </li>
+                    }
+                    @if (canCrudStudents)
+                    {
                     <li class="config-nav-item" onclick="loadConfig('ConfigStudent', this)">
                         <i class="bi bi-people"></i>
                         <span>Studenti</span>
                     </li>
+                    }
+                    @if (canCrudTeachers)
+                    {
                     <li class="config-nav-item" onclick="loadConfig('ConfigTeacher', this)">
                         <i class="bi bi-person-workspace"></i>
                         <span>Učitelé</span>
                     </li>
+                    }
                     <li class="config-nav-item" onclick="loadConfig('ConfigAbout', this)">
                         <i class="bi bi-info-circle"></i>
                         <span>O aplikaci</span>
@@ -66,15 +81,24 @@
                     <button class="config-tab active" onclick="loadConfig('ConfigProfile', this)" data-section="ConfigProfile">
                         <i class="bi bi-person-circle"></i><span>Profil</span>
                     </button>
+                    @if (canCrudClasses)
+                    {
                     <button class="config-tab" onclick="loadConfig('ConfigClass', this)" data-section="ConfigClass">
                         <i class="bi bi-building"></i><span>Třídy</span>
                     </button>
+                    }
+                    @if (canCrudStudents)
+                    {
                     <button class="config-tab" onclick="loadConfig('ConfigStudent', this)" data-section="ConfigStudent">
                         <i class="bi bi-people"></i><span>Studenti</span>
                     </button>
+                    }
+                    @if (canCrudTeachers)
+                    {
                     <button class="config-tab" onclick="loadConfig('ConfigTeacher', this)" data-section="ConfigTeacher">
                         <i class="bi bi-person-workspace"></i><span>Učitelé</span>
                     </button>
+                    }
                     <button class="config-tab" onclick="loadConfig('ConfigAbout', this)" data-section="ConfigAbout">
                         <i class="bi bi-info-circle"></i><span>Info</span>
                     </button>

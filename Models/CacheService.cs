@@ -2,6 +2,18 @@
 
 namespace SPSUL.Models
 {
+    /// <summary>
+    /// Pomocná služba pro ukládání dat do in-memory cache, vázaná na aktuálního učitele.
+    /// 
+    /// Problém, který řeší:
+    ///   Při každém requestu by se jinak muselo znovu ptát do databáze na např. jméno učitele.
+    ///   Tato třída ukládá výsledky do IMemoryCache pod klíčem "teacherId:klic",
+    ///   takže každý učitel má svůj vlastní cache prostor.
+    /// 
+    /// Použití:
+    ///   _cacheService.Set("TeacherName", "Jan Novák", TimeSpan.FromDays(7));
+    ///   string? name = _cacheService.Get("TeacherName");
+    /// </summary>
     public class CacheService
     {
         private readonly IMemoryCache _cache;

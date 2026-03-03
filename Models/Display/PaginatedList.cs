@@ -1,5 +1,16 @@
 ﻿namespace SPSUL.Models.Display
 {
+     /// <summary>
+     /// Generální helper pro stránkování dat v tabulkách.
+     ///
+     /// Jak funguje:
+     ///   Controller vezme všechny záznamy z DB, předají se PageIndex a PageSize,
+     ///   a PaginatedList vypočítá celkový počet stránek a uloží právě tu správnou "stránku" záznamů.
+     ///
+     /// Použití:
+     ///   var paged = new PaginatedList&lt;Teacher&gt;(rows, totalCount, pageNumber, pageSize);
+     ///   // V Razor view: @Model.PageIndex / @Model.TotalPages
+     /// </summary>
     public class PaginatedList<T> : List<T>
     {
         public List<T> Items { get; set; }

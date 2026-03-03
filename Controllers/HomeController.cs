@@ -2,11 +2,23 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SPSUL.Models;
+using SPSUL.Models.Display;
 using SPSUL.Models.Display.TestModels;
 using System.Text.Json;
 
 namespace SPSUL.Controllers
 {
+    /// <summary>
+    /// Dashboard – úvodní stránka po pøihlášení.
+    ///
+    /// Zobrazuje:
+    ///   - Statistické karty (aktivní testy, studenti, prùmìrná úspìšnost, èekající)
+    ///   - Posledních 10 dokonèených testù (aktivita)
+    ///   - Chystající se testy (aktivní s èekajícími studenty)
+    ///   - Sloupcový graf prùmìrné úspìšnosti za posledních 7 mìsícù
+    ///
+    /// Data jsou pøedána pøes silnì typovaný HomeViewModel (ne ViewBag).
+    /// </summary>
     [LoginRequired]
     public class HomeController : Controller
     {
@@ -21,12 +33,10 @@ namespace SPSUL.Controllers
             var teacherId = (int?)HttpContext.Items["CurrentUserId"] ?? 0;
             var teacher = await _ctx.Teachers.AsNoTracking().FirstOrDefaultAsync(t => t.TeacherId == teacherId);
 
-            // Stat cards — count queries only, no data pulled
             var activeTests = await _ctx.Tests.AsNoTracking().CountAsync(t => t.IsActive);
             var totalStudents = await _ctx.Students.AsNoTracking().CountAsync(s => s.IsActive);
             var totalQuestions = await _ctx.Questions.AsNoTracking().CountAsync(q => q.IsActive);
 
-            // Finished tests for average — only load what's needed
             var finishedAssignments = await _ctx.StudentTests
                 .AsNoTracking()
                 .Include(st => st.Test)
@@ -39,12 +49,10 @@ namespace SPSUL.Controllers
                 avgSuccess = finishedAssignments.Average(st => CalculateSuccess(st));
             }
 
-            // Pending (assigned but not started)
             var pendingCount = await _ctx.StudentTests
                 .AsNoTracking()
                 .CountAsync(st => st.StartedAt == DateTime.MinValue);
 
-            // Recent activity - last 10 finished tests
             var recentFinished = await _ctx.StudentTests
                 .AsNoTracking()
                 .Include(st => st.Test)
@@ -54,7 +62,6 @@ namespace SPSUL.Controllers
                 .Take(10)
                 .ToListAsync();
 
-            // Upcoming - active tests with pending students
             var upcomingTests = await _ctx.Tests
                 .AsNoTracking()
                 .Include(t => t.StudentField)
@@ -64,7 +71,6 @@ namespace SPSUL.Controllers
                 .Take(5)
                 .ToListAsync();
 
-            // Chart data - last 7 months avg success
             var sevenMonthsAgo = DateTime.Now.AddMonths(-6);
             var monthlyData = finishedAssignments
                 .Where(st => st.FinishedAt >= sevenMonthsAgo)
@@ -78,20 +84,23 @@ namespace SPSUL.Controllers
                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
                 .ToList();
 
-            ViewBag.TeacherName = teacher != null ? $"{teacher.FirstName} {teacher.LastName}" : "Uèiteli";
-            ViewBag.ActiveTests = activeTests;
-            ViewBag.TotalStudents = totalStudents;
-            ViewBag.TotalQuestions = totalQuestions;
-            ViewBag.AvgSuccess = avgSuccess;
-            ViewBag.PendingCount = pendingCount;
-            ViewBag.RecentFinished = recentFinished;
-            ViewBag.UpcomingTests = upcomingTests;
-            ViewBag.MonthlyLabels = JsonSerializer.Serialize(
-                monthlyData.Select(m => $"{m.Month}/{m.Year}").ToList());
-            ViewBag.MonthlyValues = JsonSerializer.Serialize(
-                monthlyData.Select(m => Math.Round(m.Avg, 1)).ToList());
+            var vm = new HomeViewModel
+            {
+                TeacherName = teacher != null ? $"{teacher.FirstName} {teacher.LastName}" : "Uèiteli",
+                ActiveTests = activeTests,
+                TotalStudents = totalStudents,
+                TotalQuestions = totalQuestions,
+                AvgSuccess = avgSuccess,
+                PendingCount = pendingCount,
+                RecentFinished = recentFinished,
+                UpcomingTests = upcomingTests,
+                MonthlyLabels = JsonSerializer.Serialize(
+                    monthlyData.Select(m => $"{m.Month}/{m.Year}").ToList()),
+                MonthlyValues = JsonSerializer.Serialize(
+                    monthlyData.Select(m => Math.Round(m.Avg, 1)).ToList())
+            };
 
-            return View();
+            return View(vm);
         }
 
         public IActionResult Privacy()

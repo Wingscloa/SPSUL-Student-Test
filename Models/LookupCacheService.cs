@@ -5,8 +5,20 @@ using SPSUL.Models.Data;
 namespace SPSUL.Models
 {
     /// <summary>
-    /// Singleton cache for semi-static lookup data (classes, fields, question types).
-    /// Data is cached for 5 minutes and invalidated on write via Invalidate().
+    /// Singleton cache pro semi-statická èíselníková data (tøídy, pøedmìty, typy otázek, role, tituly).
+    ///
+    /// Proè Singleton a ne Scoped:
+    ///   Tato data se mìní velmi zøídka (pøidání nové tøídy, pøedmìtu...).
+    ///   Singleton zajistí, že cache existuje po celou dobu bìhu aplikace a sdílí se mezi requesty.
+    ///   Scoped by cache zahodil po každém requestu, což by bylo zbyteèné.
+    ///
+    /// Životnost cache:
+    ///   Data jsou cachována 5 minut. Po té se pøi dalším requestu naètou znovu z DB.
+    ///   Lze vynutit okamžité zneplatnìní pomocí Invalidate() po zápisu do DB.
+    ///
+    /// Pozor:
+    ///   Protože je Singleton, nemùže pøímo injectovat SpsulContext (který je Scoped).
+    ///   Proto používá IServiceScopeFactory pro vytvoøení doèasného scope pøi DB dotazu.
     /// </summary>
     public class LookupCacheService
     {
@@ -33,6 +45,7 @@ namespace SPSUL.Models
         {
             return await GetOrCreateAsync(KeyActiveClasses, async ctx =>
                 await ctx.Classes.AsNoTracking()
+                    .Include(c => c.ClassesStudents)
                     .Where(c => c.IsActive)
                     .OrderBy(c => c.Name)
                     .ToListAsync());

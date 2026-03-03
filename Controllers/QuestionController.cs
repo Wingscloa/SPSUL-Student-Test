@@ -8,6 +8,22 @@ using SPSUL.Models.Display.QuestionForm;
 
 namespace SPSUL.Controllers
 {
+    /// <summary>
+    /// Správa banky otázek ze strany učitele.
+    ///
+    /// Funkce:
+    ///   Index  – stránkovaný seznam otázek s filtrováním
+    ///   Create – tvorba nové otázky (včetně možností a volitelných obrázků)
+    ///   Edit   – úprava existující otázky
+    ///
+    /// Typy otázek (QuestionTypesEnum):
+    ///   - "Uzavřená otázka"           – textové možnosti (A/B/C/D)
+    ///   - "Uzavřená otázka s obrázky" – každá možnost má obrázek v Azure Blob Storage
+    ///
+    /// Obrázky:
+    ///   Pocházejí z frontendu jako Base64 string.
+    ///   AzureBlobService je optimalizuje (WebP, max 1200px) a nahrá do Azure.
+    /// </summary>
     [LoginRequired]
     public class QuestionController : Controller
     {
@@ -34,10 +50,6 @@ namespace SPSUL.Controllers
                 {
                     pageNumber = 1;
                     questionIds = await _ctx.Questions
-                    .Include(q => q.Creator)
-                    .Include(q => q.QuestionType)
-                    .Include(q => q.Field)
-                    .Include(q => q.QuestionOptions)
                     .Where(e =>
                         (Name == null || e.Header.Contains(Name)) &&
                         (IsActive == null || e.IsActive == IsActive) &&
@@ -50,16 +62,16 @@ namespace SPSUL.Controllers
                     offFilter = false;
                 }
 
-                List<QuestionRow> query = await _ctx.QuestionRow.Where(e =>
-                    (offFilter || questionIds.Contains(e.QuestionId))).ToListAsync();
+                var queryable = _ctx.QuestionRow.Where(e =>
+                    (offFilter || questionIds.Contains(e.QuestionId)));
 
-                List<QuestionRow> rows = query
+                int count = await queryable.CountAsync();
+
+                List<QuestionRow> rows = await queryable
                     .OrderByDescending(e => e.QuestionId)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
-                    .ToList();
-
-                int count = query.Count;
+                    .ToListAsync();
 
                 QuestIndexVM model = new()
                 {
@@ -83,6 +95,7 @@ namespace SPSUL.Controllers
             }
         }
         
+        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
         public async Task<IActionResult> Create()
         {
             try
@@ -109,6 +122,7 @@ namespace SPSUL.Controllers
             }
         }
 
+        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
         public async Task<IActionResult> Edit(int id)
         {
             var question = await _ctx.Questions
@@ -137,6 +151,7 @@ namespace SPSUL.Controllers
         }
 
         [HttpPost]
+        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
         public async Task<IActionResult> Delete([FromBody] List<int> Ids)
         {
             using var transaction = await _ctx.Database.BeginTransactionAsync();
@@ -197,6 +212,7 @@ namespace SPSUL.Controllers
         }
 
         [HttpPut]
+        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
         public async Task<IActionResult> Activate([FromBody] List<int> Ids)
         {
             try
@@ -223,6 +239,7 @@ namespace SPSUL.Controllers
         }
 
         [HttpPut]
+        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
         public async Task<IActionResult> Deactivate([FromBody] List<int>Ids)
         {
             try
@@ -250,6 +267,7 @@ namespace SPSUL.Controllers
 
         [HttpPost]
         [LoginRequired]
+        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
         public async Task<IActionResult> CreateQuestion([FromBody] QuestionCreateDto dto)
         {
             // Validace pomocí ModelState (Data Annotations z DTO)
@@ -359,6 +377,7 @@ namespace SPSUL.Controllers
         }
 
         [HttpGet]
+        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
         public async Task<IActionResult> Detail(int id)
         {
             Question? question = await _ctx.Questions
@@ -375,6 +394,7 @@ namespace SPSUL.Controllers
         }
 
         [HttpPut]
+        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
         public async Task<IActionResult> Update([FromBody] QuestionUpdateDto dto)
         {
             // Validace pomocí ModelState (Data Annotations z DTO)
@@ -460,17 +480,7 @@ namespace SPSUL.Controllers
                         // Pokud není nový obrázek, ale stará option měla obrázek, zachovat starý
                         if (index < oldOptions.Count && !string.IsNullOrWhiteSpace(oldOptions[index].ImageKey))
                         {
-                            // Pokud ImageBase64 je prázdný, ale ImageKey existuje z původní option
-                            // Zachováme starý ImageKey (uživatel fotku nezměnil)
-                            if (string.IsNullOrWhiteSpace(optionDto.ImageBase64))
-                            {
-                                imageKey = oldOptions[index].ImageKey;
-                            }
-                            else
-                            {
-                                // ImageKey byl poskytnut - uživatel možná nechtěl měnit
-                                imageKey = optionDto.ImageBase64;
-                            }
+                            imageKey = oldOptions[index].ImageKey;
                         }
                     }
 
@@ -500,15 +510,15 @@ namespace SPSUL.Controllers
                 _ctx.QuestionOptions.AddRange(newOptions);
                 await _ctx.SaveChangesAsync();
 
-                // Smazání starých obrázků z Azure (po úspěšném uložení do DB)
+                // Potvrzení transakce
+                await transaction.CommitAsync();
+
+                // Smazání starých obrázků z Azure (až po úspěšném uložení a commitu DB)
                 if (imagesToDelete.Any())
                 {
                     int deletedCount = await _blobService.DeleteBlobsAsync(imagesToDelete);
                     Console.WriteLine($"Smazáno {deletedCount} starých obrázků z Azure Storage.");
                 }
-
-                // Potvrzení transakce
-                await transaction.CommitAsync();
 
                 return Ok(new 
                 { 
@@ -541,6 +551,7 @@ namespace SPSUL.Controllers
         }
 
         [HttpDelete]
+        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
         public async Task<IActionResult> Delete(int id)
         {
             using var transaction = await _ctx.Database.BeginTransactionAsync();

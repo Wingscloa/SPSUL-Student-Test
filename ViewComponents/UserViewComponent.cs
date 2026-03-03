@@ -6,6 +6,12 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace SPSUL.ViewComponents
 {
+    /// <summary>
+    /// ViewComponent zobrazující jméno přihlášeného učitele v navbaru (vpravo nahoře).
+    ///
+    /// Vyvolání v layoutu:
+    ///   @await Component.InvokeAsync("User")
+    /// </summary>
     public class UserViewComponent : ViewComponent
     {
         private readonly SharedService _sharedService;

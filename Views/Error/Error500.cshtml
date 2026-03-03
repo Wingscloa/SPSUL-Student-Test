@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Chyba serveru";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>500 - Chyba serveru</title>
+    <link href="~/lib/bootstrap/customBootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="~/css/global.css" rel="stylesheet" />
+    <style>
+        body { background: #f8f9fa; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .error-box { text-align: center; max-width: 480px; padding: 3rem 2rem; }
+        .error-code { font-size: 6rem; font-weight: 800; color: var(--spsul-red, #de401a); line-height: 1; }
+        .error-icon { font-size: 4rem; color: var(--spsul-red, #de401a); margin-bottom: 1rem; }
+        .error-title { font-size: 1.5rem; font-weight: 700; margin-bottom: .5rem; }
+        .error-desc { color: #6c757d; margin-bottom: 2rem; }
+        .btn-orange { background: var(--spsul-primary, #ff9000); color: #fff; border: none; padding: .6rem 2rem; border-radius: 10px; font-weight: 600; text-decoration: none; }
+        .btn-orange:hover { background: #e07e00; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="error-box">
+        <div class="error-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+        <div class="error-code">500</div>
+        <h1 class="error-title">Nìco se pokazilo</h1>
+        <p class="error-desc">Na serveru nastala neoèekávaná chyba. Zkuste to prosím znovu pozdìji.</p>
+        <a href="/" class="btn-orange"><i class="bi bi-house me-2"></i>Zpìt na úvod</a>
+    </div>
+</body>
+</html>

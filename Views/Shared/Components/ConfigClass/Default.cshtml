@@ -4,6 +4,10 @@
 @using SPSUL.ViewComponents
 @model ConfigClassVM
 
+@{
+    ViewData["CanEdit"] = Context.HasAnyPermission(AppPermissions.ManageClasses, AppPermissions.All);
+}
+
 <div class="d-flex flex-column h-100 ct-wrapper" id="ctRoot">
     <div class="p-3 bg-light border-bottom flex-shrink-0">
         @await Html.PartialAsync("_ConfigHeader", "Správa třídy")

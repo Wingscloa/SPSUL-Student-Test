@@ -1,18 +1,9 @@
 ﻿@using SPSUL.Models.Data
+@using SPSUL.Models.Display
+@model HomeViewModel
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
-
-    string teacherName = ViewBag.TeacherName;
-    int activeTests = ViewBag.ActiveTests;
-    int totalStudents = ViewBag.TotalStudents;
-    int totalQuestions = ViewBag.TotalQuestions;
-    double avgSuccess = ViewBag.AvgSuccess;
-    int pendingCount = ViewBag.PendingCount;
-    var recentFinished = ViewBag.RecentFinished as List<StudentTest> ?? new();
-    var upcomingTests = ViewBag.UpcomingTests as List<Test> ?? new();
-    string monthlyLabels = ViewBag.MonthlyLabels;
-    string monthlyValues = ViewBag.MonthlyValues;
 
     var hour = DateTime.Now.Hour;
     string greeting;
@@ -46,7 +37,7 @@
     <section class="hero-welcome">
         <div class="welcome-content">
             <h1 class="welcome-title">
-                <i class="bi @greetIcon"></i> @greeting, <span class="text-orange">@teacherName</span>!
+                <i class="bi @greetIcon"></i> @greeting, <span class="text-orange">@Model.TeacherName</span>!
             </h1>
             <p class="welcome-subtitle text-muted">Přehled vaší výuky</p>
         </div>
@@ -55,28 +46,28 @@
             <div class="stat-card stat-card--primary">
                 <div class="stat-icon"><i class="bi bi-clipboard-check"></i></div>
                 <div class="stat-content">
-                    <div class="stat-value" data-target="@activeTests">0</div>
+                    <div class="stat-value" data-target="@Model.ActiveTests">0</div>
                     <div class="stat-label">Aktivních testů</div>
                 </div>
             </div>
             <div class="stat-card stat-card--success">
                 <div class="stat-icon"><i class="bi bi-people"></i></div>
                 <div class="stat-content">
-                    <div class="stat-value" data-target="@totalStudents">0</div>
+                    <div class="stat-value" data-target="@Model.TotalStudents">0</div>
                     <div class="stat-label">Studentů</div>
                 </div>
             </div>
             <div class="stat-card stat-card--info">
                 <div class="stat-icon"><i class="bi bi-graph-up"></i></div>
                 <div class="stat-content">
-                    <div class="stat-value" data-target="@avgSuccess.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)" data-suffix="%">0%</div>
+                    <div class="stat-value" data-target="@Model.AvgSuccess.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)" data-suffix="%">0%</div>
                     <div class="stat-label">Průměrná úspěšnost</div>
                 </div>
             </div>
             <div class="stat-card stat-card--warning">
                 <div class="stat-icon"><i class="bi bi-clock-history"></i></div>
                 <div class="stat-content">
-                    <div class="stat-value" data-target="@pendingCount">0</div>
+                    <div class="stat-value" data-target="@Model.PendingCount">0</div>
                     <div class="stat-label">Čeká na zahájení</div>
                 </div>
             </div>
@@ -100,9 +91,9 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="activity-list">
-                        @if (recentFinished.Any())
+                        @if (Model.RecentFinished.Any())
                         {
-                            @foreach (var st in recentFinished)
+                            @foreach (var st in Model.RecentFinished)
                             {
                                 var ago = DateTime.Now - st.FinishedAt;
                                 var agoText = ago.TotalMinutes < 60 ? $"Před {(int)ago.TotalMinutes} min"
@@ -167,12 +158,18 @@
                 </div>
                 <div class="card-body p-2">
                     <div class="d-grid gap-2">
+                        @if (Context.HasAnyPermission(AppPermissions.CrudTests, AppPermissions.ManageTests, AppPermissions.All))
+                        {
                         <a href="/Test/Create" class="btn btn-outline-orange btn-sm">
                             <i class="bi bi-plus-circle me-2"></i>Vytvořit test
                         </a>
+                        }
+                        @if (Context.HasAnyPermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All))
+                        {
                         <a href="/Question/Create" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-patch-question me-2"></i>Přidat otázku
                         </a>
+                        }
                         <a href="/Students/Index" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-people me-2"></i>Správa studentů
                         </a>
@@ -196,9 +193,9 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="upcoming-list">
-                        @if (upcomingTests.Any())
+                        @if (Model.UpcomingTests.Any())
                         {
-                            @foreach (var t in upcomingTests)
+                            @foreach (var t in Model.UpcomingTests)
                             {
                                 var pending = t.StudentTests?.Count(st => st.StartedAt == DateTime.MinValue) ?? 0;
 
@@ -241,15 +238,15 @@
                     <h6><i class="bi bi-bar-chart me-2"></i>Přehled v číslech</h6>
                     <div class="d-flex justify-content-between mt-3 mb-1">
                         <small>Otázek v bance:</small>
-                        <strong>@totalQuestions</strong>
+                        <strong>@Model.TotalQuestions</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <small>Aktivních testů:</small>
-                        <strong>@activeTests</strong>
+                        <strong>@Model.ActiveTests</strong>
                     </div>
                     <div class="d-flex justify-content-between">
                         <small>Dokončených testů:</small>
-                        <strong>@recentFinished.Count</strong>
+                        <strong>@Model.RecentFinished.Count</strong>
                     </div>
                 </div>
             </div>

@@ -4,6 +4,8 @@
 @{
     ViewData["Title"] = "Otázky";
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+
+    var canCrudQuestions = Context.HasAnyPermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All);
 }
 
 <link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
@@ -28,6 +30,8 @@
                             <i class="bi bi-plus-circle"></i>
                             Potvrdit
                         </a>
+                        @if (canCrudQuestions)
+                        {
                         <!--Activate-->
                         <a class="iconLink cursor mode" title="Aktivovat otázky" id="activate" data-endpoint="Question/Activate/" data-method="PUT">
                             <i class="bi bi-arrow-up-circle-fill"></i>
@@ -48,6 +52,7 @@
                             <i class="bi bi-plus-circle"></i>
                             Vytvořit
                         </a>
+                        }
                     </div>
         </div>
         <div class="table-responsive tableContent">
@@ -61,6 +66,8 @@
                 <th class="col-2">Typ otázky</th>
                 <th class="col-2">Typ předmětu</th>
                 <th class="col-1">Aktivní</th>
+                @if (canCrudQuestions)
+                {
                 <th class="col-1 text-center" id="editHeader" style="display:table-cell">Edit</th>
                 <!--Delete-->
                  <th class="col-1 d-none" id="deleteHeader">
@@ -74,6 +81,7 @@
                 <th class="col-1 d-none" id="activateHeader">
                     Aktivace
                 </th>
+                }
               </tr>
             </thead>
             <tbody>
@@ -89,6 +97,8 @@
                 <td>@r.QuestionTypeName</td>
                 <td>@r.FieldName</td>
                 <td><span class="badge bg-@(r.IsActive ? "success" : "secondary")">@(r.IsActive ? "Aktivní" : "Neaktivní")</span></td>
+                @if (canCrudQuestions)
+                {
                 <td class="text-center editButton"><a class="icon-btn" title="Edit" href="/Question/Edit?id=@r.QuestionId"><i class="bi bi-pencil-square"></i></a></td>
                 <!-- Delete Button --> 
                 <td class="text-center deleteButton d-none">
@@ -108,6 +118,7 @@
                         <i class="bi bi-archive-fill"></i>
                     </div>
                 </td>
+                }
               </tr>
             }
             </tbody>

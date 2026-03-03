@@ -44,12 +44,15 @@
             <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto">
                     <!-- Primary Action -->
+                    @if (Context.HasAnyPermission(AppPermissions.CrudTests, AppPermissions.ManageTests, AppPermissions.All))
+                    {
                     <li class="nav-item">
                         <a class="nav-link PrimaryButton" asp-controller="Test" asp-action="Create" title="Vytvořit nový test">
                             <i class="bi bi-file-earmark-plus-fill"></i>
                             <span>Vytvořit test</span>
                         </a>
                     </li>
+                    }
                     
                     <!-- Main Navigation -->
                     <li class="nav-item">

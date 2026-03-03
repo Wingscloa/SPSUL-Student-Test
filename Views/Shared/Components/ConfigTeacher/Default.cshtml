@@ -10,6 +10,7 @@
         Titles = Model.Titles,
         Roles = Model.Roles
     };
+    ViewData["CanEdit"] = Context.HasAnyPermission(AppPermissions.CrudTeachers, AppPermissions.All);
 }
 
 <div class="d-flex flex-column h-100 ct-wrapper" id="ctRoot">

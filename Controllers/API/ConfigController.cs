@@ -6,6 +6,20 @@ using SPSUL.Models.Display.ConfigModels;
 
 namespace SPSUL.Controllers.API
 {
+    /// <summary>
+    /// API controller pro dynamické načítání sekcí konfiguračního modálu a jeho formulářů.
+    ///
+    /// Jak funguje konfigurační modál:
+    ///   Uživatel klikne na položku v levém sidebarum (např. "Učitelé").
+    ///   JavaScript zavolá GET /api/config/section/ConfigTeacher.
+    ///   Tento endpoint renderuje ViewComponent a vrátí HTML.
+    ///   JavaScript HTML vloží do #modalContainer bez načtení celé stránky.
+    ///
+    /// Formuláře pro editaci:
+    ///   GET /api/Config/TeacherEditForm/{id}   – vrátí partial view s formulářem pro úpravu učitele
+    ///   GET /api/Config/StudentCreateForm/     – vrátí partial view pro nového studenta
+    ///   atd. pro všechny entity (Teacher, Student, Classes)
+    /// </summary>
     public class ConfigController : Controller
     {
         private readonly SpsulContext _ctx;

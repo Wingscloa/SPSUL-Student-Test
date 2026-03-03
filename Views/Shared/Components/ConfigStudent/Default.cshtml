@@ -9,6 +9,7 @@
     {
         Classes = Model.Classes
     };
+    ViewData["CanEdit"] = Context.HasAnyPermission(AppPermissions.CrudStudents, AppPermissions.ManageStudents, AppPermissions.All);
 }
 
 <div class="d-flex flex-column h-100 ct-wrapper" id="ctRoot">

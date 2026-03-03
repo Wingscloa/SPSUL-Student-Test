@@ -6,6 +6,14 @@ using SPSUL.Models.Display.StudentModels;
 
 namespace SPSUL.Controllers
 {
+    /// <summary>
+    /// Zobrazení seznamů studentů pro učitele (read-only view).
+    ///
+    /// Poznámka:
+    ///   Tento controller slouží pouze k ZOBRAZENí (Index, filtrace).
+    ///   Skutečné CRUD operace (vytvoření, úprava, mazání, aktivace) jsou v
+    ///   Controllers/API/StudentController.cs a volá je frontend přes AJAX.
+    /// </summary>
     [LoginRequired]
     public class StudentsController : Controller
     {
