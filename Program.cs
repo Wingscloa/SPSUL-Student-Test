@@ -3,6 +3,8 @@ using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Infrastructure;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Data.SqlClient;
 using System.IO.Compression;
 
@@ -49,6 +51,16 @@ namespace SPSUL
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            // DataProtection – explicitní cesta zaruèuje, že klíèe pøežijí restart kontejneru.
+            // SetApplicationName zajistí kompatibilitu klíèù pøi redeploymentu nebo škálování.
+            // V Dockeru (Production) se klíèe ukládají do volume, lokálnì se použije výchozí cesta.
+            if (!builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddDataProtection()
+                    .PersistKeysToFileSystem(new DirectoryInfo("/home/app/.aspnet/DataProtection-Keys"))
+                    .SetApplicationName("SPSUL");
+            }
 
             // Scoped služby – nová instance per request
             builder.Services.AddScoped<CacheService>();        // per-teacher IMemoryCache wrapper
@@ -98,7 +110,6 @@ namespace SPSUL
 
             builder.Services.AddScoped<AzureBlobService>();
             builder.Services.AddScoped<PdfService>();
-            builder.Services.AddScoped<AuditService>();
 
             // Anti-forgery ochrana – generuje XSRF token, který musí být pøiložen ke každému POST/PUT/DELETE
             // Header name "X-XSRF-TOKEN" je èten JavaScriptem z cookie a pøikládán k AJAX requestùm
@@ -128,10 +139,6 @@ namespace SPSUL
                 {
                     db.Database.EnsureCreated();
                 }
-                else
-                {
-                    db.Database.Migrate();
-                }
             }
 
             // Configure the HTTP request pipeline.
@@ -140,9 +147,14 @@ namespace SPSUL
                 app.UseExceptionHandler("/Error");
 
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-                app.UseHttpsRedirection();
+
+                // Pøeète X-Forwarded-For / X-Forwarded-Proto posílané reverse proxy (nginx/traefik)
+                // Nutné pro správné pøesmìrování a logování IP adres za proxy
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
             }
 
             // Response compression — only in production; in development it causes

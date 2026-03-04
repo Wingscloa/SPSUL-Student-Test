@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SPSUL.Models;
 using SPSUL.Models.Data;
 using SPSUL.Models.Display.QuestionForm;
+using SPSUL.Models.Types;
 using System.Net;
 
 namespace SPSUL.Controllers.API
@@ -59,11 +60,11 @@ namespace SPSUL.Controllers.API
 
                 if (questType == null) { return NotFound("Typ otázky nebyl nalezen, nemohu vygenerovat možnosti"); }
 
-                if (questType.Name == "Uzavřená otázka")
+                if (questType.Name == QuestionTypesEnum.SelectText)
                 {
                     return PartialView(partialText + "_SelectTextPreview.cshtml", model.OptionCount);
                 }
-                else if (questType.Name == "Uzavřená otázka s obrázky")
+                else if (questType.Name == QuestionTypesEnum.SelectImage)
                 {
                     return PartialView(partialImage + "_SelectImagePreview.cshtml", model.OptionCount);
                 }

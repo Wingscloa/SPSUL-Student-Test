@@ -542,9 +542,9 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 1,
                             CreatorId = 4,
-                            Description = "Základní koncept programování — vysvětlete, co znamená pojem proměnná.",
+                            Description = "Zakladni koncept programovani — vysvetlete, co znamena pojem promenna.",
                             FieldId = 11,
-                            Header = "Co je to proměnná?",
+                            Header = "Co je to promenna?",
                             IsActive = true,
                             QuestionTypeId = 1
                         },
@@ -552,9 +552,9 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 2,
                             CreatorId = 4,
-                            Description = "Datové typy v jazyce C# — vyberte správný celočíselný typ.",
+                            Description = "Datove typy v jazyce C# — vyberte spravny celociselny typ.",
                             FieldId = 11,
-                            Header = "Který datový typ je celočíselný v C#?",
+                            Header = "Ktery datovy typ je celociselny v C#?",
                             IsActive = true,
                             QuestionTypeId = 1
                         },
@@ -562,9 +562,9 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 3,
                             CreatorId = 4,
-                            Description = "Řídicí struktury v programování — podmíněné větvení.",
+                            Description = "Ridici struktury v programovani — podminene vetveni.",
                             FieldId = 11,
-                            Header = "Co dělá příkaz 'if'?",
+                            Header = "Co dela prikaz 'if'?",
                             IsActive = true,
                             QuestionTypeId = 1
                         },
@@ -572,7 +572,7 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 4,
                             CreatorId = 7,
-                            Description = "Cykly v programování — opakování bloku kódu.",
+                            Description = "Cykly v programovani — opakovani bloku kodu.",
                             FieldId = 11,
                             Header = "Co je to cyklus 'for'?",
                             IsActive = true,
@@ -582,9 +582,9 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 5,
                             CreatorId = 7,
-                            Description = "Základy databázových jazyků — původ zkratky SQL.",
+                            Description = "Zaklady databazovych jazyku — puvod zkratky SQL.",
                             FieldId = 2,
-                            Header = "Co znamená zkratka SQL?",
+                            Header = "Co znamena zkratka SQL?",
                             IsActive = true,
                             QuestionTypeId = 1
                         },
@@ -592,9 +592,9 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 6,
                             CreatorId = 7,
-                            Description = "SQL příkazy pro čtení dat z databáze.",
+                            Description = "SQL prikazy pro cteni dat z databaze.",
                             FieldId = 2,
-                            Header = "Který příkaz slouží k výběru dat?",
+                            Header = "Ktery prikaz slouzi k vyberu dat?",
                             IsActive = true,
                             QuestionTypeId = 1
                         },
@@ -602,9 +602,9 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 7,
                             CreatorId = 7,
-                            Description = "Integritní omezení v relačních databázích.",
+                            Description = "Integritni omezeni v relacnich databazich.",
                             FieldId = 2,
-                            Header = "Co je primární klíč?",
+                            Header = "Co je primarni klic?",
                             IsActive = true,
                             QuestionTypeId = 1
                         },
@@ -612,9 +612,9 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 8,
                             CreatorId = 4,
-                            Description = "Spojování tabulek v SQL dotazech.",
+                            Description = "Spojovani tabulek v SQL dotazech.",
                             FieldId = 2,
-                            Header = "Co dělá příkaz JOIN?",
+                            Header = "Co dela prikaz JOIN?",
                             IsActive = true,
                             QuestionTypeId = 1
                         },
@@ -622,7 +622,7 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 9,
                             CreatorId = 4,
-                            Description = "Sociální inženýrství — rozpoznávání phishingových útoků.",
+                            Description = "Socialni inzenyrstvi — rozpoznavani phishingovych utoku.",
                             FieldId = 6,
                             Header = "Co je phishing?",
                             IsActive = true,
@@ -632,7 +632,7 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 10,
                             CreatorId = 4,
-                            Description = "Síťová bezpečnost — ochrana perimetru sítě.",
+                            Description = "Sitova bezpecnost — ochrana perimetru site.",
                             FieldId = 6,
                             Header = "Co je to firewall?",
                             IsActive = true,
@@ -642,9 +642,9 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 11,
                             CreatorId = 1,
-                            Description = "Mocniny — výpočet třetí mocniny čísla 2.",
+                            Description = "Mocniny — vypocet treti mocniny cisla 2.",
                             FieldId = 8,
-                            Header = "Kolik je 2³?",
+                            Header = "Kolik je 2^3?",
                             IsActive = true,
                             QuestionTypeId = 1
                         },
@@ -652,9 +652,9 @@ namespace SPSUL.Migrations
                         {
                             QuestionId = 12,
                             CreatorId = 4,
-                            Description = "Tato otázka byla deaktivována a neměla by se zobrazovat v testech.",
+                            Description = "Tato otazka byla deaktivovana a nemela by se zobrazovat v testech.",
                             FieldId = 11,
-                            Header = "Zastaralá otázka",
+                            Header = "Zastarala otazka",
                             IsActive = false,
                             QuestionTypeId = 1
                         });
@@ -696,7 +696,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 1,
-                            Text = "Funkce pro výpočet"
+                            Text = "Funkce pro vypocet"
                         },
                         new
                         {
@@ -704,7 +704,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = true,
                             QuestionId = 1,
-                            Text = "Pojmenované místo v paměti pro uložení hodnoty"
+                            Text = "Pojmenovane misto v pameti pro ulozeni hodnoty"
                         },
                         new
                         {
@@ -720,7 +720,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 1,
-                            Text = "Příkaz pro výstup na obrazovku"
+                            Text = "Prikaz pro vystup na obrazovku"
                         },
                         new
                         {
@@ -760,7 +760,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 3,
-                            Text = "Opakuje blok kódu"
+                            Text = "Opakuje blok kodu"
                         },
                         new
                         {
@@ -776,7 +776,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = true,
                             QuestionId = 3,
-                            Text = "Vykoná kód pouze pokud je podmínka pravdivá"
+                            Text = "Vykona kod pouze pokud je podminka pravdiva"
                         },
                         new
                         {
@@ -784,7 +784,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 3,
-                            Text = "Ukončí program"
+                            Text = "Ukonci program"
                         },
                         new
                         {
@@ -792,7 +792,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 4,
-                            Text = "Podmíněný příkaz"
+                            Text = "Podmineny prikaz"
                         },
                         new
                         {
@@ -800,7 +800,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = true,
                             QuestionId = 4,
-                            Text = "Cyklus s předem daným počtem opakování"
+                            Text = "Cyklus s predem danym poctem opakovani"
                         },
                         new
                         {
@@ -808,7 +808,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 4,
-                            Text = "Deklarace proměnné"
+                            Text = "Deklarace promenne"
                         },
                         new
                         {
@@ -888,7 +888,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 7,
-                            Text = "Heslo do databáze"
+                            Text = "Heslo do databaze"
                         },
                         new
                         {
@@ -896,7 +896,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = true,
                             QuestionId = 7,
-                            Text = "Unikátní identifikátor záznamu v tabulce"
+                            Text = "Unikatni identifikator zaznamu v tabulce"
                         },
                         new
                         {
@@ -904,7 +904,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 7,
-                            Text = "Název tabulky"
+                            Text = "Nazev tabulky"
                         },
                         new
                         {
@@ -920,7 +920,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 8,
-                            Text = "Maže data ze dvou tabulek"
+                            Text = "Maze data ze dvou tabulek"
                         },
                         new
                         {
@@ -928,7 +928,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = true,
                             QuestionId = 8,
-                            Text = "Spojuje data z více tabulek na základě podmínky"
+                            Text = "Spojuje data z vice tabulek na zaklade podminky"
                         },
                         new
                         {
@@ -936,7 +936,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 8,
-                            Text = "Vytváří novou tabulku"
+                            Text = "Vytvari novou tabulku"
                         },
                         new
                         {
@@ -944,7 +944,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 8,
-                            Text = "Řadí výsledky vzestupně"
+                            Text = "Radi vysledky vzestupne"
                         },
                         new
                         {
@@ -952,7 +952,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 9,
-                            Text = "Antivirový program"
+                            Text = "Antivirovy program"
                         },
                         new
                         {
@@ -960,7 +960,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = true,
                             QuestionId = 9,
-                            Text = "Podvodný pokus o získání citlivých údajů"
+                            Text = "Podvodny pokus o ziskani citlivych udaju"
                         },
                         new
                         {
@@ -968,7 +968,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 9,
-                            Text = "Šifrovací algoritmus"
+                            Text = "Sifrovaci algoritmus"
                         },
                         new
                         {
@@ -976,7 +976,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 9,
-                            Text = "Typ síťového kabelu"
+                            Text = "Typ sitoveho kabelu"
                         },
                         new
                         {
@@ -992,7 +992,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = true,
                             QuestionId = 10,
-                            Text = "Zařízení/software filtrující síťový provoz"
+                            Text = "Zarizeni/software filtrujici sitovy provoz"
                         },
                         new
                         {
@@ -1000,7 +1000,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 10,
-                            Text = "Typ operačního systému"
+                            Text = "Typ operacniho systemu"
                         },
                         new
                         {
@@ -1008,7 +1008,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 10,
-                            Text = "Programovací jazyk"
+                            Text = "Programovaci jazyk"
                         },
                         new
                         {
@@ -1048,7 +1048,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 12,
-                            Text = "Odpověď A"
+                            Text = "Odpoved A"
                         },
                         new
                         {
@@ -1056,7 +1056,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = true,
                             QuestionId = 12,
-                            Text = "Odpověď B"
+                            Text = "Odpoved B"
                         },
                         new
                         {
@@ -1064,7 +1064,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 12,
-                            Text = "Odpověď C"
+                            Text = "Odpoved C"
                         },
                         new
                         {
@@ -1072,7 +1072,7 @@ namespace SPSUL.Migrations
                             ImageKey = "",
                             IsCorrect = false,
                             QuestionId = 12,
-                            Text = "Odpověď D"
+                            Text = "Odpoved D"
                         });
                 });
 
@@ -1103,13 +1103,13 @@ namespace SPSUL.Migrations
                         {
                             QuestionTypeId = 1,
                             IsActive = true,
-                            Name = "Výběr z možností"
+                            Name = "Vyber z moznosti"
                         },
                         new
                         {
                             QuestionTypeId = 2,
                             IsActive = true,
-                            Name = "Uzavřená otázka s obrázky"
+                            Name = "Uzavrena otazka s obrazky"
                         });
                 });
 
@@ -1144,44 +1144,44 @@ namespace SPSUL.Migrations
                         new
                         {
                             RoleId = 1,
-                            Description = "Oprávnění uděluje plnou kontrolu nad systémem – správce může vytvářet, upravovat i mazat všechny účty.",
+                            Description = "Opravneni udeluje plnou kontrolu nad systemem – spravce muze vytvaret, upravovat i mazat vsechny ucty.",
                             IsActive = true,
-                            Name = "Administrátor"
+                            Name = "Administrator"
                         },
                         new
                         {
                             RoleId = 2,
-                            Description = "Oprávnění uděluje možnost vytváření, aktualizování a čtení všech systému v aplikaci, krom učitelů.",
+                            Description = "Opravneni udeluje moznost vytvareni, aktualizovani a cteni vsech systemu v aplikaci, krom ucitelu.",
                             IsActive = true,
-                            Name = "Tvůrce"
+                            Name = "Tvurce"
                         },
                         new
                         {
                             RoleId = 3,
-                            Description = "Oprávnění uděluje možnost všechny operace pro systém testů.",
+                            Description = "Opravneni udeluje moznost vsechny operace pro system testu.",
                             IsActive = true,
-                            Name = "Testátor"
+                            Name = "Testator"
                         },
                         new
                         {
                             RoleId = 4,
-                            Description = "Oprávnění uděluje možnost všechny operace pro systém učitelů.",
+                            Description = "Opravneni udeluje moznost vsechny operace pro system ucitelu.",
                             IsActive = true,
-                            Name = "Učitelátor"
+                            Name = "Ucitelator"
                         },
                         new
                         {
                             RoleId = 5,
-                            Description = "Oprávnění uděluje možnost všechny operace pro systém studentů.",
+                            Description = "Opravneni udeluje moznost vsechny operace pro system studentu.",
                             IsActive = true,
-                            Name = "Studentátor"
+                            Name = "Studentator"
                         },
                         new
                         {
                             RoleId = 6,
-                            Description = "Oprávnění uděluje pohled na všechny systémy.",
+                            Description = "Opravneni udeluje pohled na vsechny systemy.",
                             IsActive = true,
-                            Name = "Hledič"
+                            Name = "Hledic"
                         });
                 });
 
@@ -1265,168 +1265,168 @@ namespace SPSUL.Migrations
                             StudentId = 1,
                             FirstName = "Jakub",
                             IsActive = true,
-                            LastName = "Horák"
+                            LastName = "Horak"
                         },
                         new
                         {
                             StudentId = 2,
                             FirstName = "Tereza",
                             IsActive = true,
-                            LastName = "Marková"
+                            LastName = "Markova"
                         },
                         new
                         {
                             StudentId = 3,
                             FirstName = "Martin",
                             IsActive = true,
-                            LastName = "Jelínek"
+                            LastName = "Jelinek"
                         },
                         new
                         {
                             StudentId = 4,
                             FirstName = "Lucie",
                             IsActive = true,
-                            LastName = "Pokorná"
+                            LastName = "Pokorna"
                         },
                         new
                         {
                             StudentId = 5,
                             FirstName = "David",
                             IsActive = true,
-                            LastName = "Růžička"
+                            LastName = "Ruzicka"
                         },
                         new
                         {
                             StudentId = 6,
                             FirstName = "Anna",
                             IsActive = true,
-                            LastName = "Benešová"
+                            LastName = "Benesova"
                         },
                         new
                         {
                             StudentId = 7,
-                            FirstName = "Ondřej",
+                            FirstName = "Ondrej",
                             IsActive = true,
                             LastName = "Fiala"
                         },
                         new
                         {
                             StudentId = 8,
-                            FirstName = "Karolína",
+                            FirstName = "Karolina",
                             IsActive = true,
-                            LastName = "Šťastná"
+                            LastName = "Stastna"
                         },
                         new
                         {
                             StudentId = 9,
-                            FirstName = "Vojtěch",
+                            FirstName = "Vojtech",
                             IsActive = true,
-                            LastName = "Kučera"
+                            LastName = "Kucera"
                         },
                         new
                         {
                             StudentId = 10,
-                            FirstName = "Eliška",
+                            FirstName = "Eliska",
                             IsActive = true,
-                            LastName = "Veselá"
+                            LastName = "Vesela"
                         },
                         new
                         {
                             StudentId = 11,
-                            FirstName = "Matěj",
+                            FirstName = "Matej",
                             IsActive = true,
                             LastName = "Marek"
                         },
                         new
                         {
                             StudentId = 12,
-                            FirstName = "Natálie",
+                            FirstName = "Natalie",
                             IsActive = false,
-                            LastName = "Kopecká"
+                            LastName = "Kopecka"
                         },
                         new
                         {
                             StudentId = 13,
-                            FirstName = "Štěpán",
+                            FirstName = "Stepan",
                             IsActive = true,
-                            LastName = "Havlíček"
+                            LastName = "Havlicek"
                         },
                         new
                         {
                             StudentId = 14,
                             FirstName = "Michaela",
                             IsActive = true,
-                            LastName = "Vlčková"
+                            LastName = "Vlckova"
                         },
                         new
                         {
                             StudentId = 15,
                             FirstName = "Adam",
                             IsActive = true,
-                            LastName = "Bartoš"
+                            LastName = "Bartos"
                         },
                         new
                         {
                             StudentId = 16,
                             FirstName = "Barbora",
                             IsActive = true,
-                            LastName = "Urbanová"
+                            LastName = "Urbanova"
                         },
                         new
                         {
                             StudentId = 17,
                             FirstName = "Daniel",
                             IsActive = true,
-                            LastName = "Blažek"
+                            LastName = "Blazek"
                         },
                         new
                         {
                             StudentId = 18,
-                            FirstName = "Kristýna",
+                            FirstName = "Kristyna",
                             IsActive = true,
-                            LastName = "Sedláčková"
+                            LastName = "Sedlackova"
                         },
                         new
                         {
                             StudentId = 19,
                             FirstName = "Filip",
                             IsActive = true,
-                            LastName = "Kratochvíl"
+                            LastName = "Kratochvil"
                         },
                         new
                         {
                             StudentId = 20,
                             FirstName = "Simona",
                             IsActive = true,
-                            LastName = "Němcová"
+                            LastName = "Nemcova"
                         },
                         new
                         {
                             StudentId = 21,
-                            FirstName = "Lukáš",
+                            FirstName = "Lukas",
                             IsActive = true,
-                            LastName = "Pospíšil"
+                            LastName = "Pospisil"
                         },
                         new
                         {
                             StudentId = 22,
                             FirstName = "Veronika",
                             IsActive = true,
-                            LastName = "Holubová"
+                            LastName = "Holubova"
                         },
                         new
                         {
                             StudentId = 23,
                             FirstName = "Dominik",
                             IsActive = true,
-                            LastName = "Šimek"
+                            LastName = "Simek"
                         },
                         new
                         {
                             StudentId = 24,
-                            FirstName = "Klára",
+                            FirstName = "Klara",
                             IsActive = true,
-                            LastName = "Dostálová"
+                            LastName = "Dostalova"
                         });
                 });
 
@@ -1457,13 +1457,13 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 1,
                             IsActive = true,
-                            Name = "Anglický jazyk"
+                            Name = "Anglicky jazyk"
                         },
                         new
                         {
                             StudentFieldId = 2,
                             IsActive = true,
-                            Name = "Databáze"
+                            Name = "Databaze"
                         },
                         new
                         {
@@ -1487,13 +1487,13 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 6,
                             IsActive = true,
-                            Name = "Kyberbezpečnost"
+                            Name = "Kyberbezpecnost"
                         },
                         new
                         {
                             StudentFieldId = 7,
                             IsActive = true,
-                            Name = "Matematický seminář"
+                            Name = "Matematicky seminar"
                         },
                         new
                         {
@@ -1505,7 +1505,7 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 9,
                             IsActive = true,
-                            Name = "Operační systémy"
+                            Name = "Operacni systemy"
                         },
                         new
                         {
@@ -1517,7 +1517,7 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 11,
                             IsActive = true,
-                            Name = "Programování a vývoj aplikací"
+                            Name = "Programovani a vyvoj aplikaci"
                         },
                         new
                         {
@@ -1529,79 +1529,79 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 13,
                             IsActive = true,
-                            Name = "Tělesná výchova"
+                            Name = "Telesna vychova"
                         },
                         new
                         {
                             StudentFieldId = 14,
                             IsActive = true,
-                            Name = "Český jazyk a literatura"
+                            Name = "Cesky jazyk a literatura"
                         },
                         new
                         {
                             StudentFieldId = 15,
                             IsActive = true,
-                            Name = "Základy elektrotechniky"
+                            Name = "Zaklady elektrotechniky"
                         },
                         new
                         {
                             StudentFieldId = 16,
                             IsActive = true,
-                            Name = "Materiály a technologie"
+                            Name = "Materialy a technologie"
                         },
                         new
                         {
                             StudentFieldId = 17,
                             IsActive = true,
-                            Name = "Informační a komunikační technologie"
+                            Name = "Informacni a komunikacni technologie"
                         },
                         new
                         {
                             StudentFieldId = 18,
                             IsActive = true,
-                            Name = "Nauka o společnosti"
+                            Name = "Nauka o spolecnosti"
                         },
                         new
                         {
                             StudentFieldId = 19,
                             IsActive = true,
-                            Name = "Odborný výcvik"
+                            Name = "Odborny vycvik"
                         },
                         new
                         {
                             StudentFieldId = 20,
                             IsActive = true,
-                            Name = "Elektrické stroje a přístroje"
+                            Name = "Elektricke stroje a pristroje"
                         },
                         new
                         {
                             StudentFieldId = 21,
                             IsActive = true,
-                            Name = "Technická dokumentace"
+                            Name = "Technicka dokumentace"
                         },
                         new
                         {
                             StudentFieldId = 22,
                             IsActive = true,
-                            Name = "Dějepis"
+                            Name = "Dejepis"
                         },
                         new
                         {
                             StudentFieldId = 23,
                             IsActive = true,
-                            Name = "Aplikační software"
+                            Name = "Aplikacni software"
                         },
                         new
                         {
                             StudentFieldId = 24,
                             IsActive = true,
-                            Name = "Webové aplikace"
+                            Name = "Webove aplikace"
                         },
                         new
                         {
                             StudentFieldId = 25,
                             IsActive = true,
-                            Name = "Základy přírodních věd"
+                            Name = "Zaklady prirodnich ved"
                         },
                         new
                         {
@@ -1613,7 +1613,7 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 27,
                             IsActive = true,
-                            Name = "Datové sítě"
+                            Name = "Datove site"
                         },
                         new
                         {
@@ -1631,19 +1631,19 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 30,
                             IsActive = true,
-                            Name = "Německý jazyk"
+                            Name = "Nemecky jazyk"
                         },
                         new
                         {
                             StudentFieldId = 31,
                             IsActive = true,
-                            Name = "Písemná a elektronická komunikace"
+                            Name = "Pisemna a elektronicka komunikace"
                         },
                         new
                         {
                             StudentFieldId = 32,
                             IsActive = true,
-                            Name = "Občanská nauka"
+                            Name = "Obcanska nauka"
                         },
                         new
                         {
@@ -1661,13 +1661,13 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 35,
                             IsActive = true,
-                            Name = "Elektrotechnická měření"
+                            Name = "Elektrotechnicka mereni"
                         },
                         new
                         {
                             StudentFieldId = 36,
                             IsActive = true,
-                            Name = "Herní vývoj"
+                            Name = "Herni vyvoj"
                         },
                         new
                         {
@@ -1679,43 +1679,43 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 38,
                             IsActive = true,
-                            Name = "Účetnictví"
+                            Name = "Ucetnictvi"
                         },
                         new
                         {
                             StudentFieldId = 39,
                             IsActive = true,
-                            Name = "Webové technologie"
+                            Name = "Webove technologie"
                         },
                         new
                         {
                             StudentFieldId = 40,
                             IsActive = true,
-                            Name = "Zeměpis"
+                            Name = "Zemepis"
                         },
                         new
                         {
                             StudentFieldId = 41,
                             IsActive = true,
-                            Name = "Strojnictví"
+                            Name = "Strojnictvi"
                         },
                         new
                         {
                             StudentFieldId = 42,
                             IsActive = true,
-                            Name = "Programování"
+                            Name = "Programovani"
                         },
                         new
                         {
                             StudentFieldId = 43,
                             IsActive = true,
-                            Name = "Elektronika a sdělovací technika"
+                            Name = "Elektronika a sdelovaci technika"
                         },
                         new
                         {
                             StudentFieldId = 44,
                             IsActive = true,
-                            Name = "Číslicová technika"
+                            Name = "Cislicova technika"
                         },
                         new
                         {
@@ -1727,13 +1727,13 @@ namespace SPSUL.Migrations
                         {
                             StudentFieldId = 46,
                             IsActive = true,
-                            Name = "Mikroprocesorová technika"
+                            Name = "Mikroprocesorova technika"
                         },
                         new
                         {
                             StudentFieldId = 47,
                             IsActive = true,
-                            Name = "Technické kreslení"
+                            Name = "Technicke kresleni"
                         });
                 });
 
@@ -1776,7 +1776,7 @@ namespace SPSUL.Migrations
                             TestId = 1,
                             FinishedAt = new DateTime(2026, 3, 10, 8, 12, 0, 0, DateTimeKind.Utc),
                             LoginId = "PVA-HOR-001",
-                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":1,\"SelectedOptions\":[\"Pojmenované místo v paměti pro uložení hodnoty\"]},{\"QuestionId\":2,\"SelectedOptions\":[\"int\"]},{\"QuestionId\":3,\"SelectedOptions\":[\"Vykoná kód pouze pokud je podmínka pravdivá\"]},{\"QuestionId\":4,\"SelectedOptions\":[\"Cyklus s předem daným počtem opakování\"]}],\"CurrentQuestionIndex\":3}",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":1,\"SelectedOptions\":[\"Pojmenovane misto v pameti pro ulozeni hodnoty\"]},{\"QuestionId\":2,\"SelectedOptions\":[\"int\"]},{\"QuestionId\":3,\"SelectedOptions\":[\"Vykona kod pouze pokud je podminka pravdiva\"]},{\"QuestionId\":4,\"SelectedOptions\":[\"Cyklus s predem danym poctem opakovani\"]}],\"CurrentQuestionIndex\":3}",
                             StartedAt = new DateTime(2026, 3, 10, 8, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1785,7 +1785,7 @@ namespace SPSUL.Migrations
                             TestId = 1,
                             FinishedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LoginId = "PVA-MAR-002",
-                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":1,\"SelectedOptions\":[\"Pojmenované místo v paměti pro uložení hodnoty\"]},{\"QuestionId\":2,\"SelectedOptions\":[\"text\"]}],\"CurrentQuestionIndex\":2}",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":1,\"SelectedOptions\":[\"Pojmenovane misto v pameti pro ulozeni hodnoty\"]},{\"QuestionId\":2,\"SelectedOptions\":[\"text\"]}],\"CurrentQuestionIndex\":2}",
                             StartedAt = new DateTime(2026, 3, 10, 8, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1803,7 +1803,7 @@ namespace SPSUL.Migrations
                             TestId = 2,
                             FinishedAt = new DateTime(2026, 3, 12, 10, 18, 0, 0, DateTimeKind.Utc),
                             LoginId = "SQL-KUC-009",
-                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":5,\"SelectedOptions\":[\"Structured Query Language\"]},{\"QuestionId\":6,\"SelectedOptions\":[\"SELECT\"]},{\"QuestionId\":7,\"SelectedOptions\":[\"Název tabulky\"]},{\"QuestionId\":8,\"SelectedOptions\":[\"Spojuje data z více tabulek na základě podmínky\"]}],\"CurrentQuestionIndex\":3}",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":5,\"SelectedOptions\":[\"Structured Query Language\"]},{\"QuestionId\":6,\"SelectedOptions\":[\"SELECT\"]},{\"QuestionId\":7,\"SelectedOptions\":[\"Nazev tabulky\"]},{\"QuestionId\":8,\"SelectedOptions\":[\"Spojuje data z vice tabulek na zaklade podminky\"]}],\"CurrentQuestionIndex\":3}",
                             StartedAt = new DateTime(2026, 3, 12, 10, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1812,7 +1812,7 @@ namespace SPSUL.Migrations
                             TestId = 2,
                             FinishedAt = new DateTime(2026, 3, 12, 10, 15, 0, 0, DateTimeKind.Utc),
                             LoginId = "SQL-VES-010",
-                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":5,\"SelectedOptions\":[\"Structured Query Language\"]},{\"QuestionId\":6,\"SelectedOptions\":[\"SELECT\"]},{\"QuestionId\":7,\"SelectedOptions\":[\"Unikátní identifikátor záznamu v tabulce\"]},{\"QuestionId\":8,\"SelectedOptions\":[\"Spojuje data z více tabulek na základě podmínky\"]}],\"CurrentQuestionIndex\":3}",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":5,\"SelectedOptions\":[\"Structured Query Language\"]},{\"QuestionId\":6,\"SelectedOptions\":[\"SELECT\"]},{\"QuestionId\":7,\"SelectedOptions\":[\"Unikatni identifikator zaznamu v tabulce\"]},{\"QuestionId\":8,\"SelectedOptions\":[\"Spojuje data z vice tabulek na zaklade podminky\"]}],\"CurrentQuestionIndex\":3}",
                             StartedAt = new DateTime(2026, 3, 12, 10, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1830,7 +1830,7 @@ namespace SPSUL.Migrations
                             TestId = 3,
                             FinishedAt = new DateTime(2026, 2, 20, 9, 8, 0, 0, DateTimeKind.Utc),
                             LoginId = "KYB-BLA-017",
-                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":9,\"SelectedOptions\":[\"Podvodný pokus o získání citlivých údajů\"]},{\"QuestionId\":10,\"SelectedOptions\":[\"Zařízení/software filtrující síťový provoz\"]}],\"CurrentQuestionIndex\":1}",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":9,\"SelectedOptions\":[\"Podvodny pokus o ziskani citlivych udaju\"]},{\"QuestionId\":10,\"SelectedOptions\":[\"Zarizeni/software filtrujici sitovy provoz\"]}],\"CurrentQuestionIndex\":1}",
                             StartedAt = new DateTime(2026, 2, 20, 9, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1839,7 +1839,7 @@ namespace SPSUL.Migrations
                             TestId = 3,
                             FinishedAt = new DateTime(2026, 2, 20, 9, 5, 0, 0, DateTimeKind.Utc),
                             LoginId = "KYB-SED-018",
-                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":9,\"SelectedOptions\":[\"Šifrovací algoritmus\"]},{\"QuestionId\":10,\"SelectedOptions\":[\"Zařízení/software filtrující síťový provoz\"]}],\"CurrentQuestionIndex\":1}",
+                            ResultSnapshot = "{\"Answers\":[{\"QuestionId\":9,\"SelectedOptions\":[\"Sifrovaci algoritmus\"]},{\"QuestionId\":10,\"SelectedOptions\":[\"Zarizeni/software filtrujici sitovy provoz\"]}],\"CurrentQuestionIndex\":1}",
                             StartedAt = new DateTime(2026, 2, 20, 9, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
@@ -1905,7 +1905,7 @@ namespace SPSUL.Migrations
                             TeacherId = 3,
                             FirstName = "Petr",
                             IsActive = false,
-                            LastName = "Novák",
+                            LastName = "Novak",
                             NickName = "PetrNovak",
                             PasswordHash = "$2b$10$YqPz7WEHhmjRpRuFqaVPVu505tO1z4KwGVnnj3T3J0S9SEnZMrZSG"
                         },
@@ -1914,16 +1914,16 @@ namespace SPSUL.Migrations
                             TeacherId = 4,
                             FirstName = "Jana",
                             IsActive = false,
-                            LastName = "Svobodová",
+                            LastName = "Svobodova",
                             NickName = "JanaSvobodova",
                             PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
                         },
                         new
                         {
                             TeacherId = 5,
-                            FirstName = "Tomáš",
+                            FirstName = "Tomas",
                             IsActive = false,
-                            LastName = "Dvořák",
+                            LastName = "Dvorak",
                             NickName = "TomasDvorak",
                             PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
                         },
@@ -1932,7 +1932,7 @@ namespace SPSUL.Migrations
                             TeacherId = 6,
                             FirstName = "Marie",
                             IsActive = false,
-                            LastName = "Černá",
+                            LastName = "Cerna",
                             NickName = "MarieCerna",
                             PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
                         },
@@ -1941,7 +1941,7 @@ namespace SPSUL.Migrations
                             TeacherId = 7,
                             FirstName = "Jan",
                             IsActive = false,
-                            LastName = "Procházka",
+                            LastName = "Prochazka",
                             NickName = "JanProchazka",
                             PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
                         },
@@ -1950,7 +1950,7 @@ namespace SPSUL.Migrations
                             TeacherId = 8,
                             FirstName = "Eva",
                             IsActive = false,
-                            LastName = "Krejčí",
+                            LastName = "Krejci",
                             NickName = "EvaKrejci",
                             PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
                         });
@@ -2102,8 +2102,8 @@ namespace SPSUL.Migrations
                             TestId = 1,
                             CreatorId = 4,
                             IsActive = true,
-                            Name = "PVA — Základy programování",
-                            QuestionSnapshot = "[{\"QuestionId\":1,\"Header\":\"Co je to proměnná?\",\"Description\":\"Základní koncept programování.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Funkce pro výpočet\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Pojmenované místo v paměti pro uložení hodnoty\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Typ souboru\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Příkaz pro výstup na obrazovku\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":2,\"Header\":\"Který datový typ je celočíselný v C#?\",\"Description\":\"Datové typy v jazyce C#.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"number\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"text\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"int\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"letra\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":3,\"Header\":\"Co dělá příkaz 'if'?\",\"Description\":\"Řídicí struktury.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Opakuje blok kódu\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Definuje novou funkci\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Vykoná kód pouze pokud je podmínka pravdivá\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Ukončí program\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":4,\"Header\":\"Co je to cyklus 'for'?\",\"Description\":\"Cykly v programování.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Podmíněný příkaz\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Cyklus s předem daným počtem opakování\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Deklarace proměnné\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Import knihovny\",\"ImageKey\":null,\"IsCorrect\":false}]}]",
+                            Name = "PVA — Zaklady programovani",
+                            QuestionSnapshot = "[{\"QuestionId\":1,\"Header\":\"Co je to promenna?\",\"Description\":\"Zakladni koncept programovani.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"Funkce pro vypocet\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Pojmenovane misto v pameti pro ulozeni hodnoty\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Typ souboru\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Prikaz pro vystup na obrazovku\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":2,\"Header\":\"Ktery datovy typ je celociselny v C#?\",\"Description\":\"Datove typy v jazyce C#.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"number\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"text\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"int\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"letra\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":3,\"Header\":\"Co dela prikaz 'if'?\",\"Description\":\"Ridici struktury.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"Opakuje blok kodu\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Definuje novou funkci\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Vykona kod pouze pokud je podminka pravdiva\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Ukonci program\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":4,\"Header\":\"Co je to cyklus 'for'?\",\"Description\":\"Cykly v programovani.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"Podmineny prikaz\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Cyklus s predem danym poctem opakovani\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Deklarace promenne\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Import knihovny\",\"ImageKey\":null,\"IsCorrect\":false}]}]",
                             ShuffleQuestions = true,
                             StudentFieldId = 11,
                             TimeLimitMinutes = 15
@@ -2113,8 +2113,8 @@ namespace SPSUL.Migrations
                             TestId = 2,
                             CreatorId = 7,
                             IsActive = true,
-                            Name = "Databáze — SQL základy",
-                            QuestionSnapshot = "[{\"QuestionId\":5,\"Header\":\"Co znamená zkratka SQL?\",\"Description\":\"Základy databázových jazyků.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Standard Query Language\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Structured Query Language\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"System Query Logic\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Simple Question Language\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":6,\"Header\":\"Který příkaz slouží k výběru dat?\",\"Description\":\"SQL příkazy.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"INSERT\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"UPDATE\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"SELECT\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"DELETE\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":7,\"Header\":\"Co je primární klíč?\",\"Description\":\"Integritní omezení.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Heslo do databáze\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Unikátní identifikátor záznamu v tabulce\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Název tabulky\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Typ sloupce\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":8,\"Header\":\"Co dělá příkaz JOIN?\",\"Description\":\"Spojování tabulek.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Maže data ze dvou tabulek\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Spojuje data z více tabulek na základě podmínky\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Vytváří novou tabulku\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Řadí výsledky vzestupně\",\"ImageKey\":null,\"IsCorrect\":false}]}]",
+                            Name = "Databaze — SQL zaklady",
+                            QuestionSnapshot = "[{\"QuestionId\":5,\"Header\":\"Co znamena zkratka SQL?\",\"Description\":\"Zaklady databazovych jazyku.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"Standard Query Language\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Structured Query Language\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"System Query Logic\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Simple Question Language\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":6,\"Header\":\"Ktery prikaz slouzi k vyberu dat?\",\"Description\":\"SQL prikazy.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"INSERT\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"UPDATE\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"SELECT\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"DELETE\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":7,\"Header\":\"Co je primarni klic?\",\"Description\":\"Integritni omezeni.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"Heslo do databaze\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Unikatni identifikator zaznamu v tabulce\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Nazev tabulky\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Typ sloupce\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":8,\"Header\":\"Co dela prikaz JOIN?\",\"Description\":\"Spojovani tabulek.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"Maze data ze dvou tabulek\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Spojuje data z vice tabulek na zaklade podminky\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Vytvari novou tabulku\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Radi vysledky vzestupne\",\"ImageKey\":null,\"IsCorrect\":false}]}]",
                             ShuffleQuestions = false,
                             StudentFieldId = 2,
                             TimeLimitMinutes = 20
@@ -2124,8 +2124,8 @@ namespace SPSUL.Migrations
                             TestId = 3,
                             CreatorId = 4,
                             IsActive = false,
-                            Name = "Kyberbezpečnost — Úvod",
-                            QuestionSnapshot = "[{\"QuestionId\":9,\"Header\":\"Co je phishing?\",\"Description\":\"Sociální inženýrství.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Antivirový program\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Podvodný pokus o získání citlivých údajů\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Šifrovací algoritmus\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Typ síťového kabelu\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":10,\"Header\":\"Co je to firewall?\",\"Description\":\"Síťová bezpečnost.\",\"QuestionType\":\"Výběr z možností\",\"Options\":[{\"Text\":\"Hardware pro tisk\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Zařízení/software filtrující síťový provoz\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Typ operačního systému\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Programovací jazyk\",\"ImageKey\":null,\"IsCorrect\":false}]}]",
+                            Name = "Kyberbezpecnost — Uvod",
+                            QuestionSnapshot = "[{\"QuestionId\":9,\"Header\":\"Co je phishing?\",\"Description\":\"Socialni inzenyrstvi.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"Antivirovy program\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Podvodny pokus o ziskani citlivych udaju\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Sifrovaci algoritmus\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Typ sitoveho kabelu\",\"ImageKey\":null,\"IsCorrect\":false}]},{\"QuestionId\":10,\"Header\":\"Co je to firewall?\",\"Description\":\"Sitova bezpecnost.\",\"QuestionType\":\"Vyber z moznosti\",\"Options\":[{\"Text\":\"Hardware pro tisk\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Zarizeni/software filtrujici sitovy provoz\",\"ImageKey\":null,\"IsCorrect\":true},{\"Text\":\"Typ operacniho systemu\",\"ImageKey\":null,\"IsCorrect\":false},{\"Text\":\"Programovaci jazyk\",\"ImageKey\":null,\"IsCorrect\":false}]}]",
                             ShuffleQuestions = true,
                             StudentFieldId = 6
                         });
@@ -2163,7 +2163,7 @@ namespace SPSUL.Migrations
                         {
                             TitleId = 1,
                             IsActive = true,
-                            Name = "Bakalář",
+                            Name = "Bakalar",
                             Shortcut = "Bc."
                         },
                         new
@@ -2177,7 +2177,7 @@ namespace SPSUL.Migrations
                         {
                             TitleId = 3,
                             IsActive = true,
-                            Name = "Inženýr",
+                            Name = "Inzenyr",
                             Shortcut = "Ing."
                         },
                         new
@@ -2191,14 +2191,14 @@ namespace SPSUL.Migrations
                         {
                             TitleId = 5,
                             IsActive = true,
-                            Name = "Doktor práv",
+                            Name = "Doktor prav",
                             Shortcut = "JUDr."
                         },
                         new
                         {
                             TitleId = 6,
                             IsActive = true,
-                            Name = "Doktor přírodních věd",
+                            Name = "Doktor prirodnich ved",
                             Shortcut = "RNDr."
                         },
                         new
@@ -2219,14 +2219,14 @@ namespace SPSUL.Migrations
                         {
                             TitleId = 9,
                             IsActive = true,
-                            Name = "Magisterský titul obchodní administrativy",
+                            Name = "Magistersky titul obchodni administrativy",
                             Shortcut = "MBA"
                         },
                         new
                         {
                             TitleId = 10,
                             IsActive = true,
-                            Name = "Magistr práv",
+                            Name = "Magistr prav",
                             Shortcut = "LL.M."
                         });
                 });

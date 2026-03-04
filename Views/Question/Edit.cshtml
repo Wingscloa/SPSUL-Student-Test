@@ -99,11 +99,11 @@
                         <h6 class="fw-bold mb-3"><i class="bi bi-ui-checks text-orange"></i> Možnosti odpovědí:</h6>
                         <!-- Možnosti odpovědí (dynamicky) -->
                         <div id="optionsContainer" class="mb-3">
-                                @if (Model.Question.QuestionType.Name == "Uzavřená otázka")
+                                @if (Model.Question.QuestionType.Name == SPSUL.Models.Types.QuestionTypesEnum.SelectText)
                                 {
                                     @await Html.PartialAsync("/Views/Shared/QuestionType/SelectText/Edit/_SelectTextAnswerOption.cshtml", Model.Question.QuestionOptions.Select(e => e).ToList() )
                                 }
-                                else if (Model.Question.QuestionType.Name == "Uzavřená otázka s obrázky")
+                                else if (Model.Question.QuestionType.Name == SPSUL.Models.Types.QuestionTypesEnum.SelectImage)
                                 {
                                 @await Html.PartialAsync("/Views/Shared/QuestionType/SelectImage/Edit/_SelectImageAnswerOption.cshtml", Model.Question.QuestionOptions.Select(e => e).ToList())
                                 }

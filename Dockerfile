@@ -22,6 +22,12 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Pre-create the DataProtection keys directory with correct ownership while still root.
+# When the named Docker volume is first mounted and empty, Docker copies this directory
+# (including ownership) into the volume — so 'app' user can write keys on first run.
+RUN mkdir -p /home/app/.aspnet/DataProtection-Keys \
+    && chown -R app:app /home/app/.aspnet
+
 # Copy published app from build stage (runs as non-root app user)
 COPY --from=build --chown=app:app /app/publish ./
 

@@ -1,11 +1,11 @@
 ﻿// ============================================
 // STATE
 // ============================================
-const LOGIN_ID = '@Html.Raw(Model.LoginId)';
-const TOTAL_QUESTIONS = @Model.Questions.Count;
-const ELAPSED_AT_LOAD = Math.max(0, @((int)(DateTime.Now - Model.StartedAt).TotalSeconds));
-const TIME_LIMIT_SEC = @(Model.TimeLimitMinutes.HasValue ? Model.TimeLimitMinutes.Value * 60 : -1);
-const SAVED_QUESTION_INDEX = @Model.CurrentQuestionIndex;
+const LOGIN_ID = window.TEST_CONFIG.loginId;
+const TOTAL_QUESTIONS = window.TEST_CONFIG.totalQuestions;
+const ELAPSED_AT_LOAD = window.TEST_CONFIG.elapsedAtLoad;
+const TIME_LIMIT_SEC = window.TEST_CONFIG.timeLimitSec;
+const SAVED_QUESTION_INDEX = window.TEST_CONFIG.savedQuestionIndex;
 const pageLoadedAt = Date.now();
 let currentQuestion = SAVED_QUESTION_INDEX;
 let answers = {};
@@ -18,40 +18,40 @@ let saving = false;
 // INIT - load existing answers, restore position
 // ============================================
 document.addEventListener('DOMContentLoaded', function () {
-    // Load existing answers (Html.Raw prevents Razor HTML-encoding the JSON)
+    // Load existing answers from Razor-injected config
     try {
-        @foreach(var ans in Model.ExistingAnswers)
-{
-    <text>
-        answers[@ans.QuestionId] = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ans.SelectedOptions));
-    </text>
-}
-            } catch (e) {
-    console.error('Error loading saved answers:', e);
-}
+        var existing = window.TEST_CONFIG.existingAnswers;
+        for (var qId in existing) {
+            if (existing.hasOwnProperty(qId)) {
+                answers[parseInt(qId)] = existing[qId];
+            }
+        }
+    } catch (e) {
+        console.error('Error loading saved answers:', e);
+    }
 
-updateNavButtons();
-updateAnsweredCount();
-startTimer();
+    updateNavButtons();
+    updateAnsweredCount();
+    startTimer();
 
-// Restore question position
-if (SAVED_QUESTION_INDEX > 0 && SAVED_QUESTION_INDEX < TOTAL_QUESTIONS) {
-    goToQuestion(SAVED_QUESTION_INDEX);
-}
+    // Restore question position
+    if (SAVED_QUESTION_INDEX > 0 && SAVED_QUESTION_INDEX < TOTAL_QUESTIONS) {
+        goToQuestion(SAVED_QUESTION_INDEX);
+    }
 
-// Auto-save every 30s as a safety net
-autoSaveInterval = setInterval(saveProgress, 30000);
+    // Auto-save every 30s as a safety net
+    autoSaveInterval = setInterval(saveProgress, 30000);
 
-// Save on tab switch
-document.addEventListener('visibilitychange', function () {
-    if (document.hidden) saveProgressSync();
+    // Save on tab switch
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) saveProgressSync();
+    });
+
+    // Save before leaving (reliable with sendBeacon)
+    window.addEventListener('beforeunload', function () {
+        saveProgressSync();
+    });
 });
-
-// Save before leaving (reliable with sendBeacon)
-window.addEventListener('beforeunload', function () {
-    saveProgressSync();
-});
-        });
 
 // ============================================
 // NAVIGATION

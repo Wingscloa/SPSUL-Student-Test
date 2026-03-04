@@ -26,10 +26,10 @@ namespace SPSUL.Models
 
         private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(10);
 
-        // Role name ? granted permissions
+        // Role name -> granted permissions (ASCII only — no diacritics, safe on any OS encoding)
         private static readonly Dictionary<string, HashSet<string>> RolePermissionMap = new()
         {
-            ["Administrátor"] = [
+            ["Administrator"] = [
                 AppPermissions.All,
                 AppPermissions.ManageTests,
                 AppPermissions.ManageStudents,
@@ -40,7 +40,7 @@ namespace SPSUL.Models
                 AppPermissions.CrudStudents,
                 AppPermissions.ViewOnly
             ],
-            ["Tvùrce"] = [
+            ["Tvurce"] = [
                 AppPermissions.ManageTests,
                 AppPermissions.ManageStudents,
                 AppPermissions.ManageClasses,
@@ -49,19 +49,19 @@ namespace SPSUL.Models
                 AppPermissions.CrudStudents,
                 AppPermissions.ViewOnly
             ],
-            ["Testátor"] = [
+            ["Testator"] = [
                 AppPermissions.CrudTests,
                 AppPermissions.ViewOnly
             ],
-            ["Uèitelátor"] = [
+            ["Ucitelator"] = [
                 AppPermissions.CrudTeachers,
                 AppPermissions.ViewOnly
             ],
-            ["Studentátor"] = [
+            ["Studentator"] = [
                 AppPermissions.CrudStudents,
                 AppPermissions.ViewOnly
             ],
-            ["Hlediè"] = [
+            ["Hledic"] = [
                 AppPermissions.ViewOnly
             ]
         };

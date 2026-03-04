@@ -14,6 +14,7 @@
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/global.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/lib/toastr.js/toastr.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/pages/testTake.css" rel="stylesheet" asp-append-version="true" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
 </head>
@@ -148,6 +149,23 @@
         </div>
     </div>
 
+    <script>
+        // Razor-injected configuration (must be inline so Razor engine processes it)
+        window.TEST_CONFIG = {
+            loginId: '@Html.Raw(Model.LoginId)',
+            totalQuestions: @Model.Questions.Count,
+            elapsedAtLoad: Math.max(0, @((int)(DateTime.Now - Model.StartedAt).TotalSeconds)),
+            timeLimitSec: @(Model.TimeLimitMinutes.HasValue ? Model.TimeLimitMinutes.Value * 60 : -1),
+            savedQuestionIndex: @Model.CurrentQuestionIndex,
+            existingAnswers: {}
+        };
+        @foreach (var ans in Model.ExistingAnswers)
+        {
+            <text>
+            window.TEST_CONFIG.existingAnswers[@ans.QuestionId] = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ans.SelectedOptions));
+            </text>
+        }
+    </script>
     <script src="~/js/pages/TestTake.js" asp-append-version="true"></script>
 </body>
 </html>
