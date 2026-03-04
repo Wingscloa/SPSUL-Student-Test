@@ -107,7 +107,7 @@ volumes:
     driver: local
   dataprotection-keys:
     driver: local
-
+    
 networks:
   spsul-network:
     driver: bridge

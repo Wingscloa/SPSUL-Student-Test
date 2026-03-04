@@ -53,7 +53,7 @@
                                 <i class="bi bi-card-heading text-orange"></i> Název testu
                             </label>
                             <input type="text" class="form-control form-control-lg" id="testName" 
-                                   placeholder="např. Matematika - Derivace" maxlength="128" required>
+                                   placeholder="napr. Matematika - Derivace" maxlength="128" required autocomplete="off">
                             <small class="text-muted">Zadejte výstižný název testu</small>
                         </div>
 
@@ -75,7 +75,7 @@
                                 <i class="bi bi-text-paragraph text-orange"></i> Popis (volitelné)
                             </label>
                             <textarea class="form-control" id="description" rows="4" 
-                                      placeholder="Stručný popis obsahu testu..."></textarea>
+                                      placeholder="Strucny popis obsahu testu..." autocomplete="off"></textarea>
                         </div>
 
                         <div class="mb-4">
@@ -84,7 +84,7 @@
                             </label>
                             <div class="input-group">
                                 <input type="number" class="form-control" id="timeLimit" 
-                                       value="45" min="1" max="180">
+                                       value="45" min="1" max="180" autocomplete="off">
                                 <span class="input-group-text">minut</span>
                                 <button class="btn btn-outline-secondary" type="button" id="noTimeLimit">
                                     <i class="bi bi-infinity"></i> Bez limitu
@@ -103,7 +103,7 @@
                             <div class="row g-2">
                                 <div class="col-md-4">
                                     <input type="text" class="form-control" id="questionSearch" 
-                                           placeholder="Hledat podle názvu...">
+                                           placeholder="Hledat podle nazvu..." autocomplete="off">
                                 </div>
                                 <div class="col-md-4">
                                     <select class="form-select select2-field" id="questionTypeFilter">
@@ -133,6 +133,11 @@
                             </div>
                             
                             <div class="question-list" id="availableQuestions">
+                                <div class="text-center py-4 text-muted" id="noQuestionsMessage" style="display:@(Model.Questions.Count == 0 ? "block" : "none");">
+                                    <i class="bi bi-search display-4 opacity-25"></i>
+                                    <p class="mt-2 mb-0">Zadne dostupne otazky</p>
+                                    <small>Zkuste zmenit filtry nebo nejprve vytvorte otazky</small>
+                                </div>
                                 @foreach (var question in Model.Questions)
                                 {
                                     var optionsJson = System.Text.Json.JsonSerializer.Serialize(
@@ -184,9 +189,13 @@
                             <div class="alert alert-info d-flex align-items-center">
                                 <i class="bi bi-check-circle-fill fs-4 me-3"></i>
                                 <div>
-                                    <strong id="selectedCount">0</strong> otázek vybráno
-                                    <button class="btn btn-sm btn-link" id="clearSelection">Zrušit výběr</button>
+                                    <strong id="selectedCount">0</strong> otazek vybrano
+                                    <button class="btn btn-sm btn-link" id="clearSelection">Zrusit vyber</button>
                                 </div>
+                            </div>
+                            <div id="selectedQuestionsList" style="display:none;">
+                                <h6 class="mb-2"><i class="bi bi-check2-square text-orange me-2"></i>Vybrane otazky</h6>
+                                <div id="selectedQuestionsItems"></div>
                             </div>
                         </div>
                     </div>

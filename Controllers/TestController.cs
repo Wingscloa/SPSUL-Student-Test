@@ -56,7 +56,8 @@ namespace SPSUL.Controllers
                 .Include(t => t.Creator)
                 .Include(t => t.StudentField)
                 .Include(t => t.StudentTests)
-                .OrderByDescending(t => t.TestId)
+                .OrderByDescending(t => t.IsActive)
+                .ThenByDescending(t => t.TestId)
                 .ToListAsync();
 
             var students = await _ctx.Students

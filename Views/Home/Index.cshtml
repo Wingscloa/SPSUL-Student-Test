@@ -29,6 +29,13 @@
 
 @section Scripts { 
     <script src="~/lib/Chart.js/chart.umd.js" asp-append-version="true"></script>
+    <script>
+        window.DASHBOARD_CONFIG = {
+            monthlyLabels: @Html.Raw(Model.MonthlyLabels),
+            monthlyValues: @Html.Raw(Model.MonthlyValues)
+        };
+    </script>
+    <script src="~/js/pages/HomeDashboard.js" asp-append-version="true"></script>
 }
 
 <div class="dashboard-container">
@@ -95,10 +102,18 @@
                         {
                             @foreach (var st in Model.RecentFinished)
                             {
-                                var ago = DateTime.Now - st.FinishedAt;
-                                var agoText = ago.TotalMinutes < 60 ? $"Před {(int)ago.TotalMinutes} min"
-                                    : ago.TotalHours < 24 ? $"Před {(int)ago.TotalHours} hod"
-                                    : $"Před {(int)ago.TotalDays} dny";
+                                var ago = DateTime.UtcNow - st.FinishedAt;
+                                string agoText;
+                                if (ago.TotalMinutes < 1)
+                                    agoText = "Prave ted";
+                                else if (ago.TotalMinutes < 60)
+                                    agoText = $"Pred {(int)ago.TotalMinutes} min";
+                                else if (ago.TotalHours < 24)
+                                    agoText = $"Pred {(int)ago.TotalHours} hod";
+                                else if (ago.TotalDays < 30)
+                                    agoText = $"Pred {(int)ago.TotalDays} dny";
+                                else
+                                    agoText = st.FinishedAt.ToString("d. M. yyyy");
 
                                 <div class="activity-item">
                                     <div class="activity-icon bg-success-subtle">
@@ -175,9 +190,6 @@
                         </a>
                         <a href="/Detail/Index" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-clipboard-data me-2"></i>Zobrazit výsledky
-                        </a>
-                        <a href="/Detail/Stats" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-graph-up-arrow me-2"></i>Statistiky
                         </a>
                     </div>
                 </div>

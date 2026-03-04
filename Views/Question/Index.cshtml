@@ -32,15 +32,10 @@
                         </a>
                         @if (canCrudQuestions)
                         {
-                        <!--Activate-->
-                        <a class="iconLink cursor mode" title="Aktivovat otázky" id="activate" data-endpoint="Question/Activate/" data-method="PUT">
-                            <i class="bi bi-arrow-up-circle-fill"></i>
-                            Aktivace
-                        </a>
-                        <!--Deactivate-->
-                        <a class="iconLink cursor mode" title="Deaktivovat otázky" id="deactivateMode" data-endpoint="Question/Deactivate/" data-method="PUT">
-                            <i class="bi bi-arrow-down-circle-fill"></i>
-                            Deaktivace
+                        <!--Export-->
+                        <a class="iconLink cursor mode" title="Exportovat do PDF" id="exportBtn">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            Export PDF
                         </a>
                         <!--Delete Mode-->
                         <a class="iconLink cursor mode" title="Smazat otázky" id="deleteMode" data-endpoint="Question/Delete/" data-method="POST">
@@ -65,22 +60,11 @@
                 <th class="col-1">Počet odpovědí</th>
                 <th class="col-2">Typ otázky</th>
                 <th class="col-2">Typ předmětu</th>
-                <th class="col-1">Aktivní</th>
                 @if (canCrudQuestions)
                 {
-                <th class="col-1 text-center" id="editHeader" style="display:table-cell">Edit</th>
-                <!--Delete-->
-                 <th class="col-1 d-none" id="deleteHeader">
-                    Smazat
-                </th>
-                <!--Deaktivace-->
-                <th class="col-1 d-none" id="deactivateHeader">
-                    Deaktivace
-                </th>
-                <!--Aktivace-->
-                <th class="col-1 d-none" id="activateHeader">
-                    Aktivace
-                </th>
+                <th class="col-1 text-center editHeader">Edit</th>
+                <th class="col-1 text-center editHeader">Stav</th>
+                <th class="col-1 d-none deleteHeader">Smazat</th>
                 }
               </tr>
             </thead>
@@ -96,26 +80,19 @@
                 <td>@r.OptionCount</td>
                 <td>@r.QuestionTypeName</td>
                 <td>@r.FieldName</td>
-                <td><span class="badge bg-@(r.IsActive ? "success" : "secondary")">@(r.IsActive ? "Aktivní" : "Neaktivní")</span></td>
                 @if (canCrudQuestions)
                 {
                 <td class="text-center editButton"><a class="icon-btn" title="Edit" href="/Question/Edit?id=@r.QuestionId"><i class="bi bi-pencil-square"></i></a></td>
+                <td class="text-center editButton">
+                    <button class="icon-btn btn-toggle-active" title="@(r.IsActive ? "Deaktivovat" : "Aktivovat")"
+                            data-id="@r.QuestionId" data-active="@r.IsActive.ToString().ToLower()">
+                        <i class="bi @(r.IsActive ? "bi-toggle-on text-success" : "bi-toggle-off text-secondary")" style="font-size:1.3rem"></i>
+                    </button>
+                </td>
                 <!-- Delete Button --> 
                 <td class="text-center deleteButton d-none">
                     <div class="btn-delete">
                         <i class="bi bi-trash-fill"></i>
-                    </div>
-                </td>
-                <!-- Deactivate Button -->
-                <td class="text-center deactivateButton d-none">
-                    <div class="btn-deactivate">
-                    <i class="bi bi-archive-fill"></i>
-                    </div>
-                </td>
-                <!-- Activate Button -->
-                <td class="text-center activateButton d-none">
-                    <div class="btn-activate">
-                        <i class="bi bi-archive-fill"></i>
                     </div>
                 </td>
                 }
@@ -266,14 +243,75 @@
 
 @section Scripts {
     <script>
-        // Export funkcionalita
+        // Export PDF
         document.getElementById('exportBtn')?.addEventListener('click', function() {
-            toastr.info('Export statistik bude dostupný brzy');
+            var form = document.querySelector('aside form');
+            var fd = new FormData(form);
+            var body = {};
+            var name = fd.get('Name');
+            if (name) body.SearchFilter = name;
+            var active = fd.get('IsActive');
+            if (active === 'true') body.ActiveFilter = true;
+            else if (active === 'false') body.ActiveFilter = false;
+            var creatorId = fd.get('CreatorId');
+            if (creatorId) body.CreatorId = parseInt(creatorId);
+            var questionTypeId = fd.get('QuestionTypeId');
+            if (questionTypeId) body.QuestionTypeId = parseInt(questionTypeId);
+            var fieldId = fd.get('FieldId');
+            if (fieldId) body.FieldId = parseInt(fieldId);
+
+            fetch('/api/pdf/questions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(function(resp) {
+                if (!resp.ok) throw new Error('Chyba pri generovani PDF');
+                return resp.blob();
+            })
+            .then(function(blob) {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'Otazky.pdf';
+                a.click();
+                URL.revokeObjectURL(url);
+                toastr.success('PDF export dokoncen.');
+            })
+            .catch(function(err) { toastr.error(err.message); });
         });
-        
-        // Statistiky modal
-        document.getElementById('statsBtn')?.addEventListener('click', function() {
-            toastr.info('Detailní statistiky budou dostupné brzy');
+
+        // Toggle Active
+        document.querySelectorAll('.btn-toggle-active').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const id = parseInt(this.dataset.id);
+                const icon = this.querySelector('i');
+
+                try {
+                    const res = await fetch('/Question/ToggleActive', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(id)
+                    });
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        toastr.success(data.message);
+
+                        if (data.isActive) {
+                            icon.className = 'bi bi-toggle-on text-success';
+                            this.title = 'Deaktivovat';
+                        } else {
+                            icon.className = 'bi bi-toggle-off text-secondary';
+                            this.title = 'Aktivovat';
+                        }
+                    } else {
+                        toastr.error(data.message || 'Chyba.');
+                    }
+                } catch {
+                    toastr.error('Chyba při komunikaci se serverem.');
+                }
+            });
         });
     </script>
 }

@@ -19,12 +19,26 @@
                         <i class="bi bi-journal-text me-2"></i>Seznam testů
                     </h5>
                     <div class="tools d-flex justify-content-center align-items-center gap-2">
+                        <!--Cancel-->
+                        <a class="iconLink cursor option" id="cancelOption" style="display: none">
+                            <i class="bi bi-dash-circle"></i>
+                            Zrušit
+                        </a>
+                        <!--Confirm-->
+                        <a class="iconLink cursor option" id="acceptOption" style="display: none">
+                            <i class="bi bi-plus-circle"></i>
+                            Potvrdit
+                        </a>
                         <a class="iconLink cursor mode" title="Exportovat do PDF" href="/api/pdf/tests">
                             <i class="bi bi-file-earmark-pdf"></i>
                             Export PDF
                         </a>
                         @if (canCrudTests)
                         {
+                        <a class="iconLink cursor mode" title="Smazat testy" id="deleteMode" data-endpoint="Test/Delete/" data-method="POST">
+                            <i class="bi bi-dash-circle"></i>
+                            Smazat
+                        </a>
                         <a class="iconLink mode" asp-action="Create" asp-controller="Test" title="Vytvořit test">
                             <i class="bi bi-plus-circle"></i>
                             Vytvořit
@@ -36,20 +50,18 @@
                     <table class="table align-middle mb-0" style="min-width: 1000px">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Název</th>
-                                <th>Tvůrce</th>
+                                <th>Nazev</th>
+                                <th>Tvurce</th>
                                 <th>Předmět</th>
                                 <th>Otázek</th>
                                 <th>Přiřazeno</th>
-                                <th>Aktivní</th>
                                 @if (canCrudTests)
                                 {
-                                <th class="text-center">Přiřadit</th>
-                                <th class="text-center">Přiřazení</th>
-                                <th class="text-center">Edit</th>
-                                <th class="text-center">Stav</th>
-                                <th class="text-center">Smazat</th>
+                                <th class="text-center editHeader">Přiřadit</th>
+                                <th class="text-center editHeader">Přiřazení</th>
+                                <th class="text-center editHeader">Edit</th>
+                                <th class="text-center editHeader">Stav</th>
+                                <th class="col-1 d-none deleteHeader">Smazat</th>
                                 }
                             </tr>
                         </thead>
@@ -61,20 +73,14 @@
                                 try { qCount = System.Text.Json.JsonSerializer.Deserialize<List<object>>(snapshot)?.Count ?? 0; } catch { }
 
                                 <tr data-id="@t.TestId">
-                                    <td>@t.TestId</td>
                                     <td><strong>@t.Name</strong></td>
                                     <td>@t.Creator?.FirstName @t.Creator?.LastName</td>
                                     <td><span class="badge bg-info">@t.StudentField?.Name</span></td>
                                     <td>@qCount</td>
                                     <td><span class="badge bg-secondary">@(t.StudentTests?.Count ?? 0)</span></td>
-                                    <td>
-                                        <span class="badge bg-@(t.IsActive ? "success" : "secondary")">
-                                            @(t.IsActive ? "Aktivní" : "Neaktivní")
-                                        </span>
-                                    </td>
                                     @if (canCrudTests)
                                     {
-                                    <td class="text-center">
+                                    <td class="text-center editButton">
                                         @if (t.IsActive)
                                         {
                                             <button class="icon-btn btn-assign" title="Přiřadit studentům"
@@ -88,7 +94,7 @@
                                             <span class="text-muted">-</span>
                                         }
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center editButton">
                                         @if ((t.StudentTests?.Count ?? 0) > 0)
                                         {
                                             <a class="icon-btn" title="Zobrazit přiřazení"
@@ -101,23 +107,19 @@
                                             <span class="text-muted">-</span>
                                         }
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center editButton">
                                         <a class="icon-btn" title="Editovat" href="/Test/Edit?id=@t.TestId">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center editButton">
                                         <button class="icon-btn btn-toggle-active" title="@(t.IsActive ? "Deaktivovat" : "Aktivovat")"
                                                 data-test-id="@t.TestId" data-active="@t.IsActive.ToString().ToLower()">
                                             <i class="bi @(t.IsActive ? "bi-toggle-on text-success" : "bi-toggle-off text-secondary")" style="font-size:1.3rem"></i>
                                         </button>
                                     </td>
-                                    <td class="text-center">
-                                        <button class="icon-btn btn-delete-test" title="Smazat test"
-                                                data-test-id="@t.TestId" data-test-name="@t.Name"
-                                                data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                            <i class="bi bi-trash text-danger"></i>
-                                        </button>
+                                    <td class="text-center deleteButton d-none">
+                                        <div class="btn-delete"><i class="bi bi-trash-fill"></i></div>
                                     </td>
                                     }
                                 </tr>
@@ -282,33 +284,7 @@
     </div>
 </div>
 
-<!-- DELETE CONFIRM MODAL -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Smazat test
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Opravdu chcete smazat test <strong id="deleteTestName"></strong>?</p>
-                <p class="text-danger small mb-0">
-                    <i class="bi bi-info-circle me-1"></i>
-                    Budou smazána i všechna přiřazení studentů k tomuto testu. Tuto akci nelze vrátit.
-                </p>
-                <input type="hidden" id="deleteTestId" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zrušit</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
-                    <i class="bi bi-trash me-2"></i>Smazat
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<input type="hidden" id="Ids" name="Ids" value="" />
 
 @section Scripts {
     <script>

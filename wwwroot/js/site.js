@@ -1,4 +1,12 @@
-﻿window.onload = () => {
+﻿// ============================================
+// Antiforgery token helper
+// ============================================
+function getAntiForgeryToken() {
+    var el = document.querySelector('input[name="__RequestVerificationToken"]');
+    return el ? el.value : '';
+}
+
+window.onload = () => {
     var select2elements = document.querySelectorAll('.select2');
 
     select2elements.forEach(function (element) {
@@ -112,13 +120,13 @@ document.addEventListener('click', function(e){
 
   offcanvasEl.addEventListener('show.bs.offcanvas', function(){
     gsap.fromTo(this, 
-      { x: -320, opacity: 0 },
+      { x: 320, opacity: 0 },
       { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
     );
   });
 
   offcanvasEl.addEventListener('hide.bs.offcanvas', function(){
-    gsap.to(this, { x: -320, opacity: 0, duration: 0.3, ease: 'power2.in' });
+    gsap.to(this, { x: 320, opacity: 0, duration: 0.3, ease: 'power2.in' });
   });
 })();
 
@@ -147,21 +155,16 @@ activatedEndpoint = ''
 activatedMethod = 'POST'
 function setMode(name) {
     activatedMode = name
-    var modes = ['edit', 'delete', 'deactivate','activate']
+    var modes = ['edit', 'delete']
     modes = modes.filter(m => m !== name);
 
-    modes.forEach(function (m) {  
-        var button = m + 'Button'
-        const elements = document.querySelectorAll('.'+ m + 'Button')
-        elements.forEach(function (e) { e.classList.add('d-none') });
-        const header = document.getElementById(m + 'Header')
-        header.classList.add('d-none')
+    modes.forEach(function (m) {
+        document.querySelectorAll('.' + m + 'Button').forEach(function (e) { e.classList.add('d-none') });
+        document.querySelectorAll('.' + m + 'Header').forEach(function (e) { e.classList.add('d-none') });
     });
 
-    const elements = document.querySelectorAll('.' + name + 'Button')
-    elements.forEach(function (e) { e.classList.remove('d-none')});
-    const header = document.getElementById(name + 'Header')
-    header.classList.remove('d-none')
+    document.querySelectorAll('.' + name + 'Button').forEach(function (e) { e.classList.remove('d-none') });
+    document.querySelectorAll('.' + name + 'Header').forEach(function (e) { e.classList.remove('d-none') });
 }
 
 function resetRows() {
@@ -212,26 +215,6 @@ if (deleteMode) {
     activatedEndpoint = '/' + (deleteMode.dataset.endpoint || '');
     activatedMethod = deleteMode.dataset.method || 'POST';
     setMode('delete');
-}
-
-const deactivateMode = e.target.closest('#deactivateMode');
-
-if (deactivateMode) {
-    hideMode()
-    showOptions();
-    activatedEndpoint = '/' + (deactivateMode.dataset.endpoint || '');
-    activatedMethod = deactivateMode.dataset.method || 'POST';
-    setMode('deactivate');
-}
-
-const activate = e.target.closest("#activate");
-
-if (activate) {
-    hideMode();
-    showOptions();
-    activatedEndpoint = '/' + (activate.dataset.endpoint || '');
-    activatedMethod = activate.dataset.method || 'POST';
-    setMode('activate');
 }
 
 const cancelOption = e.target.closest('#cancelOption');

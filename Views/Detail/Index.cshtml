@@ -33,16 +33,14 @@
                     <table class="table align-middle mb-0" style="min-width: 1400px">
                         <thead>
                             <tr>
-                                <th class="col-1">ID</th>
-                                <th class="col-2">Název testu</th>
+                                <th class="col-2">Nazev testu</th>
                                 <th class="col-2">Student</th>
                                 <th class="col-1">Login ID</th>
                                 <th class="col-1">Začal</th>
                                 <th class="col-1">Dokončil</th>
                                 <th class="col-1">Čas</th>
-                                <th class="col-1">Úspěšnost</th>
+                                <th class="col-1">Uspesnost</th>
                                 <th class="col-1">Absolvoval</th>
-                                <th class="col-1 text-center">Historie</th>
                                 <th class="col-1 text-center">Detail</th>
                             </tr>
                         </thead>
@@ -53,7 +51,6 @@
                                 var successClass = t.UspechPct >= 80 ? "success" : t.UspechPct >= 50 ? "warning" : "danger";
                                 
                                 <tr data-id="@t.Id">
-                                    <td>@t.Id</td>
                                     <td>
                                         <strong>@t.Nazev</strong>
                                     </td>
@@ -75,12 +72,14 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <div class="progress" style="height: 25px;">
-                                            <div class="progress-bar bg-@successClass" role="progressbar" 
-                                                 style="width: @t.UspechPct%" 
-                                                 aria-valuenow="@t.UspechPct" aria-valuemin="0" aria-valuemax="100">
-                                                <strong>@t.UspechPct%</strong>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress flex-grow-1" style="height: 20px;">
+                                                <div class="progress-bar bg-@successClass" role="progressbar" 
+                                                     style="width: @t.UspechPct%" 
+                                                     aria-valuenow="@t.UspechPct" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
                                             </div>
+                                            <strong class="text-@successClass" style="min-width:42px; text-align:right;">@t.UspechPct%</strong>
                                         </div>
                                     </td>
                                     <td>
@@ -100,13 +99,7 @@
                                         }
                                     </td>
                                     <td class="text-center">
-                                        <a class="icon-btn" title="Zobrazit historii odpovědí" 
-                                           href="/Detail/History?studentId=@t.StudentId&testId=@t.Id">
-                                            <i class="bi bi-clock-history"></i>
-                                        </a>
-                                    </td>
-                                    <td class="text-center">
-                                        <a class="icon-btn" title="Zobrazit detail testu" 
+                                        <a class="icon-btn" title="Zobrazit detail a historii" 
                                            href="/Detail/View?studentId=@t.StudentId&testId=@t.Id">
                                             <i class="bi bi-file-text"></i>
                                         </a>
@@ -117,7 +110,7 @@
                             @if (!Model.Assigned.Items.Any())
                             {
                                 <tr>
-                                    <td colspan="11" class="text-center py-5">
+                    <td colspan="9" class="text-center py-5">
                                         <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
                                         <p class="text-muted mt-3">Zatím žádné dokončené testy</p>
                                     </td>

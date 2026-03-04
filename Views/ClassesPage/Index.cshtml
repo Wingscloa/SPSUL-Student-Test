@@ -1,0 +1,309 @@
+@using SPSUL.Models.Data
+@using SPSUL.Models.Display.ClassesModels
+@model ClassesIndexVM
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+    ViewData["Title"] = "Tøídy";
+
+    var canCrudClasses = Context.HasAnyPermission(AppPermissions.ManageClasses, AppPermissions.All);
+    var students = Model.Students;
+}
+<link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
+
+<div class="container-fluid py-3">
+    <div class="row g-3">
+        <div class="col-lg-9 order-2 order-lg-1">
+            <div class="card shadow-sm cardTable">
+                <div class="card-header brandText d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-building me-2"></i>
+                        Seznam tøíd
+                    </h5>
+                    <div class="tools d-flex justify-content-center align-items-center gap-2">
+                        <!--Cancel-->
+                        <a class="iconLink cursor option" id="cancelOption" style="display: none">
+                            <i class="bi bi-dash-circle"></i>
+                            Zrušit
+                        </a>
+                        <!--Confirm-->
+                        <a class="iconLink cursor option" id="acceptOption" style="display: none">
+                            <i class="bi bi-plus-circle"></i>
+                            Potvrdit
+                        </a>
+                        <!--Export-->
+                        <a class="iconLink cursor mode" title="Exportovat do PDF" id="exportBtn">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            Export PDF
+                        </a>
+                        @if (canCrudClasses)
+                        {
+                        <!--Delete Mode-->
+                        <a class="iconLink cursor mode" title="Smazat tøídy" id="deleteMode" data-endpoint="ClassesPage/Delete/" data-method="POST">
+                            <i class="bi bi-dash-circle"></i>
+                            Smazat
+                        </a>
+                        <!--Create-->
+                        <a class="iconLink cursor mode" title="Vytvoøit tøídu" id="createClassBtn">
+                            <i class="bi bi-plus-circle"></i>
+                            Vytvoøit
+                        </a>
+                        }
+                    </div>
+                </div>
+                <div class="table-responsive tableContent">
+                    <table class="table align-middle mb-0" style="min-width: 900px">
+                        <thead>
+                            <tr>
+                                <th class="col-2">Název</th>
+                                <th class="col-2">Obory</th>
+                                <th class="col-1">Studentù</th>
+                                <th class="col-1">Od roku</th>
+                                <th class="col-1">Do roku</th>
+                                @if (canCrudClasses)
+                                {
+                                <th class="col-1 text-center editHeader">Studenti</th>
+                                <th class="col-1 text-center editHeader">Edit</th>
+                                <th class="col-1 text-center editHeader">Stav</th>
+                                <th class="col-1 d-none deleteHeader">Smazat</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model.Classes)
+                            {
+                                var fieldNames = string.Join(", ", c.ClassesFields?.Select(cf => cf.StudentField?.Name) ?? []);
+
+                                <tr data-id="@c.ClassesId">
+                                    <td><strong>@c.Name</strong></td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(fieldNames))
+                                        {
+                                            @fieldNames
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">–</span>
+                                        }
+                                    </td>
+                                    <td><span class="badge bg-secondary">@(c.ClassesStudents?.Count(cs => cs.Student != null && cs.Student.IsActive) ?? 0)</span></td>
+                                    <td>@c.StartFrom</td>
+                                    <td>@c.EndTo</td>
+                                    @if (canCrudClasses)
+                                    {
+                                    <td class="text-center editButton">
+                                        <button class="icon-btn btn-assign" title="Pøiøadit studenty"
+                                                data-class-id="@c.ClassesId" data-class-name="@c.Name"
+                                                data-bs-toggle="modal" data-bs-target="#assignModal">
+                                            <i class="bi bi-person-plus-fill"></i>
+                                        </button>
+                                    </td>
+                                    <td class="text-center editButton"><a class="icon-btn class-edit-btn" title="Edit" data-id="@c.ClassesId" role="button"><i class="bi bi-pencil-square"></i></a></td>
+                                    <td class="text-center editButton">
+                                        <button class="icon-btn btn-toggle-active" title="@(c.IsActive ? "Deaktivovat" : "Aktivovat")"
+                                                data-id="@c.ClassesId" data-active="@c.IsActive.ToString().ToLower()">
+                                            <i class="bi @(c.IsActive ? "bi-toggle-on text-success" : "bi-toggle-off text-secondary")" style="font-size:1.3rem"></i>
+                                        </button>
+                                    </td>
+                                    <td class="text-center deleteButton d-none">
+                                        <div class="btn-delete"><i class="bi bi-trash-fill"></i></div>
+                                    </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div>@Model.Classes.Count položek</div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="col-lg-3 order-1 order-lg-2">
+            <div class="card shadow-sm sticky-top" style="top: 1rem;">
+                <div class="card-header brandText fw-bold"><i class="bi bi-funnel me-2"></i>Filtrace</div>
+                <div class="card-body">
+                    <form method="get" class="vstack gap-2">
+                        <input class="form-control" name="name" value="@Model.Name" placeholder="Název tøídy" />
+
+                        <select class="form-select select2" name="fieldId">
+                            <option value="">Vyber obor</option>
+                            @foreach (var f in Model.Fields)
+                            {
+                                <option value="@f.StudentFieldId" selected="@(Model.FieldId == f.StudentFieldId)">@f.Name</option>
+                            }
+                        </select>
+
+                        <select class="form-select select2" name="active">
+                            <option value="">Aktivní/Neaktivní</option>
+                            <option value="true" selected="@(Model.Active == true)">Aktivní</option>
+                            <option value="false" selected="@(Model.Active == false)">Neaktivní</option>
+                        </select>
+
+                        <button class="btn btn-orange w-100">
+                            <i class="bi bi-funnel-fill me-2"></i>Filtrovat
+                        </button>
+                        <a href="@Url.Action("Index", "ClassesPage")" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-x-circle me-2"></i>Resetovat
+                        </a>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mt-3">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-clipboard-data me-2"></i>Rychlé statistiky
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Celkem:</span>
+                        <strong>@Model.Classes.Count</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Aktivní:</span>
+                        <strong class="text-success">@Model.Classes.Count(x => x.IsActive)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Neaktivní:</span>
+                        <strong class="text-secondary">@Model.Classes.Count(x => !x.IsActive)</strong>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<input type="hidden" id="Ids" name="Ids" value="" />
+
+<!-- Create Class Modal -->
+<div class="modal fade" id="createClassModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-building me-2"></i>Nová tøída</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Název tøídy</label>
+                    <input type="text" class="form-control" id="cClassName" placeholder="napø. 4A" maxlength="20" />
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label fw-bold">Od roku</label>
+                        <input type="number" class="form-control" id="cStartFrom" placeholder="2024" min="2000" max="2100" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-bold">Do roku</label>
+                        <input type="number" class="form-control" id="cEndTo" placeholder="2028" min="2000" max="2100" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Obory</label>
+                    <select class="form-select select2-modal" id="cFieldIds" multiple>
+                        @foreach (var f in Model.Fields)
+                        {
+                            <option value="@f.StudentFieldId">@f.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zrušit</button>
+                <button type="button" class="btn btn-orange" id="createClassSubmit">
+                    <i class="bi bi-check2-circle me-1"></i>Vytvoøit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Class Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editace tøídy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="editFormBody">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-orange" role="status"></div>
+                        <p class="text-muted mt-2">Naèítám formuláø…</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zrušit</button>
+                <button type="button" class="btn btn-orange" id="editSubmitBtn">
+                    <i class="bi bi-check2-circle me-1"></i>Uložit zmìny
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ASSIGN STUDENTS MODAL -->
+<div class="modal fade" id="assignModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #ff8a00, #ff6b00); color: white;">
+                <h5 class="modal-title">
+                    <i class="bi bi-people-fill me-2"></i>
+                    Správa studentù ve tøídì: <span id="assignClassName"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="assignClassId" />
+
+                <div class="row g-2 mb-3">
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold mb-1"><i class="bi bi-search me-1"></i>Hledat</label>
+                        <input type="text" class="form-control" id="studentSearch" placeholder="Jméno studenta..." />
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background:#f8f9fa;">
+                    <div class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox" id="selectAllStudents">
+                        <label class="form-check-label fw-bold" for="selectAllStudents">Vybrat všechny dostupné</label>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="badge bg-orange" id="selectedStudentCount" style="background:#ff8a00;">0 vybráno</span>
+                        <span class="badge bg-secondary" id="alreadyAssignedInfo"></span>
+                    </div>
+                </div>
+
+                <div class="student-list" style="max-height: 400px; overflow-y: auto;">
+                    @foreach (var s in students)
+                    {
+                        var fullName = $"{s.FirstName} {s.LastName}";
+                        var existingClassIds = string.Join(",", s.ClassesStudents?.Select(cs => cs.ClassesId) ?? Array.Empty<int>());
+
+                        <div class="student-item d-flex align-items-center p-2 rounded mb-1"
+                             data-student-id="@s.StudentId" data-name="@fullName.ToLower()" data-classes="@existingClassIds">
+                            <input class="form-check-input student-checkbox me-2 flex-shrink-0" type="checkbox"
+                                   value="@s.StudentId" id="student_@s.StudentId">
+                            <label class="form-check-label w-100 d-flex align-items-center justify-content-between"
+                                   for="student_@s.StudentId" style="cursor:pointer;">
+                                <span><strong>@s.FirstName @s.LastName</strong></span>
+                                <span class="assign-status-badge"></span>
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zavøít</button>
+                <button type="button" class="btn btn-orange" id="assignBtn">
+                    <i class="bi bi-check-circle me-2"></i>Uložit zmìny
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/pages/Classes.js" asp-append-version="true"></script>

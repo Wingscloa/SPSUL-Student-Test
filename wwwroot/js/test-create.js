@@ -31,14 +31,16 @@ var $container = $('.test-create-container');
 $('#studentField').select2({
     theme: 'bootstrap-5',
     width: '100%',
-    placeholder: '-- Vyberte předmět --',
+    placeholder: '-- Vyberte predmet --',
+    allowClear: true,
     dropdownParent: $container
 });
 
 $('#questionTypeFilter').select2({
     theme: 'bootstrap-5',
     width: '100%',
-    placeholder: 'Všechny typy',
+    placeholder: 'Vsechny typy',
+    allowClear: true,
     dropdownParent: $container
 });
 
@@ -49,7 +51,8 @@ $('#questionTypeFilter').select2({
     $('#questionFieldFilter').select2({
         theme: 'bootstrap-5',
         width: '100%',
-        placeholder: 'Všechny předměty',
+        placeholder: 'Vsechny predmety',
+        allowClear: true,
         dropdownParent: $container
     });
     $('#questionFieldFilter').on('select2:select select2:clear change', filterQuestions);
@@ -248,10 +251,52 @@ function handleQuestionSelection(e) {
     }
 
     updateSelectedCount();
+    updateSelectedQuestionsList();
 }
 
 function updateSelectedCount() {
     document.getElementById('selectedCount').textContent = selectedQuestions.size;
+}
+
+function updateSelectedQuestionsList() {
+    var listEl = document.getElementById('selectedQuestionsList');
+    var itemsEl = document.getElementById('selectedQuestionsItems');
+    if (!listEl || !itemsEl) return;
+
+    if (selectedQuestions.size === 0) {
+        listEl.style.display = 'none';
+        return;
+    }
+
+    listEl.style.display = '';
+    var html = '';
+    var idx = 1;
+    selectedQuestions.forEach(function(qId) {
+        var card = document.querySelector('[data-question-id="' + qId + '"]');
+        if (!card) return;
+        var title = card.querySelector('.form-check-label').textContent.trim();
+        var badge = card.querySelector('.badge');
+        var badgeText = badge ? badge.textContent.trim() : '';
+        html += '<div class="selected-question-item d-flex align-items-center gap-2 py-1 px-2 mb-1 rounded" style="background:#f8f9fa;">'
+            + '<span class="badge bg-orange text-white" style="min-width:24px;">' + idx + '</span>'
+            + '<span class="flex-grow-1 small">' + title + '</span>'
+            + (badgeText ? '<span class="badge bg-info small">' + badgeText + '</span>' : '')
+            + '<button type="button" class="btn btn-sm btn-link text-danger p-0 ms-1 remove-selected-btn" data-qid="' + qId + '" title="Odebrat">'
+            + '<i class="bi bi-x-circle"></i></button>'
+            + '</div>';
+        idx++;
+    });
+    itemsEl.innerHTML = html;
+
+    // Wire remove buttons
+    itemsEl.querySelectorAll('.remove-selected-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var removeId = parseInt(this.dataset.qid);
+            var cb = document.querySelector('.question-checkbox[value="' + removeId + '"]');
+            if (cb) { cb.checked = false; cb.dispatchEvent(new Event('change')); }
+        });
+    });
 }
 
 function clearAllSelections() {
@@ -263,6 +308,7 @@ function clearAllSelections() {
         card.classList.remove('selected');
     });
     updateSelectedCount();
+    updateSelectedQuestionsList();
 }
 
 // ============================================
@@ -291,7 +337,12 @@ function filterQuestions() {
         }
     });
 
-    document.getElementById('availableCount').textContent = visibleCount + ' otázek';
+    document.getElementById('availableCount').textContent = visibleCount + ' otazek';
+
+    var emptyMsg = document.getElementById('noQuestionsMessage');
+    if (emptyMsg) {
+        emptyMsg.style.display = visibleCount === 0 ? '' : 'none';
+    }
 }
 
 // ============================================
@@ -315,12 +366,17 @@ function toggleTimeLimit() {
 // PREVIEW UPDATE
 // ============================================
 function updatePreview() {
-const name = document.getElementById('testName').value || 'Název testu';
-const fieldName = $('#studentField option:selected').text() || 'Předmět';
-    const timeLimit = document.getElementById('timeLimit').value;
-    const timeLimitText = timeLimit ? `${timeLimit} minut` : 'Bez limitu';
+var name = document.getElementById('testName').value || 'Nazev testu';
+var fieldName = $('#studentField option:selected').text() || 'Predmet';
+    var description = document.getElementById('description').value.trim();
+    var timeLimit = document.getElementById('timeLimit').value;
+    var timeLimitText = timeLimit ? `${timeLimit} minut` : 'Bez limitu';
 
-    const previewHTML = `
+    var descHTML = description
+        ? `<div class="preview-description mt-3"><i class="bi bi-text-paragraph text-muted me-2"></i><span class="text-muted">${description}</span></div>`
+        : '';
+
+    var previewHTML = `
         <div class="preview-test-header">
             <div class="preview-test-title">${name}</div>
             <div class="preview-meta">
@@ -333,8 +389,9 @@ const fieldName = $('#studentField option:selected').text() || 'Předmět';
                     <span>${timeLimitText}</span>
                 </div>
             </div>
+            ${descHTML}
         </div>
-        <p class="text-muted text-center">Po výběru otázek se zde zobrazí náhled testu</p>
+        <p class="text-muted text-center">Po vyberu otazek se zde zobrazi nahled testu</p>
     `;
 
     document.getElementById('previewContent').innerHTML = previewHTML;
@@ -389,25 +446,30 @@ function updateFullPreview() {
 }
 
 function renderPreviewHeader() {
-    let headerHTML = `
-        <div class="preview-test-header">
-            <div class="preview-test-title">${testData.name}</div>
-            <div class="preview-meta">
-                <div class="preview-meta-item">
-                    <i class="bi bi-book"></i>
-                    <span>${testData.fieldName}</span>
-                </div>
-                <div class="preview-meta-item">
-                    <i class="bi bi-clock"></i>
-                    <span>${testData.timeLimit ? testData.timeLimit + ' minut' : 'Bez limitu'}</span>
-                </div>
-                <div class="preview-meta-item">
-                    <i class="bi bi-list-check"></i>
-                    <span>${selectedQuestions.size} otázek</span>
-                </div>
+var descHTML = testData.description
+    ? '<div class="preview-description mt-2"><i class="bi bi-text-paragraph text-muted me-2"></i><span class="text-muted">' + testData.description + '</span></div>'
+    : '';
+
+let headerHTML = `
+    <div class="preview-test-header">
+        <div class="preview-test-title">${testData.name}</div>
+        <div class="preview-meta">
+            <div class="preview-meta-item">
+                <i class="bi bi-book"></i>
+                <span>${testData.fieldName}</span>
+            </div>
+            <div class="preview-meta-item">
+                <i class="bi bi-clock"></i>
+                <span>${testData.timeLimit ? testData.timeLimit + ' minut' : 'Bez limitu'}</span>
+            </div>
+            <div class="preview-meta-item">
+                <i class="bi bi-list-check"></i>
+                <span>${selectedQuestions.size} otazek</span>
             </div>
         </div>
-    `;
+        ${descHTML}
+    </div>
+`;
 
     const contentEl = document.getElementById('previewContent');
     // Keep header + slide container

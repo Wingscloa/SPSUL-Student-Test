@@ -24,13 +24,18 @@ namespace SPSUL.ViewComponents
                 return View("Views/Auth/Login");
             }
 
+            var teacher = await _ctx.Teachers
+                .Include(t => t.Titles).ThenInclude(tt => tt.Title)
+                .Include(t => t.TeacherRoles).ThenInclude(tr => tr.Role)
+                    .ThenInclude(r => r.RolePermissions).ThenInclude(rp => rp.Permissions)
+                .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
+
             ConfigProfileViewModel model = new()
             {
-                Teacher = await _ctx.Teachers.Where(e => e.TeacherId == teacherId).FirstOrDefaultAsync(),
-                Title = await _ctx.TeacherTitles.Include(e => e.Title)
-                .Where(e => e.TeacherId == teacherId).ToListAsync(),
-                Roles = await _ctx.Roles.ToListAsync(),
-                TeacherRoles = await _ctx.TeacherRoles.Include(e => e.Role).Where(e => e.TeacherId == teacherId).ToListAsync(),
+                Teacher = teacher,
+                Title = teacher?.Titles?.ToList(),
+                Roles = await _ctx.Roles.Include(r => r.RolePermissions).ThenInclude(rp => rp.Permissions).ToListAsync(),
+                TeacherRoles = teacher?.TeacherRoles?.ToList(),
             };
             return View(model);
         }

@@ -66,11 +66,11 @@
         {
             if(Model.Teacher.TeacherRoles.Any(r => r.RoleId == role.RoleId))
             {
-                <option value="@role.RoleId" selected>@role.Name</option>
+                <option value="@role.RoleId" selected>@role.Name - @role.Description</option>
             }
             else
             {
-                <option value="@role.RoleId">@role.Name</option>
+                <option value="@role.RoleId">@role.Name - @role.Description</option>
             }
         }
     </select>

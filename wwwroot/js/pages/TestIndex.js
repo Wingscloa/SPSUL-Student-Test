@@ -166,49 +166,6 @@ document.getElementById('assignBtn').addEventListener('click', async function ()
 });
 
 // ============================================
-// DELETE
-// ============================================
-document.querySelectorAll('.btn-delete-test').forEach(btn => {
-    btn.addEventListener('click', function () {
-        document.getElementById('deleteTestId').value = this.dataset.testId;
-        document.getElementById('deleteTestName').textContent = this.dataset.testName;
-    });
-});
-
-document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
-    const id = parseInt(document.getElementById('deleteTestId').value);
-    this.disabled = true;
-    this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mažu...';
-
-    try {
-        const res = await fetch('/Test/Delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify([id])
-        });
-        const data = await res.json();
-
-        if (res.ok) {
-            toastr.success(data.message);
-            const row = document.querySelector(`tr[data-id="${id}"]`);
-            if (row) {
-                row.style.transition = 'opacity 0.4s';
-                row.style.opacity = '0';
-                setTimeout(() => row.remove(), 400);
-            }
-            bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
-        } else {
-            toastr.error(data.message || 'Chyba při mazání.');
-        }
-    } catch {
-        toastr.error('Chyba při komunikaci se serverem.');
-    }
-
-    this.disabled = false;
-    this.innerHTML = '<i class="bi bi-trash me-2"></i>Smazat';
-});
-
-// ============================================
 // TOGGLE ACTIVE
 // ============================================
 document.querySelectorAll('.btn-toggle-active').forEach(btn => {
@@ -226,18 +183,12 @@ document.querySelectorAll('.btn-toggle-active').forEach(btn => {
 
             if (res.ok) {
                 toastr.success(data.message);
-                const row = this.closest('tr');
-                const badge = row.querySelector('td:nth-child(7) .badge');
 
                 if (data.isActive) {
                     icon.className = 'bi bi-toggle-on text-success';
-                    badge.className = 'badge bg-success';
-                    badge.textContent = 'Aktivní';
                     this.title = 'Deaktivovat';
                 } else {
                     icon.className = 'bi bi-toggle-off text-secondary';
-                    badge.className = 'badge bg-secondary';
-                    badge.textContent = 'Neaktivní';
                     this.title = 'Aktivovat';
                 }
             } else {

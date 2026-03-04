@@ -17,7 +17,7 @@
     try {
         const response = await fetch('/api/config/profile', {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getAntiForgeryToken() },
             body: JSON.stringify({
                 firstName: firstName,
                 lastName: lastName,
@@ -53,11 +53,23 @@
             // Mobile config topbar name
             var mobileNameEl = document.querySelector('.config-mobile-topbar strong');
             if (mobileNameEl) mobileNameEl.textContent = data.name;
+
+            // Profile header name
+            var profileH5 = document.getElementById('profileHeaderName');
+            if (profileH5) profileH5.textContent = data.name;
+
+            // Update initials avatar
+            var parts = data.name.split(' ');
+            var initials = parts.map(function(p) { return p.charAt(0); }).join('').substring(0, 2).toUpperCase();
+            var avatarEl = document.querySelector('#modalContainer .rounded-circle');
+            if (avatarEl) avatarEl.textContent = initials;
         }
         if (data.nickname) {
             document.querySelectorAll('.config-sidebar-nick, .Nickname').forEach(el => el.textContent = data.nickname);
             var mobileNickEl = document.querySelector('.config-mobile-topbar small');
             if (mobileNickEl) mobileNickEl.textContent = data.nickname;
+            var profileNickEl = document.getElementById('profileHeaderNick');
+            if (profileNickEl) profileNickEl.textContent = data.nickname;
         }
     } catch (error) {
         console.error(error);

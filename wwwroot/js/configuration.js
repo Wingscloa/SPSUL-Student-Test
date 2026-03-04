@@ -307,7 +307,7 @@ document.addEventListener('click', function (e) {
         try {
             const response = await fetch(url, {
                 method: method,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getAntiForgeryToken() },
                 body: JSON.stringify(data)
             });
 
@@ -399,7 +399,7 @@ document.addEventListener('click', function (e) {
         try {
             const response = await fetch(url, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getAntiForgeryToken() },
                 body: JSON.stringify(data)
             });
 
@@ -577,7 +577,7 @@ document.addEventListener('click', function (e) {
         try {
             const response = await fetch(pdfUrlEl.value, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getAntiForgeryToken() },
                 body: JSON.stringify(data)
             });
 

@@ -192,6 +192,7 @@ namespace SPSUL.Models
                         cols.RelativeColumn(3);
                         cols.RelativeColumn(2);
                         cols.RelativeColumn(2);
+                        cols.ConstantColumn(55);
                     });
 
                     table.Header(header =>
@@ -200,6 +201,7 @@ namespace SPSUL.Models
                         HeaderCell(header, "Jméno");
                         HeaderCell(header, "Tituly");
                         HeaderCell(header, "Pøezdívka");
+                        HeaderCell(header, "Stav");
                     });
 
                     int idx = 1;
@@ -213,6 +215,7 @@ namespace SPSUL.Models
                         DataCell(table, $"{t.FirstName} {t.LastName}");
                         DataCell(table, titles);
                         DataCell(table, $"@{t.NickName}");
+                        DataCell(table, t.IsActive ? "Aktivní" : "Neaktivní");
                         idx++;
                     }
                 });
@@ -235,6 +238,7 @@ namespace SPSUL.Models
                         cols.RelativeColumn(3);
                         cols.RelativeColumn(1.5f);
                         cols.RelativeColumn(1.5f);
+                        cols.ConstantColumn(55);
                     });
 
                     table.Header(header =>
@@ -244,6 +248,7 @@ namespace SPSUL.Models
                         HeaderCell(header, "Obory");
                         HeaderCell(header, "Od");
                         HeaderCell(header, "Do");
+                        HeaderCell(header, "Stav");
                     });
 
                     int idx = 1;
@@ -258,6 +263,7 @@ namespace SPSUL.Models
                         DataCell(table, fields);
                         DataCell(table, c.StartFrom.ToString());
                         DataCell(table, c.EndTo.ToString());
+                        DataCell(table, c.IsActive ? "Aktivní" : "Neaktivní");
                         idx++;
                     }
                 });
@@ -279,7 +285,7 @@ namespace SPSUL.Models
                         cols.RelativeColumn(3);
                         cols.RelativeColumn(2);
                         cols.RelativeColumn(2);
-                        cols.RelativeColumn(1.5f);
+                        cols.ConstantColumn(55);
                     });
 
                     table.Header(header =>
@@ -306,6 +312,50 @@ namespace SPSUL.Models
         }
 
         // ============================================
+        // QUESTIONS PDF
+        // ============================================
+        public byte[] GenerateQuestionsPdf(List<Question> questions)
+        {
+            return CreateDocument("Seznam otázek", content =>
+            {
+                content.Table(table =>
+                {
+                    table.ColumnsDefinition(cols =>
+                    {
+                        cols.ConstantColumn(25);
+                        cols.RelativeColumn(3);
+                        cols.RelativeColumn(2);
+                        cols.RelativeColumn(2);
+                        cols.RelativeColumn(2);
+                        cols.ConstantColumn(55);
+                    });
+
+                    table.Header(header =>
+                    {
+                        HeaderCell(header, "#");
+                        HeaderCell(header, "Název");
+                        HeaderCell(header, "Tvùrce");
+                        HeaderCell(header, "Typ otázky");
+                        HeaderCell(header, "Pøedmìt");
+                        HeaderCell(header, "Stav");
+                    });
+
+                    int idx = 1;
+                    foreach (var q in questions)
+                    {
+                        DataCell(table, idx.ToString());
+                        DataCell(table, q.Header);
+                        DataCell(table, q.Creator != null ? $"{q.Creator.FirstName} {q.Creator.LastName}" : "");
+                        DataCell(table, q.QuestionType?.Name ?? "");
+                        DataCell(table, q.Field?.Name ?? "");
+                        DataCell(table, q.IsActive ? "Aktivní" : "Neaktivní");
+                        idx++;
+                    }
+                });
+            }).GeneratePdf();
+        }
+
+        // ============================================
         // RESULTS PDF (Výsledky)
         // ============================================
         public byte[] GenerateResultsPdf(List<AssignedTestVm> results)
@@ -319,10 +369,10 @@ namespace SPSUL.Models
                         cols.ConstantColumn(25);
                         cols.RelativeColumn(3);
                         cols.RelativeColumn(2.5f);
-                        cols.RelativeColumn(2);
-                        cols.RelativeColumn(2);
-                        cols.RelativeColumn(1.2f);
-                        cols.RelativeColumn(1.2f);
+                        cols.RelativeColumn(2.2f);
+                        cols.RelativeColumn(2.2f);
+                        cols.ConstantColumn(58);
+                        cols.ConstantColumn(62);
                     });
 
                     table.Header(header =>
@@ -358,13 +408,13 @@ namespace SPSUL.Models
         private static void HeaderCell(TableCellDescriptor header, string text)
         {
             header.Cell().Background("#ff8a00").Padding(5)
-                .Text(text).Bold().FontSize(9).FontColor(Colors.White);
+                .Text(text).Bold().FontSize(9).FontColor(Colors.White).ClampLines(1);
         }
 
         private static void DataCell(TableDescriptor table, string text)
         {
             table.Cell().BorderBottom(0.5f).BorderColor("#ddd").Padding(5)
-                .Text(text).FontSize(8);
+                .Text(text).FontSize(8).ClampLines(1);
         }
     }
 }

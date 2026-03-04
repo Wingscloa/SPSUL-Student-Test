@@ -68,7 +68,8 @@ namespace SPSUL.Controllers
                 int count = await queryable.CountAsync();
 
                 List<QuestionRow> rows = await queryable
-                    .OrderByDescending(e => e.QuestionId)
+                    .OrderByDescending(e => e.IsActive)
+                    .ThenByDescending(e => e.QuestionId)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -211,58 +212,19 @@ namespace SPSUL.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
-        public async Task<IActionResult> Activate([FromBody] List<int> Ids)
+        public async Task<IActionResult> ToggleActive([FromBody] int id)
         {
-            try
-            {
-                var questions = await _ctx.Questions
-                    .Where(q => Ids.Contains(q.QuestionId))
-                    .ToListAsync();
-                if (questions.Count == 0)
-                {
-                    return NotFound(new { message = "Žádné otázky nebyly nalezeny." });
-                }
-                foreach (var question in questions)
-                {
-                    question.IsActive = true;
-                }
-                await _ctx.SaveChangesAsync();
-                return Ok(new { message = "Otázky byly úspěšně aktivovány!" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Chyba při aktivaci otázek: " + ex.Message });
+            var question = await _ctx.Questions.FindAsync(id);
+            if (question == null)
+                return NotFound(new { message = "Otázka nebyla nalezena." });
 
-            }
-        }
+            question.IsActive = !question.IsActive;
+            await _ctx.SaveChangesAsync();
 
-        [HttpPut]
-        [RequirePermission(AppPermissions.ManageQuestions, AppPermissions.CrudTests, AppPermissions.All)]
-        public async Task<IActionResult> Deactivate([FromBody] List<int>Ids)
-        {
-            try
-            {
-                var questions = await _ctx.Questions
-                    .Where(q => Ids.Contains(q.QuestionId))
-                    .ToListAsync();
-                if (questions.Count == 0)
-                {
-                    return NotFound(new { message = "Žádné otázky nebyly nalezeny." });
-                }
-                foreach (var question in questions)
-                {
-                    question.IsActive = false;
-                }
-                await _ctx.SaveChangesAsync();
-                return Ok(new { message = "Otázky byly úspěšně deaktivovány!" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Chyba při deaktivaci otázek: " + ex.Message });
-
-            }
+            var status = question.IsActive ? "aktivována" : "deaktivována";
+            return Ok(new { message = $"Otázka byla {status}.", isActive = question.IsActive });
         }
 
         [HttpPost]

@@ -395,6 +395,52 @@
     overflow: hidden;
 }
 
+/* Isolate config modal cards from page-level overrides (e.g. test-create.css) */
+#configModal .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+}
+
+#configModal .card-header {
+    border-bottom: none;
+    border-radius: 12px 12px 0 0 !important;
+    padding: .75rem 1rem;
+    background: #fff;
+}
+
+#configModal .card-body {
+    padding: .75rem 1rem;
+}
+
+#configModal .btn-orange {
+    background-color: #ff9000;
+    background-image: none;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    transition: background-color .2s, box-shadow .2s;
+}
+
+#configModal .btn-orange:hover {
+    background-color: #e68200;
+    background-image: none;
+    color: #fff;
+    transform: none;
+    box-shadow: 0 4px 8px rgba(255,144,0,.3);
+}
+
+#configModal .form-control {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+#configModal .form-control:focus {
+    border-color: #ff8a00;
+    box-shadow: 0 0 0 .2rem rgba(255,138,0,.25);
+}
+
 .config-content-area {
     background: #fff;
     min-height: 0;
@@ -404,6 +450,9 @@
     flex: 1 1 0;
     min-height: 0;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #modalContainer > .ct-wrapper {
@@ -501,6 +550,22 @@
 #ctEditor {
     width: 420px;
     max-width: 90vw;
+}
+
+#ctEditor .btn-orange {
+    background-color: #ff9000;
+    background-image: none;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+}
+
+#ctEditor .btn-orange:hover {
+    background-color: #e68200;
+    background-image: none;
+    color: #fff;
+    transform: none;
+    box-shadow: 0 4px 8px rgba(255,144,0,.3);
 }
 
 @media (max-width: 575.98px) {

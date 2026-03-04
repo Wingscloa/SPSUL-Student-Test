@@ -1,92 +1,164 @@
 ﻿@using SPSUL.ViewComponents
 @model ConfigProfileViewModel
 
-<div class="ConfigContent">
-    <p class="ContentHeader">Údaje o profilu</p>
-    <form id="profileForm">
-        <div class="row ms-1">
-            <div class="col-12 col-md-6">
-                <label class="configLabel" for="profileFirstName">
-                    <span class="bi bi-person-circle me-1"></span>Křestní jméno
-                </label>
-                <input class="configInput" autocomplete="off" value="@Model.Teacher.FirstName"
-                       name="FirstName" id="profileFirstName"
-                       data-v-name="Křestní jméno" data-v-required="true"
-                       data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
-                       data-v-msg="Jméno musí obsahovat pouze písmena." />
+@{
+    var teacher = Model.Teacher;
+    var titles = Model.Title ?? [];
+    var teacherRoles = Model.TeacherRoles ?? [];
+    var allRoles = Model.Roles ?? [];
+    var initials = "";
+    if (teacher != null)
+    {
+        initials = (teacher.FirstName.Length > 0 ? teacher.FirstName[0].ToString() : "") +
+                   (teacher.LastName.Length > 0 ? teacher.LastName[0].ToString() : "");
+    }
+}
+
+<div class="p-3 p-md-4 mx-auto" style="max-width:680px;width:100%;">
+
+    <!-- PROFILE HEADER -->
+    <div class="d-flex align-items-center gap-3 mb-4 flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-start">
+        <div class="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+             style="width:68px;height:68px;background:linear-gradient(135deg,#ff8a00,#ff6b00);color:#fff;font-size:1.6rem;font-weight:700;letter-spacing:1px;">
+            @initials
+        </div>
+        <div class="text-center text-sm-start">
+            <h5 class="mb-0 fw-bold" style="color:#2c3e50;" id="profileHeaderName">
+                @teacher?.FirstName @teacher?.LastName
+            </h5>
+            <span class="text-muted" style="font-size:.9rem;">
+                <i class="bi bi-at"></i><span id="profileHeaderNick">@teacher?.NickName</span>
+            </span>
+            <div class="d-flex flex-wrap gap-1 mt-1 justify-content-center justify-content-sm-start">
+                @foreach (var tt in titles)
+                {
+                    <span class="badge" style="background:#fff4e6;color:#ff8a00;border:1px solid #ffe0b2;font-weight:500;">
+                        @tt.Title?.Shortcut
+                    </span>
+                }
+                @foreach (var tr in teacherRoles)
+                {
+                    <span class="badge" style="background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;font-weight:500;"
+                          title="@tr.Role?.Description">
+                        @tr.Role?.Name
+                    </span>
+                }
             </div>
         </div>
-        <div class="row ms-1 mt-3">
-            <div class="col-12 col-md-6">
-                <label class="configLabel" for="profileLastName">
-                    <span class="bi bi-person-circle me-1"></span>Příjmení
-                </label>
-                <input class="configInput" autocomplete="off" value="@Model.Teacher.LastName"
-                       name="LastName" id="profileLastName"
-                       data-v-name="Příjmení" data-v-required="true"
-                       data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
-                       data-v-msg="Příjmení musí obsahovat pouze písmena." />
+    </div>
+
+    <!-- EDIT PROFILE CARD -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius:12px;">
+        <div class="card-header border-0 bg-white pb-0 pt-3 px-3" style="border-radius:12px 12px 0 0;">
+            <h6 class="fw-bold mb-0" style="color:#ff8a00;">
+                <i class="bi bi-pencil-square me-2"></i>Upravit profil
+            </h6>
+        </div>
+        <div class="card-body px-3 pt-3 pb-3">
+            <form id="profileForm">
+                <div class="row g-3">
+                    <div class="col-12 col-sm-6">
+                        <label class="form-label fw-semibold small mb-1" for="profileFirstName">
+                            <i class="bi bi-person me-1 text-muted"></i>Jméno
+                        </label>
+                        <input class="form-control" autocomplete="off" value="@teacher?.FirstName"
+                               name="FirstName" id="profileFirstName"
+                               data-v-name="Jméno" data-v-required="true"
+                               data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
+                               data-v-msg="Jméno musí obsahovat pouze písmena."
+                               style="border-radius:8px;" />
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <label class="form-label fw-semibold small mb-1" for="profileLastName">
+                            <i class="bi bi-person me-1 text-muted"></i>Příjmení
+                        </label>
+                        <input class="form-control" autocomplete="off" value="@teacher?.LastName"
+                               name="LastName" id="profileLastName"
+                               data-v-name="Příjmení" data-v-required="true"
+                               data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
+                               data-v-msg="Příjmení musí obsahovat pouze písmena."
+                               style="border-radius:8px;" />
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <label class="form-label fw-semibold small mb-1" for="profileNickName">
+                            <i class="bi bi-at me-1 text-muted"></i>Přezdívka
+                        </label>
+                        <input class="form-control" autocomplete="off" value="@teacher?.NickName"
+                               name="NickName" id="profileNickName"
+                               data-v-name="Přezdívka" data-v-required="true"
+                               data-v-msg="Přezdívka je povinná."
+                               style="border-radius:8px;" />
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <label class="form-label fw-semibold small mb-1" for="profileNewPassword">
+                            <i class="bi bi-lock me-1 text-muted"></i>Nové heslo <small class="text-muted">(volitelné)</small>
+                        </label>
+                        <input class="form-control" type="password" autocomplete="new-password"
+                               name="NewPassword" id="profileNewPassword"
+                               placeholder="Ponechte prázdné pokud nechcete měnit"
+                               style="border-radius:8px;" />
+                    </div>
+                </div>
+                <div class="mt-3 text-center text-sm-start">
+                    <button class="btn px-4" type="button" id="btnSaveProfile"
+                            style="border-radius:8px;background-color:#ff9000;color:#fff;border:none;font-weight:600;">
+                        <i class="bi bi-check2-circle me-1"></i>Uložit změny
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PERMISSIONS CARD -->
+    <div class="card border-0 shadow-sm" style="border-radius:12px;">
+        <div class="card-header border-0 bg-white pb-0 pt-3 px-3" style="border-radius:12px 12px 0 0;">
+            <h6 class="fw-bold mb-0" style="color:#ff8a00;">
+                <i class="bi bi-shield-lock me-2"></i>Oprávnění a role
+            </h6>
+            <p class="text-muted small mb-0 mt-1">
+                Přehled všech rolí v systému. Vaše aktivní role jsou zvýrazněny.
+            </p>
+        </div>
+        <div class="card-body px-3 pt-3 pb-3">
+            <div class="row g-3">
+                @foreach (var role in allRoles)
+                {
+                    bool isAssigned = teacherRoles.Any(tr => tr.RoleId == role.RoleId);
+                    var permissions = role.RolePermissions?.Select(rp => rp.Permissions?.Name).Where(n => n != null).ToList() ?? [];
+
+                    <div class="col-12 col-sm-6">
+                        <div class="p-3 rounded-3 h-100 @(isAssigned ? "" : "opacity-50")"
+                             style="border: 1.5px solid @(isAssigned ? "#ff8a00" : "#dee2e6"); background: @(isAssigned ? "#fffaf3" : "#fafafa");">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <span class="fw-bold" style="color:@(isAssigned ? "#ff8a00" : "#999");">
+                                        <i class="bi @(isAssigned ? "bi-shield-fill-check" : "bi-shield") me-1"></i>
+                                        @role.Name
+                                    </span>
+                                </div>
+                                @if (isAssigned)
+                                {
+                                    <span class="badge" style="background:#ff8a00;font-size:.7rem;">Aktivní</span>
+                                }
+                            </div>
+                            <p class="text-muted small mb-2" style="line-height:1.4;">@role.Description</p>
+                            @if (permissions.Count > 0)
+                            {
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach (var perm in permissions)
+                                    {
+                                        <span class="badge bg-light text-dark border" style="font-size:.7rem;font-weight:500;">
+                                            @perm
+                                        </span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
             </div>
         </div>
-        <div class="row ms-1 mt-3">
-            <div class="col-12 col-md-6">
-                <label class="configLabel" for="profileNickName">
-                    <span class="bi bi-at me-1"></span>Přezdívka
-                </label>
-                <input class="configInput" autocomplete="off" value="@Model.Teacher.NickName"
-                       name="NickName" id="profileNickName"
-                       data-v-name="Přezdívka" data-v-required="true"
-                       data-v-msg="Přezdívka je povinná." />
-            </div>
-        </div>
-        <div class="row ms-1 mt-4">
-            <div class="col-12">
-                <p class="ContentHeader" style="font-size:1rem;">Změna hesla <small class="text-muted fw-normal">(volitelné)</small></p>
-            </div>
-        </div>
-        <div class="row ms-1">
-            <div class="col-12 col-md-6">
-                <label class="configLabel" for="profileNewPassword">
-                    <span class="bi bi-lock me-1"></span>Nové heslo
-                </label>
-                <input class="configInput" type="password" autocomplete="new-password"
-                       name="NewPassword" id="profileNewPassword"
-                       placeholder="Ponechte prázdné pokud nechcete měnit" />
-            </div>
-        </div>
-        <div class="row ms-1 mt-3 mb-3">
-            <div class="col-12 col-md-6">
-                <button class="configButton w-100" type="button" id="btnSaveProfile">
-                    <i class="bi bi-check2-circle me-1"></i> Uložit změny
-                </button>
-            </div>
-        </div>
-    </form>
-</div>
-<div class="modalBreakGrey mt-2"></div>
-<div class="ConfigContent">
-    <p class="ContentHeader">Oprávnění</p>
-    <table class="permissionTable">
-        <tr class="tableHeaders">
-            <th class="col-2">Oprávnění</th>
-            <th class="col-1">Povolení</th>
-            <th class="col-6">Popis</th>
-        </tr>
-        @foreach (var role in Model.Roles)
-        {
-            bool isAssigned = Model.Teacher.TeacherRoles is not null ? Model.Teacher.TeacherRoles.Any(e => e.RoleId == role.RoleId) : false;
-            <tr class="tableRow @(isAssigned ? "" : "disabled")">
-                <td>@role.Name</td>
-                <td>
-                    <label class="switch" for="@role.Name">
-                        <input type="checkbox" id="@role.Name" @(isAssigned ? "checked" : "") disabled />
-                        <div class="slider round"></div>
-                    </label>
-                </td>
-                <td>@role.Description</td>
-            </tr>
-        }
-    </table>
+    </div>
 </div>
 
 <script src="~/js/config/profile.js" asp-append-version="true"></script>

@@ -47,7 +47,10 @@ namespace SPSUL.Controllers
                 query = query.Where(e => e.ClassesStudents.Any(cs =>
                     cs.Classes.ClassesFields.Any(cf => cf.StudentFieldId == fieldId.Value)));
 
-            var students = await query.OrderByDescending(e => e.StudentId).ToListAsync();
+            var students = await query
+                .OrderByDescending(e => e.IsActive)
+                .ThenByDescending(e => e.StudentId)
+                .ToListAsync();
 
             var model = new StudentIndexVM
             {
@@ -103,21 +106,17 @@ namespace SPSUL.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Activate([FromBody] List<int> ids)
+        public async Task<IActionResult> ToggleActive([FromBody] int id)
         {
-            var students = await _ctx.Students.Where(s => ids.Contains(s.StudentId)).ToListAsync();
-            students.ForEach(s => s.IsActive = true);
-            await _ctx.SaveChangesAsync();
-            return Ok(new { message = $"{students.Count} studentů aktivováno." });
-        }
+            var student = await _ctx.Students.FindAsync(id);
+            if (student == null)
+                return NotFound(new { message = "Student nebyl nalezen." });
 
-        [HttpPost]
-        public async Task<IActionResult> Deactivate([FromBody] List<int> ids)
-        {
-            var students = await _ctx.Students.Where(s => ids.Contains(s.StudentId)).ToListAsync();
-            students.ForEach(s => s.IsActive = false);
+            student.IsActive = !student.IsActive;
             await _ctx.SaveChangesAsync();
-            return Ok(new { message = $"{students.Count} studentů deaktivováno." });
+
+            var status = student.IsActive ? "aktivován" : "deaktivován";
+            return Ok(new { message = $"Student byl {status}.", isActive = student.IsActive });
         }
 
         [HttpPost]

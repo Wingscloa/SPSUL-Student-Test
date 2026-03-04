@@ -109,11 +109,11 @@ namespace SPSUL.Controllers.API
                     });
                 }
 
-                if (questType.Name == "Uzavřená otázka")
+                if (questType.Name == QuestionTypesEnum.SelectText)
                 {
                     return PartialView(partialText + "_SelectTextAnswerOption.cshtml", opts);
                 }
-                else if (questType.Name == "Uzavřená otázka s obrázky")
+                else if (questType.Name == QuestionTypesEnum.SelectImage)
                 {
                     return PartialView(partialImage + "_SelectImageAnswerOption.cshtml", opts);
                 }
@@ -144,11 +144,11 @@ namespace SPSUL.Controllers.API
 
                 List<OptionBase> opts = GenerateOptions(model.CurrentCount, model.QuestionCount);
 
-                if (questType.Name == "Uzavřená otázka")
+                if (questType.Name == QuestionTypesEnum.SelectText)
                 {
                     return PartialView(partialText + "_SelectTextPreviewOption.cshtml", opts);
                 }
-                else if (questType.Name == "Uzavřená otázka s obrázky")
+                else if (questType.Name == QuestionTypesEnum.SelectImage)
                 {
                     return PartialView(partialImage + "_SelectImagePreviewOption.cshtml", opts);
                 }

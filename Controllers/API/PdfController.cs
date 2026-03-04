@@ -6,6 +6,8 @@ using SPSUL.Models.Display.StudentModels;
 using SPSUL.Models.Display.TeacherModels;
 using SPSUL.Models.Display.ClassesModels;
 
+using SPSUL.Models.Display.QuestionModels;
+
 namespace SPSUL.Controllers.API
 {
     /// <summary>
@@ -129,6 +131,40 @@ namespace SPSUL.Controllers.API
 
             var pdfBytes = _pdf.GenerateTestsPdf(tests);
             return File(pdfBytes, "application/pdf", "Testy.pdf");
+        }
+
+        // ============================================
+        // QUESTIONS PDF (filtered)
+        // ============================================
+        [HttpPost]
+        [Route("api/pdf/questions")]
+        public async Task<IActionResult> Questions([FromBody] QuestionFilter model)
+        {
+            var query = _ctx.Questions
+                .Include(q => q.Creator)
+                .Include(q => q.QuestionType)
+                .Include(q => q.Field)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(model.SearchFilter))
+                query = query.Where(q => q.Header.Contains(model.SearchFilter));
+
+            if (model.ActiveFilter.HasValue)
+                query = query.Where(q => q.IsActive == model.ActiveFilter.Value);
+
+            if (model.CreatorId.HasValue)
+                query = query.Where(q => q.CreatorId == model.CreatorId.Value);
+
+            if (model.QuestionTypeId.HasValue)
+                query = query.Where(q => q.QuestionTypeId == model.QuestionTypeId.Value);
+
+            if (model.FieldId.HasValue)
+                query = query.Where(q => q.FieldId == model.FieldId.Value);
+
+            var questions = await query.OrderByDescending(q => q.QuestionId).ToListAsync();
+
+            var pdfBytes = _pdf.GenerateQuestionsPdf(questions);
+            return File(pdfBytes, "application/pdf", "Otazky.pdf");
         }
     }
 }

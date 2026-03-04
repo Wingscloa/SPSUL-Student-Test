@@ -1,4 +1,39 @@
-﻿// ============================================
+// ============================================
+// Toggle Active
+// ============================================
+document.querySelectorAll('.btn-toggle-active').forEach(btn => {
+    btn.addEventListener('click', async function () {
+        const id = parseInt(this.dataset.id);
+        const icon = this.querySelector('i');
+
+        try {
+            const res = await fetch('/Students/ToggleActive', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getAntiForgeryToken() },
+                body: JSON.stringify(id)
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                toastr.success(data.message);
+
+                if (data.isActive) {
+                    icon.className = 'bi bi-toggle-on text-success';
+                    this.title = 'Deaktivovat';
+                } else {
+                    icon.className = 'bi bi-toggle-off text-secondary';
+                    this.title = 'Aktivovat';
+                }
+            } else {
+                toastr.error(data.message || 'Chyba.');
+            }
+        } catch {
+            toastr.error('Chyba.');
+        }
+    });
+});
+
+// ============================================
 // Select2 init
 // ============================================
 $(document).ready(function () {
@@ -17,6 +52,8 @@ document.getElementById('exportBtn')?.addEventListener('click', function () {
     var active = fd.get('active');
     if (active === 'true') body.ActiveFilter = true;
     else if (active === 'false') body.ActiveFilter = false;
+    var classId = fd.get('classId');
+    if (classId) body.ClassFilterIds = [parseInt(classId)];
 
     fetch('/api/pdf/students', {
         method: 'POST',
@@ -24,7 +61,7 @@ document.getElementById('exportBtn')?.addEventListener('click', function () {
         body: JSON.stringify(body)
     })
         .then(function (resp) {
-            if (!resp.ok) throw new Error('Chyba při generování PDF');
+            if (!resp.ok) throw new Error('Chyba');
             return resp.blob();
         })
         .then(function (blob) {
@@ -34,6 +71,7 @@ document.getElementById('exportBtn')?.addEventListener('click', function () {
             a.download = 'Studenti.pdf';
             a.click();
             URL.revokeObjectURL(url);
+            toastr.success('PDF export hotov.');
         })
         .catch(function (err) { toastr.error(err.message); });
 });
@@ -47,13 +85,12 @@ document.getElementById('bulkCreateBtn')?.addEventListener('click', function () 
     bulkModal = bootstrap.Modal.getOrCreateInstance(modalEl);
     bulkModal.show();
 
-    // Init select2 inside modal
     setTimeout(function () {
         $('.select2-bulk').select2({
             theme: 'bootstrap-5',
             width: '100%',
             dropdownParent: $('#bulkModal'),
-            placeholder: 'Vyber třídy'
+            placeholder: 'Vyber t\u0159\u00eddy'
         });
     }, 200);
 });
@@ -65,8 +102,8 @@ document.getElementById('bulkAddRow')?.addEventListener('click', function () {
 
 function addBulkRow(first, last) {
     var html = '<div class="row g-2 mb-2 bulk-row">' +
-        '<div class="col-5"><input type="text" class="form-control bulk-first" placeholder="Jméno" maxlength="64" value="' + escapeHtml(first) + '" /></div>' +
-        '<div class="col-5"><input type="text" class="form-control bulk-last" placeholder="Příjmení" maxlength="64" value="' + escapeHtml(last) + '" /></div>' +
+        '<div class="col-5"><input type="text" class="form-control bulk-first" placeholder="Jm\u00e9no" maxlength="64" value="' + escapeHtml(first) + '" /></div>' +
+        '<div class="col-5"><input type="text" class="form-control bulk-last" placeholder="P\u0159\u00edjmen\u00ed" maxlength="64" value="' + escapeHtml(last) + '" /></div>' +
         '<div class="col-2 d-flex align-items-center"><button type="button" class="btn btn-sm btn-outline-danger bulk-remove-row" title="Odebrat"><i class="bi bi-x-lg"></i></button></div>' +
         '</div>';
     document.getElementById('bulkRows').insertAdjacentHTML('beforeend', html);
@@ -83,23 +120,21 @@ document.addEventListener('click', function (e) {
     var btn = e.target.closest('.bulk-remove-row');
     if (!btn) return;
     var rows = document.querySelectorAll('.bulk-row');
-    if (rows.length <= 1) { toastr.warning('Musí být alespoň jeden řádek.'); return; }
+    if (rows.length <= 1) { toastr.warning('Mus\u00ed b\u00fdt alespo\u0148 jeden \u0159\u00e1dek.'); return; }
     btn.closest('.bulk-row').remove();
 });
 
 // Parse pasted text
 document.getElementById('bulkParseBtn')?.addEventListener('click', function () {
     var text = document.getElementById('bulkPaste').value.trim();
-    if (!text) { toastr.warning('Vložte text se studenty.'); return; }
+    if (!text) { toastr.warning('Vlo\u017ete text se studenty.'); return; }
 
     var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(function (l) { return l.length > 0; });
     var added = 0;
 
     lines.forEach(function (line) {
-        // support tab or space separator
         var parts = line.split(/[\t;,]+/).map(function (p) { return p.trim(); });
         if (parts.length === 1) {
-            // try splitting by space: "Jan Novák"
             parts = line.split(/\s+/);
         }
         if (parts.length >= 2) {
@@ -110,9 +145,9 @@ document.getElementById('bulkParseBtn')?.addEventListener('click', function () {
 
     if (added > 0) {
         document.getElementById('bulkPaste').value = '';
-        toastr.success('Přidáno ' + added + ' řádků.');
+        toastr.success('P\u0159id\u00e1no ' + added + ' \u0159\u00e1dk\u016f.');
     } else {
-        toastr.warning('Nepodařilo se rozpoznat studenty. Formát: Jméno Příjmení');
+        toastr.warning('Nepoda\u0159ilo se rozpoznat studenty.');
     }
 });
 
@@ -130,7 +165,7 @@ document.getElementById('bulkSubmitBtn')?.addEventListener('click', async functi
     });
 
     if (students.length === 0) {
-        toastr.warning('Vyplňte jméno a příjmení alespoň u jednoho studenta.');
+        toastr.warning('Vypl\u0148te jm\u00e9no a p\u0159\u00edjmen\u00ed alespo\u0148 u jednoho studenta.');
         return;
     }
 
@@ -139,12 +174,12 @@ document.getElementById('bulkSubmitBtn')?.addEventListener('click', async functi
 
     var btn = this;
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Vytvářím...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>...';
 
     try {
         var res = await fetch('/Students/BulkCreate', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getAntiForgeryToken() },
             body: JSON.stringify({ students: students, classesIds: classesIds })
         });
 
@@ -158,15 +193,15 @@ document.getElementById('bulkSubmitBtn')?.addEventListener('click', async functi
             if (data.errors && data.errors.length > 0) {
                 data.errors.forEach(function (e) { toastr.error(e); });
             } else {
-                toastr.error(data.message || 'Chyba při vytváření.');
+                toastr.error(data.message || 'Chyba.');
             }
         }
     } catch (err) {
-        toastr.error('Chyba komunikace se serverem.');
+        toastr.error('Chyba.');
         console.error(err);
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Vytvořit studenty';
+        btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Vytvo\u0159it studenty';
     }
 });
 
@@ -185,21 +220,19 @@ document.addEventListener('click', async function (e) {
     var modalEl = document.getElementById('editModal');
     editModal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
-    // Show spinner while loading
     document.getElementById('editFormBody').innerHTML =
         '<div class="text-center py-4">' +
         '<div class="spinner-border text-orange" role="status"></div>' +
-        '<p class="text-muted mt-2">Načítám formulář…</p></div>';
+        '<p class="text-muted mt-2">Na\u010d\u00edt\u00e1m formul\u00e1\u0159\u2026</p></div>';
 
     editModal.show();
 
     try {
         var res = await fetch('/api/Config/StudentEditForm/' + editStudentId);
-        if (!res.ok) throw new Error('Nepodařilo se načíst formulář.');
+        if (!res.ok) throw new Error('Chyba.');
         var html = await res.text();
         document.getElementById('editFormBody').innerHTML = html;
 
-        // Init select2 inside the edit modal
         setTimeout(function () {
             $('#editFormBody .select2').select2({
                 theme: 'bootstrap-5',
@@ -236,39 +269,38 @@ document.getElementById('editSubmitBtn')?.addEventListener('click', async functi
         }
     });
 
-    // Validation
     if (!data.FirstName || data.FirstName.length < 2) {
-        toastr.warning('Jméno musí mít alespoň 2 znaky.'); return;
+        toastr.warning('Jm\u00e9no mus\u00ed m\u00edt alespo\u0148 2 znaky.'); return;
     }
     if (!data.LastName || data.LastName.length < 2) {
-        toastr.warning('Příjmení musí mít alespoň 2 znaky.'); return;
+        toastr.warning('P\u0159\u00edjmen\u00ed mus\u00ed m\u00edt alespo\u0148 2 znaky.'); return;
     }
 
     var btn = this;
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Ukládám...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>...';
 
     try {
         var res = await fetch('/api/Student', {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getAntiForgeryToken() },
             body: JSON.stringify(data)
         });
 
         var text = await res.text();
 
         if (res.ok) {
-            toastr.success(text || 'Student aktualizován.');
+            toastr.success(text || 'Student aktualizov\u00e1n.');
             if (editModal) editModal.hide();
             setTimeout(function () { location.reload(); }, 800);
         } else {
-            toastr.error(text || 'Chyba při aktualizaci.');
+            toastr.error(text || 'Chyba.');
         }
     } catch (err) {
-        toastr.error('Chyba komunikace se serverem.');
+        toastr.error('Chyba.');
         console.error(err);
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Uložit změny';
+        btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Ulo\u017eit zm\u011bny';
     }
 });

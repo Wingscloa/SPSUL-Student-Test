@@ -1,0 +1,271 @@
+@using SPSUL.Models.Data
+@using SPSUL.Models.Display.TeacherModels
+@model TeacherIndexVM
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Main.cshtml";
+    ViewData["Title"] = "Uèitelé";
+
+    var canCrudTeachers = Context.HasAnyPermission(AppPermissions.CrudTeachers, AppPermissions.All);
+}
+<link rel="stylesheet" href="~/css/normalTables.css" asp-append-version="true"/>
+
+<div class="container-fluid py-3">
+    <div class="row g-3">
+        <div class="col-lg-9 order-2 order-lg-1">
+            <div class="card shadow-sm cardTable">
+                <div class="card-header brandText d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-workspace me-2"></i>
+                        Seznam uèitelù
+                    </h5>
+                    <div class="tools d-flex justify-content-center align-items-center gap-2">
+                        <!--Cancel-->
+                        <a class="iconLink cursor option" id="cancelOption" style="display: none">
+                            <i class="bi bi-dash-circle"></i>
+                            Zrušit
+                        </a>
+                        <!--Confirm-->
+                        <a class="iconLink cursor option" id="acceptOption" style="display: none">
+                            <i class="bi bi-plus-circle"></i>
+                            Potvrdit
+                        </a>
+                        <!--Export-->
+                        <a class="iconLink cursor mode" title="Exportovat do PDF" id="exportBtn">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            Export PDF
+                        </a>
+                        @if (canCrudTeachers)
+                        {
+                        <!--Delete Mode-->
+                        <a class="iconLink cursor mode" title="Smazat uèitele" id="deleteMode" data-endpoint="Teachers/Delete/" data-method="POST">
+                            <i class="bi bi-dash-circle"></i>
+                            Smazat
+                        </a>
+                        <!--Create-->
+                        <a class="iconLink cursor mode" title="Vytvoøit uèitele" id="createTeacherBtn">
+                            <i class="bi bi-plus-circle"></i>
+                            Vytvoøit
+                        </a>
+                        }
+                    </div>
+                </div>
+                <div class="table-responsive tableContent">
+                    <table class="table align-middle mb-0" style="min-width: 1000px">
+                        <thead>
+                            <tr>
+                                <th class="col-2">Jméno</th>
+                                <th class="col-2">Pøíjmení</th>
+                                <th class="col-2">Pøezdívka</th>
+                                <th class="col-2">Tituly</th>
+                                <th class="col-2">Role</th>
+                                @if (canCrudTeachers)
+                                {
+                                <th class="col-1 text-center editHeader">Edit</th>
+                                <th class="col-1 text-center editHeader">Stav</th>
+                                <th class="col-1 d-none deleteHeader">Smazat</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in Model.Teachers)
+                            {
+                                var titleNames = string.Join(", ", t.Titles?.Select(tt => tt.Title?.Shortcut) ?? []);
+                                var roleNames = string.Join(", ", t.TeacherRoles?.Select(tr => tr.Role?.Name) ?? []);
+
+                                <tr data-id="@t.TeacherId">
+                                    <td>@t.FirstName</td>
+                                    <td>@t.LastName</td>
+                                    <td>@t.NickName</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(titleNames))
+                                        {
+                                            @titleNames
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">–</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(roleNames))
+                                        {
+                                            @foreach (var role in t.TeacherRoles)
+                                            {
+                                                <span class="badge bg-info me-1" title="@role.Role?.Description">@role.Role?.Name</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">–</span>
+                                        }
+                                    </td>
+                                    @if (canCrudTeachers)
+                                    {
+                                    <td class="text-center editButton"><a class="icon-btn teacher-edit-btn" title="Edit" data-id="@t.TeacherId" role="button"><i class="bi bi-pencil-square"></i></a></td>
+                                    <td class="text-center editButton">
+                                        <button class="icon-btn btn-toggle-active" title="@(t.IsActive ? "Deaktivovat" : "Aktivovat")"
+                                                data-id="@t.TeacherId" data-active="@t.IsActive.ToString().ToLower()">
+                                            <i class="bi @(t.IsActive ? "bi-toggle-on text-success" : "bi-toggle-off text-secondary")" style="font-size:1.3rem"></i>
+                                        </button>
+                                    </td>
+                                    <td class="text-center deleteButton d-none">
+                                        <div class="btn-delete"><i class="bi bi-trash-fill"></i></div>
+                                    </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div>@Model.Teachers.Count položek</div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="col-lg-3 order-1 order-lg-2">
+            <div class="card shadow-sm sticky-top" style="top: 1rem;">
+                <div class="card-header brandText fw-bold"><i class="bi bi-funnel me-2"></i>Filtrace</div>
+                <div class="card-body">
+                    <form method="get" class="vstack gap-2">
+                        <input class="form-control" name="name" value="@Model.Name" placeholder="Jméno, pøíjmení nebo pøezdívka" />
+
+                        <select class="form-select select2" name="roleId">
+                            <option value="">Vyber roli</option>
+                            @foreach (var r in Model.Roles)
+                            {
+                                <option value="@r.RoleId" selected="@(Model.RoleId == r.RoleId)">@r.Name</option>
+                            }
+                        </select>
+
+                        <select class="form-select select2" name="titleId">
+                            <option value="">Vyber titul</option>
+                            @foreach (var t in Model.Titles)
+                            {
+                                <option value="@t.TitleId" selected="@(Model.TitleId == t.TitleId)">@t.Shortcut - @t.Name</option>
+                            }
+                        </select>
+
+                        <select class="form-select select2" name="active">
+                            <option value="">Aktivní/Neaktivní</option>
+                            <option value="true" selected="@(Model.Active == true)">Aktivní</option>
+                            <option value="false" selected="@(Model.Active == false)">Neaktivní</option>
+                        </select>
+
+                        <button class="btn btn-orange w-100">
+                            <i class="bi bi-funnel-fill me-2"></i>Filtrovat
+                        </button>
+                        <a href="@Url.Action("Index", "Teachers")" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-x-circle me-2"></i>Resetovat
+                        </a>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mt-3">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-clipboard-data me-2"></i>Rychlé statistiky
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Celkem:</span>
+                        <strong>@Model.Teachers.Count</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Aktivní:</span>
+                        <strong class="text-success">@Model.Teachers.Count(x => x.IsActive)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Neaktivní:</span>
+                        <strong class="text-secondary">@Model.Teachers.Count(x => !x.IsActive)</strong>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<input type="hidden" id="Ids" name="Ids" value="" />
+
+<!-- Create Teacher Modal -->
+<div class="modal fade" id="createTeacherModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-person-plus-fill me-2"></i>Nový uèitel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Jméno</label>
+                    <input type="text" class="form-control" id="cFirstName" placeholder="Jméno" maxlength="64" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Pøíjmení</label>
+                    <input type="text" class="form-control" id="cLastName" placeholder="Pøíjmení" maxlength="64" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Pøezdívka</label>
+                    <input type="text" class="form-control" id="cNickName" placeholder="Pøezdívka" maxlength="64" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Heslo</label>
+                    <input type="password" class="form-control" id="cPassword" placeholder="Heslo" maxlength="128" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tituly</label>
+                    <select class="form-select select2-modal" id="cTitleIds" multiple>
+                        @foreach (var t in Model.Titles)
+                        {
+                            <option value="@t.TitleId">@t.Shortcut</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Role</label>
+                    <select class="form-select select2-modal" id="cRoleIds" multiple>
+                        @foreach (var r in Model.Roles)
+                        {
+                            <option value="@r.RoleId">@r.Name - @r.Description</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zrušit</button>
+                <button type="button" class="btn btn-orange" id="createTeacherSubmit">
+                    <i class="bi bi-check2-circle me-1"></i>Vytvoøit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Teacher Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editace uèitele</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="editFormBody">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-orange" role="status"></div>
+                        <p class="text-muted mt-2">Naèítám formuláø…</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zrušit</button>
+                <button type="button" class="btn btn-orange" id="editSubmitBtn">
+                    <i class="bi bi-check2-circle me-1"></i>Uložit zmìny
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/pages/Teacher.js" asp-append-version="true"></script>

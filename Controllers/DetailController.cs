@@ -148,35 +148,12 @@ namespace SPSUL.Controllers
             return View(model);
         }
 
-        // GET: Detail/History?studentId=1&testId=2
-        public async Task<IActionResult> History(int studentId, int testId)
+        // GET: Detail/History — redirect to Detail/View (merged)
+        public IActionResult History(int studentId, int testId)
         {
-            var assignment = await _ctx.StudentTests
-                .Include(st => st.Test)
-                .Include(st => st.Student)
-                .FirstOrDefaultAsync(st => st.StudentId == studentId && st.TestId == testId);
-
-            if (assignment == null)
-                return RedirectToAction("Index");
-
-            ViewBag.Assignment = assignment;
-
-            List<QuestionSnapshotItem> questions = [];
-            TestResultSnapshot result = new();
-            try
-            {
-                questions = JsonSerializer.Deserialize<List<QuestionSnapshotItem>>(
-                    assignment.Test.QuestionSnapshot) ?? [];
-                result = JsonSerializer.Deserialize<TestResultSnapshot>(
-                    assignment.ResultSnapshot) ?? new();
-            }
-            catch { }
-
-            ViewBag.Questions = questions;
-            ViewBag.Answers = result.Answers;
-
-            return View();
+            return RedirectToAction("View", new { studentId, testId });
         }
+
 
         // GET: Detail/View?studentId=1&testId=2
         public async Task<IActionResult> View(int studentId, int testId)

@@ -201,18 +201,18 @@ function resetOptionIndexes() {
         var newDefaultText = '';
 
         // Moznosti ve formatu "A) Možnost A"
-        if (defaultText.lastIndexOf(") Možnost ") != -1) {
+        if (defaultText && defaultText.lastIndexOf(") Možnost ") != -1) {
             const abcChar = `${String.fromCharCode(65 + idx)}`;
             newDefaultText = `${abcChar}) Možnost ${abcChar}`
         }
-        else if (defaultText.lastIndexOf("Nadpis ") != -1) {
+        else if (defaultText && defaultText.lastIndexOf("Nadpis ") != -1) {
             newDefaultText = 'Nadpis ' + (idx + 1);
         }
 
-        if (label.textContent == defaultText) {
+        if (label && label.textContent == defaultText) {
             label.textContent = newDefaultText;
         }
-        preview.dataset.default = newDefaultText;
+        if (newDefaultText) preview.dataset.default = newDefaultText;
     });
 }
 
@@ -570,13 +570,13 @@ document.addEventListener('input', (e) => {
 
     // Option text input
     if (name == 'optionText') {
-        const dataIndex = el.closest('.option-card').dataset.index;
+        const card = el.closest('.option-card');
+        if (!card) return;
+        const dataIndex = card.dataset.index;
         const option = document.querySelector(`.previewOption[data-index="${dataIndex}"]`);
+        if (!option) return;
 
-        const defaultValue = option.dataset.default
-
-        if (!option) { toastr.error('interní problém webové aplikace') }
-         
+        const defaultValue = option.dataset.default;
         const label = option.querySelector('.optionPreviewLabel');
 
         if (label) {
@@ -592,26 +592,25 @@ document.addEventListener('change', (e) => {
     // Correct answer checkbox
     if (name == 'CorrectInput') {
         const optionCard = el.closest('.option-card');
+        if (!optionCard) return;
         const id = optionCard.getAttribute('data-index');
 
-        let previewBorder;
-
         const optionInput = document.querySelector(`.previewOption[data-index="${id}"]`);
+        if (!optionInput) return;
+
+        let previewBorder;
         if (optionInput.classList.contains('optionPreviewBorder')) {
             previewBorder = optionInput;
-        }
-        else {
+        } else {
             previewBorder = optionInput.querySelector('.optionPreviewBorder');
-
         }
 
         if (el.checked) {
-            optionCard.classList.add('correct')
-            previewBorder.classList.add('correct')
-        }
-        else {
-            optionCard.classList.remove('correct')
-            previewBorder.classList.remove('correct')
+            optionCard.classList.add('correct');
+            if (previewBorder) previewBorder.classList.add('correct');
+        } else {
+            optionCard.classList.remove('correct');
+            if (previewBorder) previewBorder.classList.remove('correct');
         }
     }
 
@@ -619,10 +618,12 @@ document.addEventListener('change', (e) => {
     
     if (name == 'imageQuestion') {
         const optionCard = el.closest('.option-card');
+        if (!optionCard) return;
         const id = optionCard.getAttribute('data-index');
         const file = e.target.files[0];
 
         const previewOption = document.querySelector(`.previewOption[data-index="${id}"]`);
+        if (!previewOption) return;
         const imageContainer = previewOption.querySelector('.imageContainer');
         const noImageHolder = previewOption.querySelector('.noImage'); 
         const previewImage = previewOption.querySelector('.imageContainer>img');
@@ -645,12 +646,16 @@ document.addEventListener('change', (e) => {
 })
 
 function updatePreview() {
-    const header = document.getElementById('Header').value.trim();
-    const description = document.getElementById('Description').value.trim();
+    const header = document.getElementById('Header');
+    const description = document.getElementById('Description');
+    if (!header || !description) return;
+
+    const headerVal = header.value.trim();
+    const descVal = description.value.trim();
 
     const previewHeader = document.getElementById('previewHeader');
     const previewDescription = document.getElementById('previewDescription');
 
-    previewHeader.textContent = header.length <= 0 ? 'Nadpis otázky' : header;
-    previewDescription.textContent = description.length <= 0 ? 'Popis/znění otázky' : description;
+    if (previewHeader) previewHeader.textContent = headerVal.length <= 0 ? 'Nadpis otázky' : headerVal;
+    if (previewDescription) previewDescription.textContent = descVal.length <= 0 ? 'Popis/znění otázky' : descVal;
 }
