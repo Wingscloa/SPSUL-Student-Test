@@ -1,4 +1,13 @@
-﻿// ============================================
+// ============================================
+// Block 'e', '+', '-' on number inputs with .no-e
+// ============================================
+document.addEventListener('keydown', function (e) {
+    if (e.target.matches('input[type="number"].no-e') && ['e', 'E', '+', '-', '.'].includes(e.key)) {
+        e.preventDefault();
+    }
+});
+
+// ============================================
 // Antiforgery token helper
 // ============================================
 function getAntiForgeryToken() {

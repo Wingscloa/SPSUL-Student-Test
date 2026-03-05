@@ -110,6 +110,11 @@ document.getElementById('createClassSubmit')?.addEventListener('click', async fu
         return;
     }
 
+    if (startFrom > endTo) {
+        toastr.warning('Rok zah\u00e1jen\u00ed nesm\u00ed b\u00fdt v\u011bt\u0161\u00ed ne\u017e rok ukon\u010den\u00ed.');
+        return;
+    }
+
     var btn = this;
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>...';
@@ -195,6 +200,11 @@ document.getElementById('editSubmitBtn')?.addEventListener('click', async functi
             }
         }
     });
+
+    if (data.StartFrom && data.EndTo && Number(data.StartFrom) > Number(data.EndTo)) {
+        toastr.warning('Rok zah\u00e1jen\u00ed nesm\u00ed b\u00fdt v\u011bt\u0161\u00ed ne\u017e rok ukon\u010den\u00ed.');
+        return;
+    }
 
     var btn = this;
     btn.disabled = true;

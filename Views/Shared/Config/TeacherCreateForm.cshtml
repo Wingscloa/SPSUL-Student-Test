@@ -10,11 +10,13 @@
            data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
            data-v-msg="Jméno musí obsahovat pouze písmena a být vyplněno."
            data-v-length="3,30"
+           autocomplete="off"
            required>
 </div>
 <div class="mb-3">
     <label class="configLabel small mb-1" for="LastName">Příjmení</label>
     <input type="text" class="configInput w-100" placeholder="Příjmení" name="LastName" 
+        autocomplete="off"
         data-v-name="Příjmení"
         data-v-required="true"
         data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
@@ -25,6 +27,7 @@
 <div class="mb-3">
     <label class="configLabel small mb-1" for="NickName">Přezdívka</label>
     <input type="text" class="configInput w-100" placeholder="Přezdívka" name="NickName" required
+           autocomplete="off"
            data-v-name="Přezdívka"
            data-v-required="true"
            data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
@@ -34,6 +37,7 @@
 <div class="mb-3">
     <label class="configLabel small mb-1" for="Password">Heslo</label>
     <input type="text" class="configInput w-100" name="Password" required
+           autocomplete="off"
            data-v-name="Heslo"
            data-v-required="true"
            data-v-length="8,30"
@@ -54,6 +58,7 @@
     <label class="configLabel small mb-1" for="RoleIds">Role</label>
     <input type="hidden" name="RoleIds" value="" />
     <select class="form-select select2" multiple="multiple" name="RoleIds"
+            autocomplete="off"
             data-v-name="Role"
             data-v-required="true"
             data-v-length="1,1"

@@ -4,7 +4,7 @@
 
 <div class="mb-3">
     <label class="configLabel small mb-1" for="FirstName">Jméno</label>
-    <input type="text" class="configInput w-100" value="@Model.Student.FirstName" placeholder="Jméno" name="FirstName"
+    <input type="text" class="configInput w-100" value="@Model.Student.FirstName" placeholder="Jméno" name="FirstName" autocomplete="off"
            data-v-name="Jméno"
            data-v-required="true"
            data-v-reg="^[a-zA-Zá-žÁ-Ž]+$"
@@ -14,7 +14,7 @@
 </div>
 <div class="mb-3">
     <label class="configLabel small mb-1" for="LastName">Příjmení</label>
-    <input type="text" class="configInput w-100" value="@Model.Student.LastName" placeholder="Příjmení" name="LastName"
+    <input type="text" class="configInput w-100" value="@Model.Student.LastName" placeholder="Příjmení" name="LastName" autocomplete="off"
            data-v-name="Příjmení"
            data-v-required="true"
            data-v-reg="^[a-zA-Zá-žÁ-Ž]+$"

@@ -8,20 +8,19 @@ using System.Text.Json;
 namespace SPSUL.Controllers
 {
     /// <summary>
-    /// Správa testù ze strany uèitele.
+    /// SprÃ¡va testÅ¯ ze strany uÄitele.
     ///
     /// Funkce:
-    ///   Index      – seznam všech testù s filtrem a rychlımi statistikami
-    ///   Create     – tvorba nového testu (vıbìr otázek ze snapshotu)
-    ///   Edit       – úprava existujícího testu
-    ///   Assignments – pøehled pøiøazení studentù ke konkrétnímu testu
-    ///   Example    – demo test (dostupnı bez pøihlášení, [AllowAnonymousTest])
-    ///   Take       – stránka pro studenta pøi psaní testu (pøes LoginId)
-    ///   PrintCodes – tisk pøihlašovacích kódù studentù
+    ///   Index      â€“ seznam vÅ¡ech testÅ¯ s filtrem a rychlÃ½mi statistikami
+    ///   Create     â€“ tvorba novÃ©ho testu (vÃ½bÄ›r otÃ¡zek ze snapshotu)
+    ///   Edit       â€“ Ãºprava existujÃ­cÃ­ho testu
+    ///   Assignments â€“ pÅ™ehled pÅ™iÅ™azenÃ­ studentÅ¯ ke konkrÃ©tnÃ­mu testu + tisk kÃ³dÅ¯
+    ///   Example    â€“ demo test (dostupnÃ½ bez pÅ™ihlÃ¡Å¡enÃ­, [AllowAnonymousTest])
+    ///   Take       â€“ strÃ¡nka pro studenta pÅ™i psanÃ­ testu (pÅ™es LoginId)
     ///
-    /// Klíèovı koncept – QuestionSnapshot:
-    ///   Pøi uloení testu se otázky zkopírují jako JSON snapshot.
-    ///   Díky tomu pozdìjší editace otázek neovlivní ji vytvoøené testy.
+    /// KlÃ­ÄovÃ½ koncept â€“ QuestionSnapshot:
+    ///   PÅ™i uloÅ¾enÃ­ testu se otÃ¡zky zkopÃ­rujÃ­ jako JSON snapshot.
+    ///   DÃ­ky tomu pozdÄ›jÅ¡Ã­ editace otÃ¡zek neovlivnÃ­ jiÅ¾ vytvoÅ™enÃ© testy.
     /// </summary>
     [LoginRequired]
     public class TestController : Controller
@@ -76,7 +75,7 @@ namespace SPSUL.Controllers
         }
 
         // ============================================
-        // ASSIGNMENTS - historie pøiøazení pro test
+        // ASSIGNMENTS - historie pÅ™iÅ™azenÃ­ pro test
         // ============================================
         public async Task<IActionResult> Assignments(int id)
         {
@@ -92,25 +91,6 @@ namespace SPSUL.Controllers
                 .Include(st => st.Student)
                 .Where(st => st.TestId == id)
                 .OrderByDescending(st => st.StartedAt)
-                .ToListAsync();
-
-            ViewBag.Test = test;
-            ViewBag.Assignments = assignments;
-
-            return View();
-        }
-
-        // ============================================
-        // PRINT CODES - tisk pøihlašovacích kódù
-        // ============================================
-        public async Task<IActionResult> PrintCodes(int id)
-        {
-            var test = await _ctx.Tests.FindAsync(id);
-            if (test == null) return RedirectToAction("Index");
-
-            var assignments = await _ctx.StudentTests
-                .Include(st => st.Student)
-                .Where(st => st.TestId == id)
                 .ToListAsync();
 
             ViewBag.Test = test;
@@ -151,7 +131,7 @@ namespace SPSUL.Controllers
                 .ToListAsync();
 
             if (assignments.Count == 0)
-                return BadRequest(new { message = "ádné kódy nebyly vybrány." });
+                return BadRequest(new { message = "Å½Ã¡dnÃ© kÃ³dy nebyly vybrÃ¡ny." });
 
             var pdfBytes = _pdf.GenerateCodesPdf(test, assignments);
             return File(pdfBytes, "application/pdf", $"Kody-{test.Name}.pdf");
@@ -164,14 +144,14 @@ namespace SPSUL.Controllers
         public async Task<IActionResult> Assign([FromBody] AssignTestDto dto)
         {
             if (dto.StudentIds == null || dto.StudentIds.Count == 0)
-                return BadRequest(new { message = "Musíte vybrat alespoò jednoho studenta." });
+                return BadRequest(new { message = "MusÃ­te vybrat alespoÅˆ jednoho studenta." });
 
             var test = await _ctx.Tests.FindAsync(dto.TestId);
             if (test == null)
                 return NotFound(new { message = "Test nebyl nalezen." });
 
             if (!test.IsActive)
-                return BadRequest(new { message = "Tento test není aktivní." });
+                return BadRequest(new { message = "Tento test nenÃ­ aktivnÃ­." });
 
             var existingAssignments = await _ctx.StudentTests
                 .Where(st => st.TestId == dto.TestId)
@@ -180,7 +160,7 @@ namespace SPSUL.Controllers
 
             var newStudentIds = dto.StudentIds.Except(existingAssignments).ToList();
             if (newStudentIds.Count == 0)
-                return BadRequest(new { message = "Všichni vybraní studenti u mají tento test pøiøazenı." });
+                return BadRequest(new { message = "VÅ¡ichni vybranÃ­ studenti uÅ¾ majÃ­ tento test pÅ™iÅ™azenÃ½." });
 
             var assignments = new List<StudentTest>();
             var loginIds = new List<object>();
@@ -214,13 +194,13 @@ namespace SPSUL.Controllers
 
             return Ok(new
             {
-                message = $"Test pøiøazen {newStudentIds.Count} studentùm.",
+                message = $"Test pÅ™iÅ™azen {newStudentIds.Count} studentÅ¯m.",
                 assignments = loginIds
             });
         }
 
         // ============================================
-        // REASSIGN - opakování testu
+        // REASSIGN - opakovÃ¡nÃ­ testu
         // ============================================
         [HttpPost]
         public async Task<IActionResult> Reassign([FromBody] ReassignDto dto)
@@ -229,13 +209,13 @@ namespace SPSUL.Controllers
                 .FirstOrDefaultAsync(st => st.StudentId == dto.StudentId && st.TestId == dto.TestId);
 
             if (old == null)
-                return NotFound(new { message = "Pøiøazení nebylo nalezeno." });
+                return NotFound(new { message = "PÅ™iÅ™azenÃ­ nebylo nalezeno." });
 
-            // Smazat staré pøiøazení
+            // Smazat starÃ© pÅ™iÅ™azenÃ­
             _ctx.StudentTests.Remove(old);
             await _ctx.SaveChangesAsync();
 
-            // Vytvoøit nové s novım LoginId
+            // VytvoÅ™it novÃ© s novÃ½m LoginId
             var loginId = GenerateLoginId();
             var newAssignment = new StudentTest
             {
@@ -250,7 +230,7 @@ namespace SPSUL.Controllers
             _ctx.StudentTests.Add(newAssignment);
             await _ctx.SaveChangesAsync();
 
-            return Ok(new { message = "Test byl znovu pøiøazen.", loginId });
+            return Ok(new { message = "Test byl znovu pÅ™iÅ™azen.", loginId });
         }
 
         // ============================================
@@ -262,7 +242,7 @@ namespace SPSUL.Controllers
         {
             if (string.IsNullOrWhiteSpace(testId))
             {
-                TempData["TestError"] = "Zadejte èíslo testu.";
+                TempData["TestError"] = "Zadejte ÄÃ­slo testu.";
                 return RedirectToAction("Test", "Auth");
             }
 
@@ -273,32 +253,32 @@ namespace SPSUL.Controllers
 
             if (assignment == null)
             {
-                TempData["TestError"] = "Zadané èíslo testu neexistuje.";
+                TempData["TestError"] = "ZadanÃ© ÄÃ­slo testu neexistuje.";
                 return RedirectToAction("Test", "Auth");
             }
 
             if (!assignment.Test.IsActive)
             {
-                TempData["TestError"] = "Tento test není momentálnì aktivní. Kontaktujte svého uèitele.";
+                TempData["TestError"] = "Tento test nenÃ­ momentÃ¡lnÄ› aktivnÃ­. Kontaktujte svÃ©ho uÄitele.";
                 return RedirectToAction("Test", "Auth");
             }
 
             if (assignment.FinishedAt != DateTime.MinValue)
             {
-                TempData["TestError"] = "Tento test byl ji dokonèen.";
+                TempData["TestError"] = "Tento test byl jiÅ¾ dokonÄen.";
                 return RedirectToAction("Test", "Auth");
             }
 
-            // Deserializovat otázky
+            // Deserializovat otÃ¡zky
             var questions = JsonSerializer.Deserialize<List<QuestionSnapshotItem>>(
                 assignment.Test.QuestionSnapshot) ?? [];
 
-            // Pokud student zaèíná poprvé
+            // Pokud student zaÄÃ­nÃ¡ poprvÃ©
             if (assignment.StartedAt == DateTime.MinValue)
             {
                 assignment.StartedAt = DateTime.Now;
 
-                // Shuffle otázky + odpovìdi pokud test to vyaduje
+                // Shuffle otÃ¡zky + odpovÄ›di pokud test to vyÅ¾aduje
                 if (assignment.Test.ShuffleQuestions)
                 {
                     var rng = new Random();
@@ -306,7 +286,7 @@ namespace SPSUL.Controllers
                     foreach (var q in questions)
                         q.Options = q.Options.OrderBy(_ => rng.Next()).ToList();
 
-                    // Uloit poøadí pro konzistentní zobrazení pøi návratu
+                    // UloÅ¾it poÅ™adÃ­ pro konzistentnÃ­ zobrazenÃ­ pÅ™i nÃ¡vratu
                     var order = questions.Select(q => q.QuestionId).ToList();
                     assignment.ShuffleOrder = JsonSerializer.Serialize(order);
                 }
@@ -325,7 +305,7 @@ namespace SPSUL.Controllers
             }
             else if (!string.IsNullOrEmpty(assignment.ShuffleOrder))
             {
-                // Pokraèování - obnovit uloené poøadí
+                // PokraÄovÃ¡nÃ­ - obnovit uloÅ¾enÃ© poÅ™adÃ­
                 var order = JsonSerializer.Deserialize<List<int>>(assignment.ShuffleOrder) ?? [];
                 if (order.Count > 0)
                 {
@@ -334,19 +314,19 @@ namespace SPSUL.Controllers
                 }
             }
 
-            // Kontrola èasového limitu
+            // Kontrola ÄasovÃ©ho limitu
             if (assignment.Test.TimeLimitMinutes.HasValue)
             {
                 var elapsed = DateTime.Now - assignment.StartedAt;
                 if (elapsed.TotalMinutes >= assignment.Test.TimeLimitMinutes.Value)
                 {
-                    // Èas vypršel - automaticky dokonèit
+                    // ÄŒas vyprÅ¡el - automaticky dokonÄit
                     if (assignment.FinishedAt == DateTime.MinValue)
                     {
                         assignment.FinishedAt = DateTime.Now;
                         await _ctx.SaveChangesAsync();
                     }
-                    TempData["TestError"] = "Èasovı limit vypršel. Test byl automaticky odevzdán.";
+                    TempData["TestError"] = "ÄŒasovÃ½ limit vyprÅ¡el. Test byl automaticky odevzdÃ¡n.";
                     return RedirectToAction("Test", "Auth");
                 }
             }
@@ -383,7 +363,7 @@ namespace SPSUL.Controllers
                 return NotFound(new { message = "Test nebyl nalezen." });
 
             if (assignment.FinishedAt != DateTime.MinValue)
-                return BadRequest(new { message = "Test byl ji dokonèen." });
+                return BadRequest(new { message = "Test byl jiÅ¾ dokonÄen." });
 
             assignment.ResultSnapshot = JsonSerializer.Serialize(new TestResultSnapshot
             {
@@ -392,7 +372,7 @@ namespace SPSUL.Controllers
             });
             await _ctx.SaveChangesAsync();
 
-            return Ok(new { message = "Prùbìh uloen." });
+            return Ok(new { message = "PrÅ¯bÄ›h uloÅ¾en." });
         }
 
         // ============================================
@@ -410,7 +390,7 @@ namespace SPSUL.Controllers
                 return NotFound(new { message = "Test nebyl nalezen." });
 
             if (assignment.FinishedAt != DateTime.MinValue)
-                return BadRequest(new { message = "Test byl ji dokonèen." });
+                return BadRequest(new { message = "Test byl jiÅ¾ dokonÄen." });
 
             assignment.ResultSnapshot = JsonSerializer.Serialize(new TestResultSnapshot
             {
@@ -438,7 +418,7 @@ namespace SPSUL.Controllers
 
             int successPct = total > 0 ? (int)Math.Round((double)correct / total * 100) : 0;
 
-            return Ok(new { message = "Test byl úspìšnì dokonèen!", correct, total, successPct });
+            return Ok(new { message = "Test byl ÃºspÄ›Å¡nÄ› dokonÄen!", correct, total, successPct });
         }
 
         // ============================================
@@ -450,7 +430,7 @@ namespace SPSUL.Controllers
             var tests = await _ctx.Tests.Where(t => ids.Contains(t.TestId)).ToListAsync();
             tests.ForEach(t => t.IsActive = true);
             await _ctx.SaveChangesAsync();
-            return Ok(new { message = $"{tests.Count} testù aktivováno." });
+            return Ok(new { message = $"{tests.Count} testÅ¯ aktivovÃ¡no." });
         }
 
         [HttpPost]
@@ -459,7 +439,7 @@ namespace SPSUL.Controllers
             var tests = await _ctx.Tests.Where(t => ids.Contains(t.TestId)).ToListAsync();
             tests.ForEach(t => t.IsActive = false);
             await _ctx.SaveChangesAsync();
-            return Ok(new { message = $"{tests.Count} testù deaktivováno." });
+            return Ok(new { message = $"{tests.Count} testÅ¯ deaktivovÃ¡no." });
         }
 
         // ============================================
@@ -474,16 +454,16 @@ namespace SPSUL.Controllers
                 .ToListAsync();
 
             if (tests.Count == 0)
-                return NotFound(new { message = "ádné testy k smazání nebyly nalezeny." });
+                return NotFound(new { message = "Å½Ã¡dnÃ© testy k smazÃ¡nÃ­ nebyly nalezeny." });
 
-            // Smazat pøiøazení studentù
+            // Smazat pÅ™iÅ™azenÃ­ studentÅ¯
             var assignments = tests.SelectMany(t => t.StudentTests).ToList();
             _ctx.StudentTests.RemoveRange(assignments);
 
             _ctx.Tests.RemoveRange(tests);
             await _ctx.SaveChangesAsync();
 
-            return Ok(new { message = $"{tests.Count} testù bylo smazáno." });
+            return Ok(new { message = $"{tests.Count} testÅ¯ bylo smazÃ¡no." });
         }
 
         // ============================================
@@ -499,7 +479,7 @@ namespace SPSUL.Controllers
             test.IsActive = !test.IsActive;
             await _ctx.SaveChangesAsync();
 
-            var status = test.IsActive ? "aktivován" : "deaktivován";
+            var status = test.IsActive ? "aktivovÃ¡n" : "deaktivovÃ¡n";
             return Ok(new { message = $"Test byl {status}.", isActive = test.IsActive });
         }
 
@@ -541,7 +521,7 @@ namespace SPSUL.Controllers
                     .SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage)
                     .ToList();
-                return BadRequest(new { message = "Neplatná vstupní data.", errors });
+                return BadRequest(new { message = "NeplatnÃ¡ vstupnÃ­ data.", errors });
             }
 
             using var transaction = await _ctx.Database.BeginTransactionAsync();
@@ -555,7 +535,7 @@ namespace SPSUL.Controllers
                     .ToListAsync();
 
                 if (questions.Count != dto.QuestionIds.Count)
-                    return BadRequest(new { message = "Nìkteré vybrané otázky neexistují." });
+                    return BadRequest(new { message = "NÄ›kterÃ© vybranÃ© otÃ¡zky neexistujÃ­." });
 
                 var questionSnapshot = questions.Select(q => new
                 {
@@ -590,7 +570,7 @@ namespace SPSUL.Controllers
 
                 return Ok(new
                 {
-                    message = "Test byl úspìšnì vytvoøen!",
+                    message = "Test byl ÃºspÄ›Å¡nÄ› vytvoÅ™en!",
                     testId = test.TestId,
                     questionsCount = questions.Count
                 });
@@ -600,7 +580,7 @@ namespace SPSUL.Controllers
                 await transaction.RollbackAsync();
                 return BadRequest(new
                 {
-                    message = "Chyba pøi vytváøení testu.",
+                    message = "Chyba pÅ™i vytvÃ¡Å™enÃ­ testu.",
                     error = ex.Message,
                     innerError = ex.InnerException?.Message
                 });

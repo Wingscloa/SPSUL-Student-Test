@@ -8,7 +8,17 @@
     const newPassword = form.querySelector('#profileNewPassword').value;
 
     if (!firstName || !lastName || !nickName) {
-        toastr.error('Jméno, příjmení a přezdívka jsou povinné.');
+        toastr.error('Jm\u00e9no, p\u0159\u00edjmen\u00ed a p\u0159ezd\u00edvka jsou povinn\u00e9.');
+        return;
+    }
+
+    var nameRegex = /^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF ]+$/;
+    if (!nameRegex.test(firstName)) {
+        toastr.error('Jm\u00e9no m\u016f\u017ee obsahovat pouze p\u00edsmena.');
+        return;
+    }
+    if (!nameRegex.test(lastName)) {
+        toastr.error('P\u0159\u00edjmen\u00ed m\u016f\u017ee obsahovat pouze p\u00edsmena.');
         return;
     }
 

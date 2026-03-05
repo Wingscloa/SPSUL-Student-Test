@@ -5,20 +5,20 @@ using SPSUL.Models.Data;
 namespace SPSUL.Models
 {
     /// <summary>
-    /// Singleton cache pro semi-statická èíselníková data (tøídy, pøedmìty, typy otázek, role, tituly).
+    /// Singleton cache pro semi-statickÃ¡ ÄÃ­selnÃ­kovÃ¡ data (tÅ™Ã­dy, pÅ™edmÄ›ty, typy otÃ¡zek, role, tituly).
     ///
-    /// Proè Singleton a ne Scoped:
-    ///   Tato data se mìní velmi zøídka (pøidání nové tøídy, pøedmìtu...).
-    ///   Singleton zajistí, e cache existuje po celou dobu bìhu aplikace a sdílí se mezi requesty.
-    ///   Scoped by cache zahodil po kadém requestu, co by bylo zbyteèné.
+    /// ProÄ Singleton a ne Scoped:
+    ///   Tato data se mÄ›nÃ­ velmi zÅ™Ã­dka (pÅ™idÃ¡nÃ­ novÃ© tÅ™Ã­dy, pÅ™edmÄ›tu...).
+    ///   Singleton zajistÃ­, Å¾e cache existuje po celou dobu bÄ›hu aplikace a sdÃ­lÃ­ se mezi requesty.
+    ///   Scoped by cache zahodil po kaÅ¾dÃ©m requestu, coÅ¾ by bylo zbyteÄnÃ©.
     ///
-    /// ivotnost cache:
-    ///   Data jsou cachována 5 minut. Po té se pøi dalším requestu naètou znovu z DB.
-    ///   Lze vynutit okamité zneplatnìní pomocí Invalidate() po zápisu do DB.
+    /// Å½ivotnost cache:
+    ///   Data jsou cachovÃ¡na 5 minut. Po tÃ© se pÅ™i dalÅ¡Ã­m requestu naÄtou znovu z DB.
+    ///   Lze vynutit okamÅ¾itÃ© zneplatnÄ›nÃ­ pomocÃ­ Invalidate() po zÃ¡pisu do DB.
     ///
     /// Pozor:
-    ///   Protoe je Singleton, nemùe pøímo injectovat SpsulContext (kterı je Scoped).
-    ///   Proto pouívá IServiceScopeFactory pro vytvoøení doèasného scope pøi DB dotazu.
+    ///   ProtoÅ¾e je Singleton, nemÅ¯Å¾e pÅ™Ã­mo injectovat SpsulContext (kterÃ½ je Scoped).
+    ///   Proto pouÅ¾Ã­vÃ¡ IServiceScopeFactory pro vytvoÅ™enÃ­ doÄasnÃ©ho scope pÅ™i DB dotazu.
     /// </summary>
     public class LookupCacheService
     {

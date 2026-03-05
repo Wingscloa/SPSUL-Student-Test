@@ -3,17 +3,17 @@ using SPSUL.Models;
 namespace SPSUL.Helpers
 {
     /// <summary>
-    /// Extension metody pro snadné ovìøování oprávnìní pøímo v Razor views.
+    /// Extension metody pro snadnÃ© ovÄ›Å™ovÃ¡nÃ­ oprÃ¡vnÄ›nÃ­ pÅ™Ã­mo v Razor views.
     ///
     /// Jak funguje:
-    ///   LoginRequiredAttribute pøi kadém requestu pøednaète oprávnìní uèitele a uloí je
+    ///   LoginRequiredAttribute pÅ™i kaÅ¾dÃ©m requestu pÅ™ednaÄte oprÃ¡vnÄ›nÃ­ uÄitele a uloÅ¾Ã­ je
     ///   do HttpContext.Items["Permissions"] jako HashSet&lt;string&gt;.
-    ///   Tyto extension metody pak z Items rychle pøeètou, zda dané oprávnìní existuje.
+    ///   Tyto extension metody pak z Items rychle pÅ™eÄtou, zda danÃ© oprÃ¡vnÄ›nÃ­ existuje.
     ///
-    /// Pouití v Razor view:
+    /// PouÅ¾itÃ­ v Razor view:
     ///   @if (Context.HasPermission(AppPermissions.CrudTests))
     ///   {
-    ///       &lt;button&gt;Vytvoøit test&lt;/button&gt;
+    ///       &lt;button&gt;VytvoÅ™it test&lt;/button&gt;
     ///   }
     /// </summary>
     public static class PermissionHelper

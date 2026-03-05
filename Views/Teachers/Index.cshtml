@@ -4,7 +4,7 @@
 
 @{
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
-    ViewData["Title"] = "UËitelÈ";
+    ViewData["Title"] = "Uƒçitel√©";
 
     var canCrudTeachers = Context.HasAnyPermission(AppPermissions.CrudTeachers, AppPermissions.All);
 }
@@ -17,13 +17,13 @@
                 <div class="card-header brandText d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="bi bi-person-workspace me-2"></i>
-                        Seznam uËitel˘
+                        Seznam uƒçitel≈Ø
                     </h5>
                     <div class="tools d-flex justify-content-center align-items-center gap-2">
                         <!--Cancel-->
                         <a class="iconLink cursor option" id="cancelOption" style="display: none">
                             <i class="bi bi-dash-circle"></i>
-                            Zruöit
+                            Zru≈°it
                         </a>
                         <!--Confirm-->
                         <a class="iconLink cursor option" id="acceptOption" style="display: none">
@@ -38,14 +38,14 @@
                         @if (canCrudTeachers)
                         {
                         <!--Delete Mode-->
-                        <a class="iconLink cursor mode" title="Smazat uËitele" id="deleteMode" data-endpoint="Teachers/Delete/" data-method="POST">
+                        <a class="iconLink cursor mode" title="Smazat uƒçitele" id="deleteMode" data-endpoint="Teachers/Delete/" data-method="POST">
                             <i class="bi bi-dash-circle"></i>
                             Smazat
                         </a>
                         <!--Create-->
-                        <a class="iconLink cursor mode" title="Vytvo¯it uËitele" id="createTeacherBtn">
+                        <a class="iconLink cursor mode" title="Vytvo≈ôit uƒçitele" id="createTeacherBtn">
                             <i class="bi bi-plus-circle"></i>
-                            Vytvo¯it
+                            Vytvo≈ôit
                         </a>
                         }
                     </div>
@@ -54,9 +54,9 @@
                     <table class="table align-middle mb-0" style="min-width: 1000px">
                         <thead>
                             <tr>
-                                <th class="col-2">JmÈno</th>
-                                <th class="col-2">P¯ÌjmenÌ</th>
-                                <th class="col-2">P¯ezdÌvka</th>
+                                <th class="col-2">Jm√©no</th>
+                                <th class="col-2">P≈ô√≠jmen√≠</th>
+                                <th class="col-2">P≈ôezd√≠vka</th>
                                 <th class="col-2">Tituly</th>
                                 <th class="col-2">Role</th>
                                 @if (canCrudTeachers)
@@ -84,7 +84,7 @@
                                         }
                                         else
                                         {
-                                            <span class="text-muted">ñ</span>
+                                            <span class="text-muted">‚Äì</span>
                                         }
                                     </td>
                                     <td>
@@ -97,7 +97,7 @@
                                         }
                                         else
                                         {
-                                            <span class="text-muted">ñ</span>
+                                            <span class="text-muted">‚Äì</span>
                                         }
                                     </td>
                                     @if (canCrudTeachers)
@@ -119,7 +119,7 @@
                     </table>
                 </div>
                 <div class="card-footer d-flex justify-content-between align-items-center">
-                    <div>@Model.Teachers.Count poloûek</div>
+                    <div>@Model.Teachers.Count polo≈æek</div>
                 </div>
             </div>
         </div>
@@ -129,7 +129,7 @@
                 <div class="card-header brandText fw-bold"><i class="bi bi-funnel me-2"></i>Filtrace</div>
                 <div class="card-body">
                     <form method="get" class="vstack gap-2">
-                        <input class="form-control" name="name" value="@Model.Name" placeholder="JmÈno, p¯ÌjmenÌ nebo p¯ezdÌvka" />
+                        <input class="form-control" name="name" value="@Model.Name" placeholder="Jm√©no, p≈ô√≠jmen√≠ nebo p≈ôezd√≠vka" />
 
                         <select class="form-select select2" name="roleId">
                             <option value="">Vyber roli</option>
@@ -148,9 +148,9 @@
                         </select>
 
                         <select class="form-select select2" name="active">
-                            <option value="">AktivnÌ/NeaktivnÌ</option>
-                            <option value="true" selected="@(Model.Active == true)">AktivnÌ</option>
-                            <option value="false" selected="@(Model.Active == false)">NeaktivnÌ</option>
+                            <option value="">Aktivn√≠/Neaktivn√≠</option>
+                            <option value="true" selected="@(Model.Active == true)">Aktivn√≠</option>
+                            <option value="false" selected="@(Model.Active == false)">Neaktivn√≠</option>
                         </select>
 
                         <button class="btn btn-orange w-100">
@@ -165,7 +165,7 @@
 
             <div class="card shadow-sm mt-3">
                 <div class="card-header bg-light fw-bold">
-                    <i class="bi bi-clipboard-data me-2"></i>RychlÈ statistiky
+                    <i class="bi bi-clipboard-data me-2"></i>Rychl√© statistiky
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
@@ -173,11 +173,11 @@
                         <strong>@Model.Teachers.Count</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">AktivnÌ:</span>
+                        <span class="text-muted">Aktivn√≠:</span>
                         <strong class="text-success">@Model.Teachers.Count(x => x.IsActive)</strong>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="text-muted">NeaktivnÌ:</span>
+                        <span class="text-muted">Neaktivn√≠:</span>
                         <strong class="text-secondary">@Model.Teachers.Count(x => !x.IsActive)</strong>
                     </div>
                 </div>
@@ -193,25 +193,25 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="bi bi-person-plus-fill me-2"></i>Nov˝ uËitel</h5>
+                <h5 class="modal-title"><i class="bi bi-person-plus-fill me-2"></i>Nov√Ω uƒçitel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label fw-bold">JmÈno</label>
-                    <input type="text" class="form-control" id="cFirstName" placeholder="JmÈno" maxlength="64" />
+                    <label class="form-label fw-bold">Jm√©no</label>
+                    <input type="text" class="form-control" id="cFirstName" placeholder="Jm√©no" maxlength="64" pattern="[a-zA-Z√°-≈æ√Å-≈Ω ]+" title="Pouze p√≠smena" autocomplete="off"/>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-bold">P¯ÌjmenÌ</label>
-                    <input type="text" class="form-control" id="cLastName" placeholder="P¯ÌjmenÌ" maxlength="64" />
+                    <label class="form-label fw-bold">P≈ô√≠jmen√≠</label>
+                    <input type="text" class="form-control" id="cLastName" placeholder="P≈ô√≠jmen√≠" maxlength="64" pattern="[a-zA-Z√°-≈æ√Å-≈Ω ]+" title="Pouze p√≠smena" autocomplete="off" />
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-bold">P¯ezdÌvka</label>
-                    <input type="text" class="form-control" id="cNickName" placeholder="P¯ezdÌvka" maxlength="64" />
+                    <label class="form-label fw-bold">P≈ôezd√≠vka</label>
+                    <input type="text" class="form-control" id="cNickName" placeholder="P≈ôezd√≠vka" maxlength="64" pattern="[a-zA-Z√°-≈æ√Å-≈Ω0-9_ ]+" title="Pouze p√≠smena, ƒç√≠sla a podtr≈æ√≠tka" autocomplete="one-time-code" />
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-bold">Heslo</label>
-                    <input type="password" class="form-control" id="cPassword" placeholder="Heslo" maxlength="128" />
+                    <input type="password" class="form-control" id="cPassword" placeholder="Heslo" maxlength="128" autocomplete="new-password" />
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-bold">Tituly</label>
@@ -233,9 +233,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zruöit</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zru≈°it</button>
                 <button type="button" class="btn btn-orange" id="createTeacherSubmit">
-                    <i class="bi bi-check2-circle me-1"></i>Vytvo¯it
+                    <i class="bi bi-check2-circle me-1"></i>Vytvo≈ôit
                 </button>
             </div>
         </div>
@@ -247,21 +247,21 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editace uËitele</h5>
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editace uƒçitele</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div id="editFormBody">
                     <div class="text-center py-4">
                         <div class="spinner-border text-orange" role="status"></div>
-                        <p class="text-muted mt-2">NaËÌt·m formul·¯Ö</p>
+                        <p class="text-muted mt-2">Naƒç√≠t√°m formul√°≈ô‚Ä¶</p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zruöit</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zru≈°it</button>
                 <button type="button" class="btn btn-orange" id="editSubmitBtn">
-                    <i class="bi bi-check2-circle me-1"></i>Uloûit zmÏny
+                    <i class="bi bi-check2-circle me-1"></i>Ulo≈æit zmƒõny
                 </button>
             </div>
         </div>

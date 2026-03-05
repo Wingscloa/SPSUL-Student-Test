@@ -32,15 +32,15 @@ namespace SPSUL.Models
 
                 row.RelativeItem().PaddingLeft(8).AlignMiddle().Column(col =>
                 {
-                    col.Item().Text("SPä").Bold().FontSize(14).FontColor("#2D8C3C");
-                    col.Item().Text("⁄stÌ nad Labem").Bold().FontSize(10).FontColor("#2D8C3C");
+                    col.Item().Text("SP≈†").Bold().FontSize(14).FontColor("#2D8C3C");
+                    col.Item().Text("√öst√≠ nad Labem").Bold().FontSize(10).FontColor("#2D8C3C");
                 });
 
                 row.RelativeItem().AlignMiddle().AlignRight().Column(col =>
                 {
                     col.Item().Text("Elektrotechnika").FontSize(7).FontColor("#333");
-                    col.Item().Text("InformaËnÌ technologie").FontSize(7).FontColor("#333");
-                    col.Item().Text("StrojÌrenstvÌ").FontSize(7).FontColor("#333");
+                    col.Item().Text("Informaƒçn√≠ technologie").FontSize(7).FontColor("#333");
+                    col.Item().Text("Stroj√≠renstv√≠").FontSize(7).FontColor("#333");
                     col.Item().Text("Doprava a logistika").FontSize(7).FontColor("#333");
                 });
 
@@ -88,7 +88,7 @@ namespace SPSUL.Models
         // ============================================
         public byte[] GenerateCodesPdf(Test test, List<StudentTest> assignments)
         {
-            return CreateDocument($"P¯ihlaöovacÌ kÛdy ñ {test.Name}", content =>
+            return CreateDocument($"P≈ôihla≈°ovac√≠ k√≥dy ‚Äì {test.Name}", content =>
             {
                 content.Column(col =>
                 {
@@ -120,7 +120,7 @@ namespace SPSUL.Models
                                             .Background("#f5f5f5").Padding(6)
                                             .Text(a.LoginId)
                                             .Bold().FontSize(16).LetterSpacing(0.15f);
-                                        card.Item().AlignCenter().Text("Zadejte tento kÛd na p¯ihlaöovacÌ str·nce testu")
+                                        card.Item().AlignCenter().Text("Zadejte tento k√≥d na p≈ôihla≈°ovac√≠ str√°nce testu")
                                             .FontSize(6).FontColor("#888");
                                     });
                                 }
@@ -140,7 +140,7 @@ namespace SPSUL.Models
         // ============================================
         public byte[] GenerateStudentsPdf(List<Student> students)
         {
-            return CreateDocument("Seznam student˘", content =>
+            return CreateDocument("Seznam student≈Ø", content =>
             {
                 content.Table(table =>
                 {
@@ -155,8 +155,8 @@ namespace SPSUL.Models
                     table.Header(header =>
                     {
                         HeaderCell(header, "#");
-                        HeaderCell(header, "JmÈno");
-                        HeaderCell(header, "T¯Ìdy");
+                        HeaderCell(header, "Jm√©no");
+                        HeaderCell(header, "T≈ô√≠dy");
                         HeaderCell(header, "Stav");
                     });
 
@@ -170,7 +170,7 @@ namespace SPSUL.Models
                         DataCell(table, idx.ToString());
                         DataCell(table, $"{s.FirstName} {s.LastName}");
                         DataCell(table, classes);
-                        DataCell(table, s.IsActive ? "AktivnÌ" : "NeaktivnÌ");
+                        DataCell(table, s.IsActive ? "Aktivn√≠" : "Neaktivn√≠");
                         idx++;
                     }
                 });
@@ -182,7 +182,7 @@ namespace SPSUL.Models
         // ============================================
         public byte[] GenerateTeachersPdf(List<Teacher> teachers)
         {
-            return CreateDocument("Seznam uËitel˘", content =>
+            return CreateDocument("Seznam uƒçitel≈Ø", content =>
             {
                 content.Table(table =>
                 {
@@ -198,9 +198,9 @@ namespace SPSUL.Models
                     table.Header(header =>
                     {
                         HeaderCell(header, "#");
-                        HeaderCell(header, "JmÈno");
+                        HeaderCell(header, "Jm√©no");
                         HeaderCell(header, "Tituly");
-                        HeaderCell(header, "P¯ezdÌvka");
+                        HeaderCell(header, "P≈ôezd√≠vka");
                         HeaderCell(header, "Stav");
                     });
 
@@ -215,7 +215,7 @@ namespace SPSUL.Models
                         DataCell(table, $"{t.FirstName} {t.LastName}");
                         DataCell(table, titles);
                         DataCell(table, $"@{t.NickName}");
-                        DataCell(table, t.IsActive ? "AktivnÌ" : "NeaktivnÌ");
+                        DataCell(table, t.IsActive ? "Aktivn√≠" : "Neaktivn√≠");
                         idx++;
                     }
                 });
@@ -227,7 +227,7 @@ namespace SPSUL.Models
         // ============================================
         public byte[] GenerateClassesPdf(List<Classes> classes)
         {
-            return CreateDocument("Seznam t¯Ìd", content =>
+            return CreateDocument("Seznam t≈ô√≠d", content =>
             {
                 content.Table(table =>
                 {
@@ -244,7 +244,7 @@ namespace SPSUL.Models
                     table.Header(header =>
                     {
                         HeaderCell(header, "#");
-                        HeaderCell(header, "N·zev");
+                        HeaderCell(header, "N√°zev");
                         HeaderCell(header, "Obory");
                         HeaderCell(header, "Od");
                         HeaderCell(header, "Do");
@@ -263,7 +263,7 @@ namespace SPSUL.Models
                         DataCell(table, fields);
                         DataCell(table, c.StartFrom.ToString());
                         DataCell(table, c.EndTo.ToString());
-                        DataCell(table, c.IsActive ? "AktivnÌ" : "NeaktivnÌ");
+                        DataCell(table, c.IsActive ? "Aktivn√≠" : "Neaktivn√≠");
                         idx++;
                     }
                 });
@@ -275,7 +275,7 @@ namespace SPSUL.Models
         // ============================================
         public byte[] GenerateTestsPdf(List<Test> tests)
         {
-            return CreateDocument("Seznam test˘", content =>
+            return CreateDocument("Seznam test≈Ø", content =>
             {
                 content.Table(table =>
                 {
@@ -291,7 +291,7 @@ namespace SPSUL.Models
                     table.Header(header =>
                     {
                         HeaderCell(header, "#");
-                        HeaderCell(header, "N·zev");
+                        HeaderCell(header, "N√°zev");
                         HeaderCell(header, "Obor");
                         HeaderCell(header, "Autor");
                         HeaderCell(header, "Stav");
@@ -304,7 +304,7 @@ namespace SPSUL.Models
                         DataCell(table, t.Name);
                         DataCell(table, t.StudentField?.Name ?? "");
                         DataCell(table, t.Creator != null ? $"{t.Creator.FirstName} {t.Creator.LastName}" : "");
-                        DataCell(table, t.IsActive ? "AktivnÌ" : "NeaktivnÌ");
+                        DataCell(table, t.IsActive ? "Aktivn√≠" : "Neaktivn√≠");
                         idx++;
                     }
                 });
@@ -316,7 +316,7 @@ namespace SPSUL.Models
         // ============================================
         public byte[] GenerateQuestionsPdf(List<Question> questions)
         {
-            return CreateDocument("Seznam ot·zek", content =>
+            return CreateDocument("Seznam ot√°zek", content =>
             {
                 content.Table(table =>
                 {
@@ -333,10 +333,10 @@ namespace SPSUL.Models
                     table.Header(header =>
                     {
                         HeaderCell(header, "#");
-                        HeaderCell(header, "N·zev");
-                        HeaderCell(header, "Tv˘rce");
-                        HeaderCell(header, "Typ ot·zky");
-                        HeaderCell(header, "P¯edmÏt");
+                        HeaderCell(header, "N√°zev");
+                        HeaderCell(header, "Tv≈Ørce");
+                        HeaderCell(header, "Typ ot√°zky");
+                        HeaderCell(header, "P≈ôedmƒõt");
                         HeaderCell(header, "Stav");
                     });
 
@@ -348,7 +348,7 @@ namespace SPSUL.Models
                         DataCell(table, q.Creator != null ? $"{q.Creator.FirstName} {q.Creator.LastName}" : "");
                         DataCell(table, q.QuestionType?.Name ?? "");
                         DataCell(table, q.Field?.Name ?? "");
-                        DataCell(table, q.IsActive ? "AktivnÌ" : "NeaktivnÌ");
+                        DataCell(table, q.IsActive ? "Aktivn√≠" : "Neaktivn√≠");
                         idx++;
                     }
                 });
@@ -356,11 +356,11 @@ namespace SPSUL.Models
         }
 
         // ============================================
-        // RESULTS PDF (V˝sledky)
+        // RESULTS PDF (V√Ωsledky)
         // ============================================
         public byte[] GenerateResultsPdf(List<AssignedTestVm> results)
         {
-            return CreateDocument("V˝sledky test˘", content =>
+            return CreateDocument("V√Ωsledky test≈Ø", content =>
             {
                 content.Table(table =>
                 {
@@ -380,10 +380,10 @@ namespace SPSUL.Models
                         HeaderCell(header, "#");
                         HeaderCell(header, "Test");
                         HeaderCell(header, "Student");
-                        HeaderCell(header, "ZaËal");
-                        HeaderCell(header, "DokonËil");
-                        HeaderCell(header, "⁄spÏönost");
-                        HeaderCell(header, "V˝sledek");
+                        HeaderCell(header, "Zaƒçal");
+                        HeaderCell(header, "Dokonƒçil");
+                        HeaderCell(header, "√öspƒõ≈°nost");
+                        HeaderCell(header, "V√Ωsledek");
                     });
 
                     int idx = 1;
@@ -395,7 +395,7 @@ namespace SPSUL.Models
                         DataCell(table, r.ZacalV.ToString("dd.MM.yyyy HH:mm"));
                         DataCell(table, r.DokoncilV.ToString("dd.MM.yyyy HH:mm"));
                         DataCell(table, $"{r.UspechPct} %");
-                        DataCell(table, r.Absolvoval ? "ProspÏl" : "NeprospÏl");
+                        DataCell(table, r.Absolvoval ? "Prospƒõl" : "Neprospƒõl");
                         idx++;
                     }
                 });

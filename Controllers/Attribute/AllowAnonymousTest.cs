@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 
 /// <summary>
-/// Oznaèí akci jako pøístupnou bez pøihlášení uèitele.
+/// OznaÄÃ­ akci jako pÅ™Ã­stupnou bez pÅ™ihlÃ¡Å¡enÃ­ uÄitele.
 ///
-/// Proè existuje:
-///   Studenti se pøihlašují na test pomocí LoginId (ne jako uèitelé).
-///   Akce jako Test/Take nebo Test/Example proto nepotøebují session uèitele.
-///   LoginRequiredAttribute kontroluje pøítomnost tohoto atributu a kontrolu pøeskoèí.
+/// ProÄ existuje:
+///   Studenti se pÅ™ihlaÅ¡ujÃ­ na test pomocÃ­ LoginId (ne jako uÄitelÃ©).
+///   Akce jako Test/Take nebo Test/Example proto nepotÅ™ebujÃ­ session uÄitele.
+///   LoginRequiredAttribute kontroluje pÅ™Ã­tomnost tohoto atributu a kontrolu pÅ™eskoÄÃ­.
 ///
-/// Pouití:
+/// PouÅ¾itÃ­:
 ///   [AllowAnonymousTest]
 ///   public IActionResult Take() { ... }
 /// </summary>

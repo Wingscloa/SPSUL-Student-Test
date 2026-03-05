@@ -4,6 +4,7 @@
 <div class="mb-3">
     <label class="configLabel small mb-1" for="FirstName">Jméno</label>
     <input type="text" class="configInput w-100" placeholder="Jméno" name="FirstName" value="@Model.Teacher.FirstName" required
+           autocomplete="off"
            data-v-name="Jméno"
            data-v-required="true"
            data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
@@ -13,6 +14,7 @@
 <div class="mb-3">
     <label class="configLabel small mb-1" for="LastName">Příjmení</label>
     <input type="text" class="configInput w-100" placeholder="Příjmení" name="LastName" value="@Model.Teacher.LastName" required
+           autocomplete="off"
            data-v-name="Příjmení"
            data-v-required="true"
            data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
@@ -22,6 +24,7 @@
 <div class="mb-3">
     <label class="configLabel small mb-1" for="NickName">Přezdívka</label>
     <input type="text" class="configInput w-100" placeholder="Přezdívka" name="NickName" value="@Model.Teacher.NickName"  required
+           autocomplete="off"
            data-v-name="Přezdívka"
            data-v-required="true"
            data-v-reg="^[a-zA-Zá-žÁ-Ž ]+$"
@@ -31,6 +34,7 @@
 <div class="mb-3">
     <label class="configLabel small mb-1" for="Password">Heslo</label>
     <input type="text" class="configInput w-100" placeholder="Pro změnu hesla" name="Password"
+           autocomplete="off"
            data-v-name="Heslo"
            data-v-length="8,30"
            data-v-reg="^[a-zA-Z0-9]+$"
@@ -57,6 +61,7 @@
     <label class="configLabel small mb-1" for="RoleIds">Role</label>
     <input type="hidden" name="RoleIds" value="" />
     <select class="form-select select2" multiple="multiple" name="RoleIds"
+            autocomplete="off"
             data-v-name="Role"
             data-v-required="true"
             data-v-length="1,1"

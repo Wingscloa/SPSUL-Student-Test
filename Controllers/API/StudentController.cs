@@ -183,17 +183,17 @@ namespace SPSUL.Controllers.API
 
 
                     List<ClassesStudent>? classes = await _ctx.ClassesStudents.Where(t => t.StudentId == model.StudentId).ToListAsync();
-                    List<ClassesStudent>? newClasses = model.ClassesIds.Select(e => new ClassesStudent
-                    {
-                        ClassesId = e,
-                        StudentId = model.StudentId,
-                    }).ToList();
-
                     _ctx.RemoveRange(classes);
-                    if (newClasses != null)
+
+                    if (model.ClassesIds != null && model.ClassesIds.Count > 0)
                     {
+                        List<ClassesStudent> newClasses = model.ClassesIds.Select(e => new ClassesStudent
+                        {
+                            ClassesId = e,
+                            StudentId = model.StudentId,
+                        }).ToList();
                         _ctx.AddRange(newClasses);
-                    };
+                    }
 
                     await _ctx.SaveChangesAsync();
 

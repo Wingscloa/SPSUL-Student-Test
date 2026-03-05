@@ -1,4 +1,4 @@
-﻿var onMobile = false;
+var onMobile = false;
 
 document.addEventListener('DOMContentLoaded', function () {
     onMobile = window.innerWidth < 992;
@@ -54,6 +54,18 @@ async function loadConfig(componentName, clickedEl) {
     const response = await fetch(`/api/config/section/${componentName}`);
     const html = await response.text();
     container.innerHTML = html;
+
+    // Scripts injected via innerHTML don't execute — re-create them
+    container.querySelectorAll('script').forEach(oldScript => {
+        const newScript = document.createElement('script');
+        if (oldScript.src) {
+            newScript.src = oldScript.src;
+        } else {
+            newScript.textContent = oldScript.textContent;
+        }
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+
     initTitlesSelect2()
 }
 

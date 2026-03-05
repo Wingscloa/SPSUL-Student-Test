@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using SPSUL.Models;
 
 /// <summary>
-/// Action filter, kterı ovìøí, zda má pøihlášenı uèitel potøebné oprávnìní.
+/// Action filter, kterÃ½ ovÄ›Å™Ã­, zda mÃ¡ pÅ™ihlÃ¡Å¡enÃ½ uÄitel potÅ™ebnÃ© oprÃ¡vnÄ›nÃ­.
 ///
-/// Co dìlá:
-///   Pokud uèitel nemá ádné z uvedenıch oprávnìní:
-///   - API endpointy (JSON) vrátí 403 s JSON odpovìdí.
-///   - Stránky (GET) pøesmìrují na /Error/403 (Forbidden view).
+/// Co dÄ›lÃ¡:
+///   Pokud uÄitel nemÃ¡ Å¾Ã¡dnÃ© z uvedenÃ½ch oprÃ¡vnÄ›nÃ­:
+///   - API endpointy (JSON) vrÃ¡tÃ­ 403 s JSON odpovÄ›dÃ­.
+///   - StrÃ¡nky (GET) pÅ™esmÄ›rujÃ­ na /Error/403 (Forbidden view).
 ///
-/// Pouití:
-///   [RequirePermission(AppPermissions.CrudTests)]              - vyaduje jedno oprávnìní
-///   [RequirePermission(AppPermissions.CrudTests, AppPermissions.All)] - staèí jedno z nich
+/// PouÅ¾itÃ­:
+///   [RequirePermission(AppPermissions.CrudTests)]              - vyÅ¾aduje jedno oprÃ¡vnÄ›nÃ­
+///   [RequirePermission(AppPermissions.CrudTests, AppPermissions.All)] - staÄÃ­ jedno z nich
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
 public class RequirePermissionAttribute : Attribute, IAsyncActionFilter
@@ -38,7 +38,7 @@ public class RequirePermissionAttribute : Attribute, IAsyncActionFilter
             if (context.HttpContext.Request.Headers.Accept.ToString().Contains("application/json")
                 || context.HttpContext.Request.Method != "GET")
             {
-                context.Result = new JsonResult(new { message = "Nemáte oprávnìní k této akci." })
+                context.Result = new JsonResult(new { message = "NemÃ¡te oprÃ¡vnÄ›nÃ­ k tÃ©to akci." })
                 {
                     StatusCode = 403
                 };

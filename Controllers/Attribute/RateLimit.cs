@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
 
 /// <summary>
-/// Jednoduchı ochrannı filter proti brute-force útokùm (pøíliš mnoho pokusù za krátkou dobu).
+/// JednoduchÃ½ ochrannÃ½ filter proti brute-force ÃºtokÅ¯m (pÅ™Ã­liÅ¡ mnoho pokusÅ¯ za krÃ¡tkou dobu).
 ///
 /// Jak funguje:
-///   Poèítá poèet requiestù z konkrétní IP adresy pro danou akci.
-///   Pokud poèet pøekroèí MaxAttempts bìhem WindowSeconds sekund, další request je zablokovanı.
-///   Èítadá je uloeno v IMemoryCache.
+///   PoÄÃ­tÃ¡ poÄet requiestÅ¯ z konkrÃ©tnÃ­ IP adresy pro danou akci.
+///   Pokud poÄet pÅ™ekroÄÃ­ MaxAttempts bÄ›hem WindowSeconds sekund, dalÅ¡Ã­ request je zablokovanÃ½.
+///   ÄŒÃ­tadÃ¡ je uloÅ¾eno v IMemoryCache.
 ///
-/// Pouití:
+/// PouÅ¾itÃ­:
 ///   [RateLimit(MaxAttempts = 5, WindowSeconds = 300)]
 ///   public async Task&lt;IActionResult&gt; Login(LoginViewModel model) { ... }
 /// </summary>
@@ -36,7 +36,7 @@ public class RateLimitAttribute : Attribute, IAsyncActionFilter
         {
             if (context.HttpContext.Request.Headers.Accept.ToString().Contains("application/json"))
             {
-                context.Result = new JsonResult(new { message = "Pøíliš mnoho pokusù. Zkuste to znovu za nìkolik minut." })
+                context.Result = new JsonResult(new { message = "PÅ™Ã­liÅ¡ mnoho pokusÅ¯. Zkuste to znovu za nÄ›kolik minut." })
                 {
                     StatusCode = 429
                 };
@@ -45,7 +45,7 @@ public class RateLimitAttribute : Attribute, IAsyncActionFilter
             {
                 context.HttpContext.Items["RateLimited"] = true;
                 var controller = context.Controller as Controller;
-                controller?.TempData["TestError"] = "Pøíliš mnoho pokusù o pøihlášení. Zkuste to za 5 minut.";
+                controller?.TempData["TestError"] = "PÅ™Ã­liÅ¡ mnoho pokusÅ¯ o pÅ™ihlÃ¡Å¡enÃ­. Zkuste to za 5 minut.";
                 context.Result = new ViewResult { ViewName = "Login" };
             }
             return;

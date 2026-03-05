@@ -9,16 +9,16 @@ using Microsoft.Data.SqlClient;
 using System.IO.Compression;
 
 /// <summary>
-/// Vstupní bod aplikace – konfiguruje všechny sluby (DI kontejner) a HTTP pipeline.
+/// VstupnÃ­ bod aplikace â€“ konfiguruje vÅ¡echny sluÅ¾by (DI kontejner) a HTTP pipeline.
 ///
-/// Základní pojmy:
-///   builder.Services.AddXxx() – registrace slueb do DI kontejneru (pøed spuštìním aplikace)
-///   app.UseXxx()              – pøidání middleware do HTTP pipeline (poøadí záleí!)
+/// ZÃ¡kladnÃ­ pojmy:
+///   builder.Services.AddXxx() â€“ registrace sluÅ¾eb do DI kontejneru (pÅ™ed spuÅ¡tÄ›nÃ­m aplikace)
+///   app.UseXxx()              â€“ pÅ™idÃ¡nÃ­ middleware do HTTP pipeline (poÅ™adÃ­ zÃ¡leÅ¾Ã­!)
 ///
-/// ivotnosti DI slueb:
-///   Singleton  – jedna instance pro celou dobu bìhu aplikace (sdílená mezi všemi uivateli)
-///   Scoped     – jedna instance per HTTP request
-///   Transient  – nová instance pøi kadém injectování
+/// Å½ivotnosti DI sluÅ¾eb:
+///   Singleton  â€“ jedna instance pro celou dobu bÄ›hu aplikace (sdÃ­lenÃ¡ mezi vÅ¡emi uÅ¾ivateli)
+///   Scoped     â€“ jedna instance per HTTP request
+///   Transient  â€“ novÃ¡ instance pÅ™i kaÅ¾dÃ©m injectovÃ¡nÃ­
 /// </summary>
 
 namespace SPSUL
@@ -36,7 +36,7 @@ namespace SPSUL
 
             builder.Services.AddHttpContextAccessor();
 
-            // Distribuovaná session ukládaná do SQL Server tabulky "Sessions" (funguje ve více instancích)
+            // DistribuovanÃ¡ session uklÃ¡danÃ¡ do SQL Server tabulky "Sessions" (funguje ve vÃ­ce instancÃ­ch)
             builder.Services.AddDistributedSqlServerCache(options =>
             {
                 options.ConnectionString = builder.Configuration.GetConnectionString("Default");
@@ -44,7 +44,7 @@ namespace SPSUL
                 options.TableName = "Sessions";
             });
 
-            // Session konfigurace – cookie pøeije 7 dní a je HttpOnly (JavaScript k ní nemá pøístup)
+            // Session konfigurace â€“ cookie pÅ™eÅ¾ije 7 dnÃ­ a je HttpOnly (JavaScript k nÃ­ nemÃ¡ pÅ™Ã­stup)
             builder.Services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromDays(7);
@@ -52,9 +52,9 @@ namespace SPSUL
                 options.Cookie.IsEssential = true;
             });
 
-            // DataProtection – explicitní cesta zaruèuje, e klíèe pøeijí restart kontejneru.
-            // SetApplicationName zajistí kompatibilitu klíèù pøi redeploymentu nebo škálování.
-            // V Dockeru (Production) se klíèe ukládají do volume, lokálnì se pouije vıchozí cesta.
+            // DataProtection â€“ explicitnÃ­ cesta zaruÄuje, Å¾e klÃ­Äe pÅ™eÅ¾ijÃ­ restart kontejneru.
+            // SetApplicationName zajistÃ­ kompatibilitu klÃ­ÄÅ¯ pÅ™i redeploymentu nebo Å¡kÃ¡lovÃ¡nÃ­.
+            // V Dockeru (Production) se klÃ­Äe uklÃ¡dajÃ­ do volume, lokÃ¡lnÄ› se pouÅ¾ije vÃ½chozÃ­ cesta.
             if (!builder.Environment.IsDevelopment())
             {
                 builder.Services.AddDataProtection()
@@ -62,18 +62,18 @@ namespace SPSUL
                     .SetApplicationName("SPSUL");
             }
 
-            // Scoped sluby – nová instance per request
+            // Scoped sluÅ¾by â€“ novÃ¡ instance per request
             builder.Services.AddScoped<CacheService>();        // per-teacher IMemoryCache wrapper
-            builder.Services.AddScoped<SharedService>();       // jméno/ID pøihlášeného uèitele
+            builder.Services.AddScoped<SharedService>();       // jmÃ©no/ID pÅ™ihlÃ¡Å¡enÃ©ho uÄitele
 
-            // In-memory cache pro èíselníková data (tøídy, pøedmìty, typy) – sdílená singleton
+            // In-memory cache pro ÄÃ­selnÃ­kovÃ¡ data (tÅ™Ã­dy, pÅ™edmÄ›ty, typy) â€“ sdÃ­lenÃ¡ singleton
             builder.Services.AddMemoryCache();
             builder.Services.AddSingleton<LookupCacheService>(); // singleton, cachuje lookup data 5 min
-            builder.Services.AddScoped<AuthorizationService>();   // role ? oprávnìní mapping
-            builder.Services.AddScoped<AuditService>();           // záznam CUD operací do AuditLogs
+            builder.Services.AddScoped<AuthorizationService>();   // role ? oprÃ¡vnÄ›nÃ­ mapping
+            builder.Services.AddScoped<AuditService>();           // zÃ¡znam CUD operacÃ­ do AuditLogs
 
-            // Response compression (Brotli > GZip) – komprimuje odpovìdi a šetøí bandwidth
-            // Brotli dosahuje lepší komprese ne GZip, prohlíeèe ho podporují
+            // Response compression (Brotli > GZip) â€“ komprimuje odpovÄ›di a Å¡etÅ™Ã­ bandwidth
+            // Brotli dosahuje lepÅ¡Ã­ komprese neÅ¾ GZip, prohlÃ­Å¾eÄe ho podporujÃ­
             builder.Services.AddResponseCompression(options =>
             {
                 options.EnableForHttps = true;
@@ -88,13 +88,13 @@ namespace SPSUL
             builder.Services.Configure<GzipCompressionProviderOptions>(options =>
                 options.Level = CompressionLevel.Fastest);
 
-            // Azurite (lokální emulátor Azure Blob Storage v Dockeru)
-            // V produkci: nahradit connection stringem skuteèného Azure Storage úètu
+            // Azurite (lokÃ¡lnÃ­ emulÃ¡tor Azure Blob Storage v Dockeru)
+            // V produkci: nahradit connection stringem skuteÄnÃ©ho Azure Storage ÃºÄtu
             builder.Services.AddSingleton(x =>
             {
                 var options = new BlobClientOptions()
                 {
-                    // Pouít starší API verzi kompatibilní s Azurite
+                    // PouÅ¾Ã­t starÅ¡Ã­ API verzi kompatibilnÃ­ s Azurite
                     Retry = 
                     {
                         MaxRetries = 3,
@@ -111,8 +111,8 @@ namespace SPSUL
             builder.Services.AddScoped<AzureBlobService>();
             builder.Services.AddScoped<PdfService>();
 
-            // Anti-forgery ochrana – generuje XSRF token, kterı musí bıt pøiloen ke kadému POST/PUT/DELETE
-            // Header name "X-XSRF-TOKEN" je èten JavaScriptem z cookie a pøikládán k AJAX requestùm
+            // Anti-forgery ochrana â€“ generuje XSRF token, kterÃ½ musÃ­ bÃ½t pÅ™iloÅ¾en ke kaÅ¾dÃ©mu POST/PUT/DELETE
+            // Header name "X-XSRF-TOKEN" je Äten JavaScriptem z cookie a pÅ™iklÃ¡dÃ¡n k AJAX requestÅ¯m
             builder.Services.AddAntiforgery(options =>
             {
                 options.HeaderName = "X-XSRF-TOKEN";
@@ -139,6 +139,10 @@ namespace SPSUL
                 {
                     db.Database.EnsureCreated();
                 }
+                else
+                {
+                    db.Database.Migrate();
+                }
             }
 
             // Configure the HTTP request pipeline.
@@ -149,15 +153,15 @@ namespace SPSUL
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 app.UseHsts();
 
-                // Pøeète X-Forwarded-For / X-Forwarded-Proto posílané reverse proxy (nginx/traefik)
-                // Nutné pro správné pøesmìrování a logování IP adres za proxy
+                // PÅ™eÄte X-Forwarded-For / X-Forwarded-Proto posÃ­lanÃ© reverse proxy (nginx/traefik)
+                // NutnÃ© pro sprÃ¡vnÃ© pÅ™esmÄ›rovÃ¡nÃ­ a logovÃ¡nÃ­ IP adres za proxy
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 });
             }
 
-            // Response compression — only in production; in development it causes
+            // Response compression â€” only in production; in development it causes
             // ERR_CONTENT_DECODING_FAILED when a view-rendering exception corrupts the Brotli stream
             if (!app.Environment.IsDevelopment())
             {

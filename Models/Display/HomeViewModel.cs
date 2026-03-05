@@ -4,7 +4,7 @@ namespace SPSUL.Models.Display
 {
     public class HomeViewModel
     {
-        public string TeacherName { get; set; } = "Uèiteli";
+        public string TeacherName { get; set; } = "UÄiteli";
         public int ActiveTests { get; set; }
         public int TotalStudents { get; set; }
         public int TotalQuestions { get; set; }

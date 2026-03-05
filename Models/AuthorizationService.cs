@@ -4,18 +4,18 @@ using Microsoft.Extensions.Caching.Memory;
 namespace SPSUL.Models
 {
     /// <summary>
-    /// Sluba pro správu oprávnìní uèitelù na základì jejich rolí.
+    /// SluÅ¾ba pro sprÃ¡vu oprÃ¡vnÄ›nÃ­ uÄitelÅ¯ na zÃ¡kladÄ› jejich rolÃ­.
     ///
     /// Jak to funguje:
-    ///   1. Pøi kadém requestu (pøes LoginRequiredAttribute) se naètou role uèitele z DB.
-    ///   2. Role jsou mapovány na sadu oprávnìní (AppPermissions) pomocí statického slovníku.
-    ///   3. Vısledná oprávnìní jsou UNION všech rolí (pokud má uèitel víc rolí).
-    ///   4. Oprávnìní jsou cachována v IMemoryCache na 10 minut.
+    ///   1. PÅ™i kaÅ¾dÃ©m requestu (pÅ™es LoginRequiredAttribute) se naÄtou role uÄitele z DB.
+    ///   2. Role jsou mapovÃ¡ny na sadu oprÃ¡vnÄ›nÃ­ (AppPermissions) pomocÃ­ statickÃ©ho slovnÃ­ku.
+    ///   3. VÃ½slednÃ¡ oprÃ¡vnÄ›nÃ­ jsou UNION vÅ¡ech rolÃ­ (pokud mÃ¡ uÄitel vÃ­c rolÃ­).
+    ///   4. OprÃ¡vnÄ›nÃ­ jsou cachovÃ¡na v IMemoryCache na 10 minut.
     ///
-    /// Pouití v controlleru:
+    /// PouÅ¾itÃ­ v controlleru:
     ///   bool muze = await _authService.HasPermissionAsync(AppPermissions.CrudTests);
     ///
-    /// Pouití v Razor view (pøes HttpContext.Items, pøednaèteno LoginRequired):
+    /// PouÅ¾itÃ­ v Razor view (pÅ™es HttpContext.Items, pÅ™ednaÄteno LoginRequired):
     ///   @if (Context.HasPermission(AppPermissions.CrudTests)) { ... }
     /// </summary>
     public class AuthorizationService
@@ -26,7 +26,7 @@ namespace SPSUL.Models
 
         private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(10);
 
-        // Role name -> granted permissions (ASCII only — no diacritics, safe on any OS encoding)
+        // Role name -> granted permissions (ASCII only â€” no diacritics, safe on any OS encoding)
         private static readonly Dictionary<string, HashSet<string>> RolePermissionMap = new()
         {
             ["Administrator"] = [
@@ -111,7 +111,7 @@ namespace SPSUL.Models
                     permissions.UnionWith(perms);
             }
 
-            // No roles = anonymous = Hlediè
+            // No roles = anonymous = HlediÄ
             if (roles.Count == 0)
                 permissions.Add(AppPermissions.ViewOnly);
 

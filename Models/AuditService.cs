@@ -3,18 +3,18 @@ using SPSUL.Models.Data;
 namespace SPSUL.Models
 {
     /// <summary>
-    /// Sluba pro zápis auditního logu (kdo, co, kdy udìlal).
+    /// SluÅ¾ba pro zÃ¡pis auditnÃ­ho logu (kdo, co, kdy udÄ›lal).
     ///
-    /// Proè existuje:
-    ///   Administrátor potøebuje vìdìt, kdo smazal uèitele nebo zmìnil roli.
-    ///   Kadá CREATE / UPDATE / DELETE operace zavolá LogAsync() a záznam se uloí do tabulky AuditLogs.
+    /// ProÄ existuje:
+    ///   AdministrÃ¡tor potÅ™ebuje vÄ›dÄ›t, kdo smazal uÄitele nebo zmÄ›nil roli.
+    ///   KaÅ¾dÃ¡ CREATE / UPDATE / DELETE operace zavolÃ¡ LogAsync() a zÃ¡znam se uloÅ¾Ã­ do tabulky AuditLogs.
     ///
-    /// Informace, které se logují:
-    ///   - Jméno a ID pøihlášeného uèitele (ze session)
-    ///   - Název akce (napø. "Vytvoøen", "Upraven", "Smazán")
-    ///   - Entita (napø. "Uèitel", "Student", "Tøída")
-    ///   - ID entity a doplnkovı detail
-    ///   - Èas akce (UTC)
+    /// Informace, kterÃ© se logujÃ­:
+    ///   - JmÃ©no a ID pÅ™ihlÃ¡Å¡enÃ©ho uÄitele (ze session)
+    ///   - NÃ¡zev akce (napÅ™. "VytvoÅ™en", "Upraven", "SmazÃ¡n")
+    ///   - Entita (napÅ™. "UÄitel", "Student", "TÅ™Ã­da")
+    ///   - ID entity a doplnkovÃ½ detail
+    ///   - ÄŒas akce (UTC)
     /// </summary>
     public class AuditService
     {
@@ -31,7 +31,7 @@ namespace SPSUL.Models
         {
             var session = _httpContextAccessor.HttpContext?.Session;
             var teacherId = session?.GetInt32("TeacherId");
-            var teacherName = session?.GetString("Name") ?? "Systém";
+            var teacherName = session?.GetString("Name") ?? "SystÃ©m";
 
             _ctx.AuditLogs.Add(new AuditLog
             {

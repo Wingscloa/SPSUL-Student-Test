@@ -62,13 +62,13 @@ namespace SPSUL.Controllers
         {
             var teacher = await _ctx.Teachers.FindAsync(id);
             if (teacher == null)
-                return NotFound(new { message = "Uèitel nebyl nalezen." });
+                return NotFound(new { message = "UÄitel nebyl nalezen." });
 
             teacher.IsActive = !teacher.IsActive;
             await _ctx.SaveChangesAsync();
 
-            var status = teacher.IsActive ? "aktivován" : "deaktivován";
-            return Ok(new { message = $"Uèitel byl {status}.", isActive = teacher.IsActive });
+            var status = teacher.IsActive ? "aktivovÃ¡n" : "deaktivovÃ¡n";
+            return Ok(new { message = $"UÄitel byl {status}.", isActive = teacher.IsActive });
         }
 
         [HttpPost]
@@ -81,14 +81,14 @@ namespace SPSUL.Controllers
                 .ToListAsync();
 
             if (teachers.Count == 0)
-                return NotFound(new { message = "ádní uèitelé nebyli nalezeni." });
+                return NotFound(new { message = "Å½Ã¡dnÃ­ uÄitelÃ© nebyli nalezeni." });
 
             _ctx.TeacherTitles.RemoveRange(teachers.SelectMany(t => t.Titles));
             _ctx.TeacherRoles.RemoveRange(teachers.SelectMany(t => t.TeacherRoles));
             _ctx.Teachers.RemoveRange(teachers);
             await _ctx.SaveChangesAsync();
 
-            return Ok(new { message = $"{teachers.Count} uèitelù smazáno." });
+            return Ok(new { message = $"{teachers.Count} uÄitelÅ¯ smazÃ¡no." });
         }
     }
 }

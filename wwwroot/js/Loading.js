@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     window.loadingScreen = function (show) {
         var overlay = document.getElementById('loader-overlay');
         if (!overlay) return;

@@ -11,18 +11,18 @@ using SPSUL.Models.Display.QuestionModels;
 namespace SPSUL.Controllers.API
 {
     /// <summary>
-    /// API controller pro generování PDF dokumentù pomocí knihovny QuestPDF.
+    /// API controller pro generovÃ¡nÃ­ PDF dokumentÅ¯ pomocÃ­ knihovny QuestPDF.
     ///
     /// Endpointy:
-    ///   GET /api/pdf/tests    – export seznamu testù do PDF
-    ///   GET /api/pdf/students – export seznamu studentù do PDF
-    ///   GET /api/pdf/teachers – export seznamu uèitelù do PDF
-    ///   GET /api/pdf/classes  – export seznamu tøíd do PDF
+    ///   GET /api/pdf/tests    â€“ export seznamu testÅ¯ do PDF
+    ///   GET /api/pdf/students â€“ export seznamu studentÅ¯ do PDF
+    ///   GET /api/pdf/teachers â€“ export seznamu uÄitelÅ¯ do PDF
+    ///   GET /api/pdf/classes  â€“ export seznamu tÅ™Ã­d do PDF
     ///
     /// Jak funguje:
-    ///   PdfService (QuestPDF) pøijme data a vygeneruje PDF binar.ní soubor.
-    ///   Response je vrácena jako application/pdf s Content-Disposition: attachment.
-    ///   Prohlíeè automaticky spustí staení souboru.
+    ///   PdfService (QuestPDF) pÅ™ijme data a vygeneruje PDF binar.nÃ­ soubor.
+    ///   Response je vrÃ¡cena jako application/pdf s Content-Disposition: attachment.
+    ///   ProhlÃ­Å¾eÄ automaticky spustÃ­ staÅ¾enÃ­ souboru.
     /// </summary>
     [LoginRequired]
     public class PdfController : Controller

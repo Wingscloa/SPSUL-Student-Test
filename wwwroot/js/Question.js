@@ -1,4 +1,4 @@
-﻿const readAsBase64 = (file) => {
+const readAsBase64 = (file) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
@@ -293,10 +293,7 @@ async function Validate() {
         setFieldError(description, 'Popis je povinný');
         isValid = false;
     } else if (description.value.trim().length < 10) {
-        setFieldError(description, 'Popis musí mít alespoň 10 znaků');
-        isValid = false;
-    } else if (description.value.trim().length > 512) {
-        setFieldError(description, 'Popis nesmí být delší než 512 znaků');
+        setFieldError(description, 'Popis mus\u00ed m\u00edt alespo\u0148 10 znak\u016f');
         isValid = false;
     } else {
         setFieldSuccess(description);
@@ -499,8 +496,8 @@ descriptionInput.addEventListener('input', (e) => {
     }
     // Live validation
     const v = e.target.value.trim();
-    if (v.length >= 10 && v.length <= 512) setFieldSuccess(e.target);
-    else if (v.length > 0) { setFieldError(e.target, v.length < 10 ? 'Min. 10 znaků' : 'Max. 512 znaků'); }
+    if (v.length >= 10) setFieldSuccess(e.target);
+    else if (v.length > 0) { setFieldError(e.target, 'Min. 10 znak\u016f'); }
     else { e.target.classList.remove('is-valid', 'is-invalid'); const fb = e.target.parentElement.querySelector('.q-feedback'); if (fb) fb.remove(); }
 })
 

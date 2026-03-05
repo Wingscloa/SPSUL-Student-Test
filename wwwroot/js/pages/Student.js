@@ -169,6 +169,18 @@ document.getElementById('bulkSubmitBtn')?.addEventListener('click', async functi
         return;
     }
 
+    var nameRegex = /^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF ]+$/;
+    for (var i = 0; i < students.length; i++) {
+        if (!nameRegex.test(students[i].firstName)) {
+            toastr.warning('Jm\u00e9no "' + students[i].firstName + '" obsahuje neplatn\u00e9 znaky.');
+            return;
+        }
+        if (!nameRegex.test(students[i].lastName)) {
+            toastr.warning('P\u0159\u00edjmen\u00ed "' + students[i].lastName + '" obsahuje neplatn\u00e9 znaky.');
+            return;
+        }
+    }
+
     var classesIds = $('#bulkClassIds').val();
     classesIds = classesIds ? classesIds.map(Number) : [];
 
@@ -274,6 +286,14 @@ document.getElementById('editSubmitBtn')?.addEventListener('click', async functi
     }
     if (!data.LastName || data.LastName.length < 2) {
         toastr.warning('P\u0159\u00edjmen\u00ed mus\u00ed m\u00edt alespo\u0148 2 znaky.'); return;
+    }
+
+    var nameRegex = /^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF ]+$/;
+    if (!nameRegex.test(data.FirstName)) {
+        toastr.warning('Jm\u00e9no m\u016f\u017ee obsahovat pouze p\u00edsmena.'); return;
+    }
+    if (!nameRegex.test(data.LastName)) {
+        toastr.warning('P\u0159\u00edjmen\u00ed m\u016f\u017ee obsahovat pouze p\u00edsmena.'); return;
     }
 
     var btn = this;

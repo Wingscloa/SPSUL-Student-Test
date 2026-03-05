@@ -4,8 +4,8 @@ namespace SPSUL.Models.Display.StudentModels
 {
     public class StudentBulkCreateDto
     {
-        [Required(ErrorMessage = "Musíte zadat alespoò jednoho studenta.")]
-        [MinLength(1, ErrorMessage = "Musíte zadat alespoò jednoho studenta.")]
+        [Required(ErrorMessage = "MusÃ­te zadat alespoÅˆ jednoho studenta.")]
+        [MinLength(1, ErrorMessage = "MusÃ­te zadat alespoÅˆ jednoho studenta.")]
         public List<StudentBulkItem> Students { get; set; } = [];
 
         public List<int>? ClassesIds { get; set; }
@@ -13,12 +13,14 @@ namespace SPSUL.Models.Display.StudentModels
 
     public class StudentBulkItem
     {
-        [Required(ErrorMessage = "Jméno je povinné.")]
-        [StringLength(64, MinimumLength = 2, ErrorMessage = "Jméno musí mít 2–64 znakù.")]
+        [Required(ErrorMessage = "JmÃ©no je povinnÃ©.")]
+        [StringLength(64, MinimumLength = 2, ErrorMessage = "JmÃ©no musÃ­ mÃ­t 2â€“64 znakÅ¯.")]
+        [RegularExpression(@"^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF ]+$", ErrorMessage = "JmÃ©no mÅ¯Å¾e obsahovat pouze pÃ­smena.")]
         public string FirstName { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Pøíjmení je povinné.")]
-        [StringLength(64, MinimumLength = 2, ErrorMessage = "Pøíjmení musí mít 2–64 znakù.")]
+        [Required(ErrorMessage = "PÅ™Ã­jmenÃ­ je povinnÃ©.")]
+        [StringLength(64, MinimumLength = 2, ErrorMessage = "PÅ™Ã­jmenÃ­ musÃ­ mÃ­t 2â€“64 znakÅ¯.")]
+        [RegularExpression(@"^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF ]+$", ErrorMessage = "PÅ™Ã­jmenÃ­ mÅ¯Å¾e obsahovat pouze pÃ­smena.")]
         public string LastName { get; set; } = string.Empty;
     }
 }

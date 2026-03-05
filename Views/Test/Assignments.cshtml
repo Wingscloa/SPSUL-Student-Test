@@ -22,9 +22,6 @@
             <small class="text-muted">Celkem @assignments.Count studentů | @finished.Count dokončeno | @pending.Count probíhá | @notStarted.Count nezačalo</small>
         </div>
         <div class="d-flex gap-2">
-            <a href="/Test/PrintCodes?id=@test?.TestId" class="btn btn-outline-secondary" target="_blank">
-                <i class="bi bi-printer me-1"></i>Tisk kódů
-            </a>
             <a href="/Test/Index" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i>Zpět
             </a>
@@ -66,83 +63,167 @@
         </div>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>Student</th>
-                        <th>Login kód</th>
-                        <th>Stav</th>
-                        <th>Začal</th>
-                        <th>Dokončil</th>
-                        <th class="text-center">Akce</th>
-                    </tr>
-                </thead>
-                <tbody>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs mb-3" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabTable" type="button">
+                <i class="bi bi-table me-1"></i>Tabulka
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabCodes" type="button">
+                <i class="bi bi-key me-1"></i>Přihlašovací kódy
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- TAB: Table -->
+        <div class="tab-pane fade show active" id="tabTable">
+            <div class="card shadow-sm">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Login kód</th>
+                                <th>Stav</th>
+                                <th>Začal</th>
+                                <th>Dokončil</th>
+                                <th class="text-center">Akce</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var a in assignments)
+                            {
+                                var state = a.FinishedAt != DateTime.MinValue ? "done"
+                                          : a.StartedAt != DateTime.MinValue ? "progress" : "waiting";
+                                <tr>
+                                    <td><strong>@a.Student.FirstName @a.Student.LastName</strong></td>
+                                    <td><code class="fs-6 user-select-all">@a.LoginId</code></td>
+                                    <td>
+                                        @if (state == "done")
+                                        {
+                                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Dokončeno</span>
+                                        }
+                                        else if (state == "progress")
+                                        {
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Probíhá</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary"><i class="bi bi-clock me-1"></i>Nezačal</span>
+                                        }
+                                    </td>
+                                    <td>@(a.StartedAt != DateTime.MinValue ? a.StartedAt.ToString("dd.MM.yyyy HH:mm") : "-")</td>
+                                    <td>@(a.FinishedAt != DateTime.MinValue ? a.FinishedAt.ToString("dd.MM.yyyy HH:mm") : "-")</td>
+                                    <td class="text-center">
+                                        <div class="d-flex gap-1 justify-content-center">
+                                            @if (state == "done")
+                                            {
+                                                <a href="/Detail/View?studentId=@a.StudentId&testId=@a.TestId"
+                                                   class="btn btn-sm btn-outline-primary" title="Detail">
+                                                    <i class="bi bi-file-text"></i>
+                                                </a>
+                                            }
+                                            <button class="btn btn-sm btn-outline-warning btn-reassign"
+                                                    data-student-id="@a.StudentId" data-test-id="@a.TestId"
+                                                    data-student-name="@a.Student.FirstName @a.Student.LastName"
+                                                    title="Znovu přiřadit">
+                                                <i class="bi bi-arrow-repeat"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            @if (!assignments.Any())
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-muted">
+                                        Žádní studenti nebyli přiřazeni.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Codes -->
+        <div class="tab-pane fade" id="tabCodes">
+            @if (assignments.Any())
+            {
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body d-flex flex-wrap gap-2 align-items-center">
+                        <input type="text" class="form-control" id="codeSearch" placeholder="Hledat studenta..." style="max-width:250px" />
+                        <select class="form-select" id="codeStateFilter" style="max-width:180px">
+                            <option value="">Všechny stavy</option>
+                            <option value="waiting">Nezačal</option>
+                            <option value="progress">Probíhá</option>
+                            <option value="done">Dokončeno</option>
+                        </select>
+                        <button class="btn btn-outline-secondary" id="toggleAllCodes" type="button">
+                            <i class="bi bi-check2-square me-1"></i>Vybrat / Zrušit vše
+                        </button>
+                        <span class="badge bg-orange ms-auto" id="selectedCodeCount" style="background:#ff8a00;font-size:.85rem">0 vybráno</span>
+                        <div class="d-flex gap-2">
+                            <a href="/Test/DownloadCodesPdf?id=@test?.TestId"
+                               class="btn btn-sm d-inline-flex align-items-center gap-1 fw-semibold"
+                               style="background:#e63946;color:#fff;border:none;border-radius:8px;padding:.4rem .9rem;box-shadow:0 2px 6px rgba(230,57,70,.35);transition:filter .15s"
+                               onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                                <i class="bi bi-file-earmark-pdf fs-6"></i>Vše (PDF)
+                            </a>
+                            <button id="downloadSelectedPdf" type="button"
+                                    class="btn btn-sm d-inline-flex align-items-center gap-1 fw-semibold"
+                                    style="background:linear-gradient(135deg,#ff9000,#ff6000);color:#fff;border:none;border-radius:8px;padding:.4rem .9rem;box-shadow:0 2px 6px rgba(255,144,0,.35);transition:filter .15s"
+                                    onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                                <i class="bi bi-file-earmark-pdf fs-6"></i>Vybrané (PDF)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3" id="codesGrid">
                     @foreach (var a in assignments)
                     {
                         var state = a.FinishedAt != DateTime.MinValue ? "done"
                                   : a.StartedAt != DateTime.MinValue ? "progress" : "waiting";
-
-                        <tr>
-                            <td><strong>@a.Student.FirstName @a.Student.LastName</strong></td>
-                            <td><code class="fs-6 user-select-all">@a.LoginId</code></td>
-                            <td>
-                                @if (state == "done")
-                                {
-                                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Dokončeno</span>
-                                }
-                                else if (state == "progress")
-                                {
-                                    <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Probíhá</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary"><i class="bi bi-clock me-1"></i>Nezačal</span>
-                                }
-                            </td>
-                            <td>
-                                @(a.StartedAt != DateTime.MinValue ? a.StartedAt.ToString("dd.MM.yyyy HH:mm") : "-")
-                            </td>
-                            <td>
-                                @(a.FinishedAt != DateTime.MinValue ? a.FinishedAt.ToString("dd.MM.yyyy HH:mm") : "-")
-                            </td>
-                            <td class="text-center">
-                                <div class="d-flex gap-1 justify-content-center">
-                                    @if (state == "done")
-                                    {
-                                        <a href="/Detail/View?studentId=@a.StudentId&testId=@a.TestId"
-                                           class="btn btn-sm btn-outline-primary" title="Detail">
-                                            <i class="bi bi-file-text"></i>
-                                        </a>
-                                    }
-                                    <button class="btn btn-sm btn-outline-warning btn-reassign"
-                                            data-student-id="@a.StudentId" data-test-id="@a.TestId"
-                                            data-student-name="@a.Student.FirstName @a.Student.LastName"
-                                            title="Znovu přiřadit">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </button>
+                        var borderClass = state == "done" ? "border-success"
+                                        : state == "progress" ? "border-warning" : "border-secondary";
+                        <div class="col-md-4 col-lg-3 code-item" data-login="@a.LoginId"
+                             data-name="@(a.Student.FirstName + " " + a.Student.LastName)" data-state="@state">
+                            <div class="card h-100 @borderClass code-card" style="cursor:pointer;transition:box-shadow .2s,transform .15s">
+                                <div class="card-body text-center py-3">
+                                    <div class="fw-bold mb-1">@a.Student.FirstName @a.Student.LastName</div>
+                                    <small class="text-muted d-block mb-2">@test?.Name</small>
+                                    <div class="font-monospace fw-bold fs-4 mb-2 px-2 py-1 rounded"
+                                         style="background:#f8f9fa;letter-spacing:3px;border:1px dashed #ccc">
+                                        @a.LoginId
+                                    </div>
+                                    <small class="text-muted" style="font-size:.7rem">Zadejte kód na přihlašovací stránce testu</small>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
                     }
-                    @if (!assignments.Any())
-                    {
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">
-                                Žádní studenti nebyli přiřazeni.
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                    Žádní studenti nebyli přiřazeni.
+                </div>
+            }
         </div>
     </div>
 </div>
 
 @section Scripts {
 <script>
+    // ============================================
+    // REASSIGN
+    // ============================================
     document.querySelectorAll('.btn-reassign').forEach(btn => {
         btn.addEventListener('click', async function () {
             const name = this.dataset.studentName;
@@ -169,6 +250,93 @@
                 toastr.error('Chyba komunikace.');
             }
         });
+    });
+
+    // ============================================
+    // CODES TAB
+    // ============================================
+    var codeCards = document.querySelectorAll('.code-card');
+
+    // Toggle selection on click
+    codeCards.forEach(card => {
+        card.addEventListener('click', function () {
+            this.classList.toggle('selected');
+            this.style.boxShadow = this.classList.contains('selected')
+                ? '0 0 0 3px rgba(255,144,0,.35)' : '';
+            this.style.transform = this.classList.contains('selected') ? 'translateY(-2px)' : '';
+            updateSelectedCount();
+        });
+    });
+
+    function updateSelectedCount() {
+        var count = document.querySelectorAll('.code-card.selected').length;
+        var badge = document.getElementById('selectedCodeCount');
+        if (badge) badge.textContent = count + ' vybráno';
+    }
+
+    // Toggle all
+    document.getElementById('toggleAllCodes')?.addEventListener('click', function () {
+        var visible = document.querySelectorAll('.code-item:not([style*="display: none"]) .code-card');
+        var allSelected = Array.from(visible).every(c => c.classList.contains('selected'));
+        visible.forEach(c => {
+            if (allSelected) {
+                c.classList.remove('selected');
+                c.style.boxShadow = '';
+                c.style.transform = '';
+            } else {
+                c.classList.add('selected');
+                c.style.boxShadow = '0 0 0 3px rgba(255,144,0,.35)';
+                c.style.transform = 'translateY(-2px)';
+            }
+        });
+        updateSelectedCount();
+    });
+
+    // Search filter
+    document.getElementById('codeSearch')?.addEventListener('input', filterCodes);
+    document.getElementById('codeStateFilter')?.addEventListener('change', filterCodes);
+
+    function filterCodes() {
+        var search = (document.getElementById('codeSearch')?.value || '').toLowerCase();
+        var state = document.getElementById('codeStateFilter')?.value || '';
+
+        document.querySelectorAll('.code-item').forEach(item => {
+            var name = (item.dataset.name || '').toLowerCase();
+            var itemState = item.dataset.state || '';
+            var matchName = !search || name.includes(search);
+            var matchState = !state || itemState === state;
+            item.style.display = (matchName && matchState) ? '' : 'none';
+        });
+    }
+
+    // Download selected PDF
+    document.getElementById('downloadSelectedPdf')?.addEventListener('click', function () {
+        var selected = document.querySelectorAll('.code-card.selected');
+        if (selected.length === 0) {
+            toastr.warning('Vyberte alespoň jeden kód.');
+            return;
+        }
+
+        var loginIds = Array.from(selected).map(c => c.closest('.code-item').dataset.login);
+
+        fetch('/Test/DownloadSelectedCodesPdf', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ testId: @(test?.TestId ?? 0), loginIds: loginIds })
+        })
+        .then(resp => {
+            if (!resp.ok) throw new Error('Chyba při generování PDF');
+            return resp.blob();
+        })
+        .then(blob => {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'Kody-vybrane.pdf';
+            a.click();
+            URL.revokeObjectURL(url);
+        })
+        .catch(err => toastr.error(err.message));
     });
 </script>
 }

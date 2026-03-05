@@ -155,6 +155,20 @@ document.getElementById('assignBtn').addEventListener('click', async function ()
             // Update local map so reopening modal reflects changes
             if (!assignmentMap[testId]) assignmentMap[testId] = [];
             studentIds.forEach(id => { if (!assignmentMap[testId].includes(id)) assignmentMap[testId].push(id); });
+
+            // Update the student count badge and assignments link in the table row
+            var row = document.querySelector('tr[data-id="' + testId + '"]');
+            if (row) {
+                var countBadge = row.querySelector('.badge.bg-secondary');
+                if (countBadge) {
+                    var newCount = assignmentMap[testId].length;
+                    countBadge.textContent = newCount;
+                }
+                var assignCell = row.querySelectorAll('.editButton')[1];
+                if (assignCell && assignCell.querySelector('.text-muted')) {
+                    assignCell.innerHTML = '<a class="icon-btn" title="Zobrazit p\u0159i\u0159azen\u00ed" href="/Test/Assignments?id=' + testId + '"><i class="bi bi-people-fill"></i></a>';
+                }
+            }
         } else {
             toastr.error(data.message);
             resetAssignBtn();

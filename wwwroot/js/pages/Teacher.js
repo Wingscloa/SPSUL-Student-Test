@@ -109,6 +109,16 @@ document.getElementById('createTeacherSubmit')?.addEventListener('click', async 
         return;
     }
 
+    var nameRegex = /^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF ]+$/;
+    if (!nameRegex.test(firstName)) {
+        toastr.warning('Jm\u00e9no m\u016f\u017ee obsahovat pouze p\u00edsmena.');
+        return;
+    }
+    if (!nameRegex.test(lastName)) {
+        toastr.warning('P\u0159\u00edjmen\u00ed m\u016f\u017ee obsahovat pouze p\u00edsmena.');
+        return;
+    }
+
     if (roleIds.length === 0) {
         toastr.warning('Vyberte alespo\u0148 jednu roli.');
         return;
@@ -199,6 +209,16 @@ document.getElementById('editSubmitBtn')?.addEventListener('click', async functi
             }
         }
     });
+
+    var nameRegex = /^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF ]+$/;
+    if (data.FirstName && !nameRegex.test(data.FirstName)) {
+        toastr.warning('Jm\u00e9no m\u016f\u017ee obsahovat pouze p\u00edsmena.');
+        return;
+    }
+    if (data.LastName && !nameRegex.test(data.LastName)) {
+        toastr.warning('P\u0159\u00edjmen\u00ed m\u016f\u017ee obsahovat pouze p\u00edsmena.');
+        return;
+    }
 
     var btn = this;
     btn.disabled = true;

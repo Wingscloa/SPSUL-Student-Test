@@ -4,7 +4,7 @@
 
 @{
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
-    ViewData["Title"] = "T¯Ìdy";
+    ViewData["Title"] = "T≈ô√≠dy";
 
     var canCrudClasses = Context.HasAnyPermission(AppPermissions.ManageClasses, AppPermissions.All);
     var students = Model.Students;
@@ -18,13 +18,13 @@
                 <div class="card-header brandText d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="bi bi-building me-2"></i>
-                        Seznam t¯Ìd
+                        Seznam t≈ô√≠d
                     </h5>
                     <div class="tools d-flex justify-content-center align-items-center gap-2">
                         <!--Cancel-->
                         <a class="iconLink cursor option" id="cancelOption" style="display: none">
                             <i class="bi bi-dash-circle"></i>
-                            Zruöit
+                            Zru≈°it
                         </a>
                         <!--Confirm-->
                         <a class="iconLink cursor option" id="acceptOption" style="display: none">
@@ -39,14 +39,14 @@
                         @if (canCrudClasses)
                         {
                         <!--Delete Mode-->
-                        <a class="iconLink cursor mode" title="Smazat t¯Ìdy" id="deleteMode" data-endpoint="ClassesPage/Delete/" data-method="POST">
+                        <a class="iconLink cursor mode" title="Smazat t≈ô√≠dy" id="deleteMode" data-endpoint="ClassesPage/Delete/" data-method="POST">
                             <i class="bi bi-dash-circle"></i>
                             Smazat
                         </a>
                         <!--Create-->
-                        <a class="iconLink cursor mode" title="Vytvo¯it t¯Ìdu" id="createClassBtn">
+                        <a class="iconLink cursor mode" title="Vytvo≈ôit t≈ô√≠du" id="createClassBtn">
                             <i class="bi bi-plus-circle"></i>
-                            Vytvo¯it
+                            Vytvo≈ôit
                         </a>
                         }
                     </div>
@@ -55,9 +55,9 @@
                     <table class="table align-middle mb-0" style="min-width: 900px">
                         <thead>
                             <tr>
-                                <th class="col-2">N·zev</th>
+                                <th class="col-2">N√°zev</th>
                                 <th class="col-2">Obory</th>
-                                <th class="col-1">Student˘</th>
+                                <th class="col-1">Student≈Ø</th>
                                 <th class="col-1">Od roku</th>
                                 <th class="col-1">Do roku</th>
                                 @if (canCrudClasses)
@@ -83,7 +83,7 @@
                                         }
                                         else
                                         {
-                                            <span class="text-muted">ñ</span>
+                                            <span class="text-muted">‚Äì</span>
                                         }
                                     </td>
                                     <td><span class="badge bg-secondary">@(c.ClassesStudents?.Count(cs => cs.Student != null && cs.Student.IsActive) ?? 0)</span></td>
@@ -92,7 +92,7 @@
                                     @if (canCrudClasses)
                                     {
                                     <td class="text-center editButton">
-                                        <button class="icon-btn btn-assign" title="P¯i¯adit studenty"
+                                        <button class="icon-btn btn-assign" title="P≈ôi≈ôadit studenty"
                                                 data-class-id="@c.ClassesId" data-class-name="@c.Name"
                                                 data-bs-toggle="modal" data-bs-target="#assignModal">
                                             <i class="bi bi-person-plus-fill"></i>
@@ -115,7 +115,7 @@
                     </table>
                 </div>
                 <div class="card-footer d-flex justify-content-between align-items-center">
-                    <div>@Model.Classes.Count poloûek</div>
+                    <div>@Model.Classes.Count polo≈æek</div>
                 </div>
             </div>
         </div>
@@ -125,7 +125,7 @@
                 <div class="card-header brandText fw-bold"><i class="bi bi-funnel me-2"></i>Filtrace</div>
                 <div class="card-body">
                     <form method="get" class="vstack gap-2">
-                        <input class="form-control" name="name" value="@Model.Name" placeholder="N·zev t¯Ìdy" />
+                        <input class="form-control" name="name" value="@Model.Name" placeholder="N√°zev t≈ô√≠dy" />
 
                         <select class="form-select select2" name="fieldId">
                             <option value="">Vyber obor</option>
@@ -136,9 +136,9 @@
                         </select>
 
                         <select class="form-select select2" name="active">
-                            <option value="">AktivnÌ/NeaktivnÌ</option>
-                            <option value="true" selected="@(Model.Active == true)">AktivnÌ</option>
-                            <option value="false" selected="@(Model.Active == false)">NeaktivnÌ</option>
+                            <option value="">Aktivn√≠/Neaktivn√≠</option>
+                            <option value="true" selected="@(Model.Active == true)">Aktivn√≠</option>
+                            <option value="false" selected="@(Model.Active == false)">Neaktivn√≠</option>
                         </select>
 
                         <button class="btn btn-orange w-100">
@@ -153,7 +153,7 @@
 
             <div class="card shadow-sm mt-3">
                 <div class="card-header bg-light fw-bold">
-                    <i class="bi bi-clipboard-data me-2"></i>RychlÈ statistiky
+                    <i class="bi bi-clipboard-data me-2"></i>Rychl√© statistiky
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
@@ -161,11 +161,11 @@
                         <strong>@Model.Classes.Count</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">AktivnÌ:</span>
+                        <span class="text-muted">Aktivn√≠:</span>
                         <strong class="text-success">@Model.Classes.Count(x => x.IsActive)</strong>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span class="text-muted">NeaktivnÌ:</span>
+                        <span class="text-muted">Neaktivn√≠:</span>
                         <strong class="text-secondary">@Model.Classes.Count(x => !x.IsActive)</strong>
                     </div>
                 </div>
@@ -181,22 +181,25 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="bi bi-building me-2"></i>Nov· t¯Ìda</h5>
+                <h5 class="modal-title"><i class="bi bi-building me-2"></i>Nov√° t≈ô√≠da</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label fw-bold">N·zev t¯Ìdy</label>
-                    <input type="text" class="form-control" id="cClassName" placeholder="nap¯. 4A" maxlength="20" />
+                    <label class="form-label fw-bold">N√°zev t≈ô√≠dy</label>
+                    <input type="text" class="form-control" id="cClassName" placeholder="nap≈ô. 4A" maxlength="20" autocomplete="off" />
                 </div>
                 <div class="row g-2 mb-3">
                     <div class="col-6">
                         <label class="form-label fw-bold">Od roku</label>
-                        <input type="number" class="form-control" id="cStartFrom" placeholder="2024" min="2000" max="2100" />
+                        <input type="number" class="form-control no-e" id="cStartFrom" placeholder="2024" min="2000" max="2100" autocomplete="off" />
                     </div>
                     <div class="col-6">
                         <label class="form-label fw-bold">Do roku</label>
-                        <input type="number" class="form-control" id="cEndTo" placeholder="2028" min="2000" max="2100" />
+                        <input type="number" class="form-control no-e" id="cEndTo" placeholder="2028" min="2000" max="2100" autocomplete="off" />
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted">Od roku mus√≠ b√Ωt men≈°√≠ nebo rovno Do roku.</small>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -210,9 +213,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zruöit</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zru≈°it</button>
                 <button type="button" class="btn btn-orange" id="createClassSubmit">
-                    <i class="bi bi-check2-circle me-1"></i>Vytvo¯it
+                    <i class="bi bi-check2-circle me-1"></i>Vytvo≈ôit
                 </button>
             </div>
         </div>
@@ -224,21 +227,21 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editace t¯Ìdy</h5>
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editace t≈ô√≠dy</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div id="editFormBody">
                     <div class="text-center py-4">
                         <div class="spinner-border text-orange" role="status"></div>
-                        <p class="text-muted mt-2">NaËÌt·m formul·¯Ö</p>
+                        <p class="text-muted mt-2">Naƒç√≠t√°m formul√°≈ô‚Ä¶</p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zruöit</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zru≈°it</button>
                 <button type="button" class="btn btn-orange" id="editSubmitBtn">
-                    <i class="bi bi-check2-circle me-1"></i>Uloûit zmÏny
+                    <i class="bi bi-check2-circle me-1"></i>Ulo≈æit zmƒõny
                 </button>
             </div>
         </div>
@@ -252,7 +255,7 @@
             <div class="modal-header" style="background: linear-gradient(135deg, #ff8a00, #ff6b00); color: white;">
                 <h5 class="modal-title">
                     <i class="bi bi-people-fill me-2"></i>
-                    Spr·va student˘ ve t¯ÌdÏ: <span id="assignClassName"></span>
+                    Spr√°va student≈Ø ve t≈ô√≠dƒõ: <span id="assignClassName"></span>
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -262,17 +265,17 @@
                 <div class="row g-2 mb-3">
                     <div class="col-md-8">
                         <label class="form-label fw-bold mb-1"><i class="bi bi-search me-1"></i>Hledat</label>
-                        <input type="text" class="form-control" id="studentSearch" placeholder="JmÈno studenta..." />
+                        <input type="text" class="form-control" id="studentSearch" placeholder="Jm√©no studenta..." autocomplete="off" />
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded" style="background:#f8f9fa;">
                     <div class="form-check mb-0">
                         <input class="form-check-input" type="checkbox" id="selectAllStudents">
-                        <label class="form-check-label fw-bold" for="selectAllStudents">Vybrat vöechny dostupnÈ</label>
+                        <label class="form-check-label fw-bold" for="selectAllStudents">Vybrat v≈°echny dostupn√©</label>
                     </div>
                     <div class="d-flex gap-2 align-items-center">
-                        <span class="badge bg-orange" id="selectedStudentCount" style="background:#ff8a00;">0 vybr·no</span>
+                        <span class="badge bg-orange" id="selectedStudentCount" style="background:#ff8a00;">0 vybr√°no</span>
                         <span class="badge bg-secondary" id="alreadyAssignedInfo"></span>
                     </div>
                 </div>
@@ -286,7 +289,7 @@
                         <div class="student-item d-flex align-items-center p-2 rounded mb-1"
                              data-student-id="@s.StudentId" data-name="@fullName.ToLower()" data-classes="@existingClassIds">
                             <input class="form-check-input student-checkbox me-2 flex-shrink-0" type="checkbox"
-                                   value="@s.StudentId" id="student_@s.StudentId">
+                                   value="@s.StudentId" id="student_@s.StudentId" autocomplete="off">
                             <label class="form-check-label w-100 d-flex align-items-center justify-content-between"
                                    for="student_@s.StudentId" style="cursor:pointer;">
                                 <span><strong>@s.FirstName @s.LastName</strong></span>
@@ -297,9 +300,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zav¯Ìt</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zav≈ô√≠t</button>
                 <button type="button" class="btn btn-orange" id="assignBtn">
-                    <i class="bi bi-check-circle me-2"></i>Uloûit zmÏny
+                    <i class="bi bi-check-circle me-2"></i>Ulo≈æit zmƒõny
                 </button>
             </div>
         </div>

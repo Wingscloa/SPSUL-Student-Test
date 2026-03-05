@@ -12,18 +12,18 @@ using System.Text.Json;
 namespace SPSUL.Controllers
 {
     /// <summary>
-    /// Zobrazování vısledkù testù a statistik.
+    /// ZobrazovÃ¡nÃ­ vÃ½sledkÅ¯ testÅ¯ a statistik.
     ///
     /// Funkce:
-    ///   Index   – tabulka všech dokonèenıch StudentTest záznamù s filtrováním a stránkováním
-    ///   View    – detail jednoho konkrétního vısledku testu (odpovìdi studenta vs. správné)
-    ///   Stats   – agregované statistiky (prùmìry, rozdìlení úspìšnosti)
-    ///   History – historie otázek/testù konkrétního studenta
+    ///   Index   â€“ tabulka vÅ¡ech dokonÄenÃ½ch StudentTest zÃ¡znamÅ¯ s filtrovÃ¡nÃ­m a strÃ¡nkovÃ¡nÃ­m
+    ///   View    â€“ detail jednoho konkrÃ©tnÃ­ho vÃ½sledku testu (odpovÄ›di studenta vs. sprÃ¡vnÃ©)
+    ///   Stats   â€“ agregovanÃ© statistiky (prÅ¯mÄ›ry, rozdÄ›lenÃ­ ÃºspÄ›Å¡nosti)
+    ///   History â€“ historie otÃ¡zek/testÅ¯ konkrÃ©tnÃ­ho studenta
     ///
-    /// Jak se vypoèítává úspìšnost:
-    ///   Ze StudentTest.ResultSnapshot (JSON) se extrahují odpovìdi studenta.
-    ///   Porovnají se se správnımi monostmi z Test.QuestionSnapshot (JSON).
-    ///   Vısledek je procento správnıch odpovìdí.
+    /// Jak se vypoÄÃ­tÃ¡vÃ¡ ÃºspÄ›Å¡nost:
+    ///   Ze StudentTest.ResultSnapshot (JSON) se extrahujÃ­ odpovÄ›di studenta.
+    ///   PorovnajÃ­ se se sprÃ¡vnÃ½mi moÅ¾nostmi z Test.QuestionSnapshot (JSON).
+    ///   VÃ½sledek je procento sprÃ¡vnÃ½ch odpovÄ›dÃ­.
     /// </summary>
     [LoginRequired]
     public class DetailController : Controller
@@ -148,7 +148,7 @@ namespace SPSUL.Controllers
             return View(model);
         }
 
-        // GET: Detail/History — redirect to Detail/View (merged)
+        // GET: Detail/History â€” redirect to Detail/View (merged)
         public IActionResult History(int studentId, int testId)
         {
             return RedirectToAction("View", new { studentId, testId });

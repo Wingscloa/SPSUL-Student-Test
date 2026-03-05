@@ -4,20 +4,20 @@ namespace SPSUL.Models.Display.TestModels
 {
     public class TestCreateDto
     {
-        [Required(ErrorMessage = "Název testu je povinnı.")]
-        [StringLength(128, ErrorMessage = "Název nesmí bıt delší ne 128 znakù.")]
-        [MinLength(3, ErrorMessage = "Název musí mít alespoò 3 znaky.")]
+        [Required(ErrorMessage = "NÃ¡zev testu je povinnÃ½.")]
+        [StringLength(128, ErrorMessage = "NÃ¡zev nesmÃ­ bÃ½t delÅ¡Ã­ neÅ¾ 128 znakÅ¯.")]
+        [MinLength(3, ErrorMessage = "NÃ¡zev musÃ­ mÃ­t alespoÅˆ 3 znaky.")]
         public string Name { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Pøedmìt je povinnı.")]
-        [Range(1, int.MaxValue, ErrorMessage = "Musíte vybrat platnı pøedmìt.")]
+        [Required(ErrorMessage = "PÅ™edmÄ›t je povinnÃ½.")]
+        [Range(1, int.MaxValue, ErrorMessage = "MusÃ­te vybrat platnÃ½ pÅ™edmÄ›t.")]
         public int StudentFieldId { get; set; }
 
-        [Required(ErrorMessage = "Otázky jsou povinné.")]
-        [MinLength(1, ErrorMessage = "Test musí obsahovat alespoò 1 otázku.")]
+        [Required(ErrorMessage = "OtÃ¡zky jsou povinnÃ©.")]
+        [MinLength(1, ErrorMessage = "Test musÃ­ obsahovat alespoÅˆ 1 otÃ¡zku.")]
         public List<int> QuestionIds { get; set; } = new();
 
-        [Range(1, 180, ErrorMessage = "Èasovı limit musí bıt mezi 1 a 180 minutami.")]
+        [Range(1, 180, ErrorMessage = "ÄŒasovÃ½ limit musÃ­ bÃ½t mezi 1 a 180 minutami.")]
         public int? TimeLimit { get; set; }
 
         public string? Description { get; set; }

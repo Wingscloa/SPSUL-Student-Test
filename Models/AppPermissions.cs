@@ -1,36 +1,36 @@
 namespace SPSUL.Models
 {
     /// <summary>
-    /// Statické konstanty pro všechna opravdná oprávnìní v aplikaci.
+    /// StatickÃ© konstanty pro vÅ¡echna opravdnÃ¡ oprÃ¡vnÄ›nÃ­ v aplikaci.
     ///
-    /// Proè konstanty místo magic strings:
-    ///   Pokud by se opravdé název zmìnil, staèí zmìnit zde – ne na 20 místech.
-    ///   Kompilder také upozorní na pøeklep (na rozdíl od stringù).
+    /// ProÄ konstanty mÃ­sto magic strings:
+    ///   Pokud by se opravdÃ© nÃ¡zev zmÄ›nil, staÄÃ­ zmÄ›nit zde â€“ ne na 20 mÃ­stech.
+    ///   Kompilder takÃ© upozornÃ­ na pÅ™eklep (na rozdÃ­l od stringÅ¯).
     ///
-    /// Mapování konstant na role je definováno v AuthorizationService.RolePermissionMap.
-    /// Detailní pøehled co která role mùe je v souboru PERMISSIONS.txt.
+    /// MapovÃ¡nÃ­ konstant na role je definovÃ¡no v AuthorizationService.RolePermissionMap.
+    /// DetailnÃ­ pÅ™ehled co kterÃ¡ role mÅ¯Å¾e je v souboru PERMISSIONS.txt.
     /// </summary>
     public static class AppPermissions
     {
-        // Administrátor — full control
+        // AdministrÃ¡tor â€” full control
         public const string All = "All";
 
-        // Tvùrce — CRUD on everything except teachers
+        // TvÅ¯rce â€” CRUD on everything except teachers
         public const string ManageTests = "ManageTests";
         public const string ManageStudents = "ManageStudents";
         public const string ManageClasses = "ManageClasses";
         public const string ManageQuestions = "ManageQuestions";
 
-        // Testátor — CRUD tests only
+        // TestÃ¡tor â€” CRUD tests only
         public const string CrudTests = "CrudTests";
 
-        // Uèitelátor — CRUD teachers only
+        // UÄitelÃ¡tor â€” CRUD teachers only
         public const string CrudTeachers = "CrudTeachers";
 
-        // Studentátor — CRUD students only
+        // StudentÃ¡tor â€” CRUD students only
         public const string CrudStudents = "CrudStudents";
 
-        // Hlediè / Anonymous — view only
+        // HlediÄ / Anonymous â€” view only
         public const string ViewOnly = "ViewOnly";
     }
 }

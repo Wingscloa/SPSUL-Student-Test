@@ -64,11 +64,11 @@ namespace SPSUL.Controllers
         public async Task<IActionResult> AssignStudents([FromBody] AssignStudentsDto dto)
         {
             if (dto.ClassId <= 0 || dto.StudentIds == null || dto.StudentIds.Count == 0)
-                return BadRequest(new { message = "Neplatná data." });
+                return BadRequest(new { message = "NeplatnÃ¡ data." });
 
             var cls = await _ctx.Classes.Include(c => c.ClassesStudents).FirstOrDefaultAsync(c => c.ClassesId == dto.ClassId);
             if (cls == null)
-                return NotFound(new { message = "Tøída nebyla nalezena." });
+                return NotFound(new { message = "TÅ™Ã­da nebyla nalezena." });
 
             var existingIds = cls.ClassesStudents.Select(cs => cs.StudentId).ToHashSet();
             var newLinks = dto.StudentIds
@@ -77,31 +77,31 @@ namespace SPSUL.Controllers
                 .ToList();
 
             if (newLinks.Count == 0)
-                return Ok(new { message = "Všichni vybraní studenti jsou ji pøiøazeni.", added = 0 });
+                return Ok(new { message = "VÅ¡ichni vybranÃ­ studenti jsou jiÅ¾ pÅ™iÅ™azeni.", added = 0 });
 
             _ctx.ClassesStudents.AddRange(newLinks);
             await _ctx.SaveChangesAsync();
 
-            return Ok(new { message = $"{newLinks.Count} studentù pøiøazeno do tøídy.", added = newLinks.Count });
+            return Ok(new { message = $"{newLinks.Count} studentÅ¯ pÅ™iÅ™azeno do tÅ™Ã­dy.", added = newLinks.Count });
         }
 
         [HttpPost]
         public async Task<IActionResult> UnassignStudents([FromBody] AssignStudentsDto dto)
         {
             if (dto.ClassId <= 0 || dto.StudentIds == null || dto.StudentIds.Count == 0)
-                return BadRequest(new { message = "Neplatná data." });
+                return BadRequest(new { message = "NeplatnÃ¡ data." });
 
             var links = await _ctx.ClassesStudents
                 .Where(cs => cs.ClassesId == dto.ClassId && dto.StudentIds.Contains(cs.StudentId))
                 .ToListAsync();
 
             if (links.Count == 0)
-                return Ok(new { message = "ádní studenti k odebrání.", removed = 0 });
+                return Ok(new { message = "Å½Ã¡dnÃ­ studenti k odebrÃ¡nÃ­.", removed = 0 });
 
             _ctx.ClassesStudents.RemoveRange(links);
             await _ctx.SaveChangesAsync();
 
-            return Ok(new { message = $"{links.Count} studentù odebráno z tøídy.", removed = links.Count });
+            return Ok(new { message = $"{links.Count} studentÅ¯ odebrÃ¡no z tÅ™Ã­dy.", removed = links.Count });
         }
 
         [HttpPost]
@@ -109,13 +109,13 @@ namespace SPSUL.Controllers
         {
             var cls = await _ctx.Classes.FindAsync(id);
             if (cls == null)
-                return NotFound(new { message = "Tøída nebyla nalezena." });
+                return NotFound(new { message = "TÅ™Ã­da nebyla nalezena." });
 
             cls.IsActive = !cls.IsActive;
             await _ctx.SaveChangesAsync();
 
-            var status = cls.IsActive ? "aktivována" : "deaktivována";
-            return Ok(new { message = $"Tøída byla {status}.", isActive = cls.IsActive });
+            var status = cls.IsActive ? "aktivovÃ¡na" : "deaktivovÃ¡na";
+            return Ok(new { message = $"TÅ™Ã­da byla {status}.", isActive = cls.IsActive });
         }
 
         [HttpPost]
@@ -128,14 +128,14 @@ namespace SPSUL.Controllers
                 .ToListAsync();
 
             if (classes.Count == 0)
-                return NotFound(new { message = "ádné tøídy nebyly nalezeny." });
+                return NotFound(new { message = "Å½Ã¡dnÃ© tÅ™Ã­dy nebyly nalezeny." });
 
             _ctx.ClassesFields.RemoveRange(classes.SelectMany(c => c.ClassesFields));
             _ctx.ClassesStudents.RemoveRange(classes.SelectMany(c => c.ClassesStudents));
             _ctx.Classes.RemoveRange(classes);
             await _ctx.SaveChangesAsync();
 
-            return Ok(new { message = $"{classes.Count} tøíd smazáno." });
+            return Ok(new { message = $"{classes.Count} tÅ™Ã­d smazÃ¡no." });
         }
     }
 }

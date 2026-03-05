@@ -9,15 +9,15 @@ using System.Text.Json;
 namespace SPSUL.Controllers
 {
     /// <summary>
-    /// Dashboard – úvodní stránka po pøihlášení.
+    /// Dashboard â€“ ÃºvodnÃ­ strÃ¡nka po pÅ™ihlÃ¡Å¡enÃ­.
     ///
     /// Zobrazuje:
-    ///   - Statistické karty (aktivní testy, studenti, prùmìrná úspìšnost, èekající)
-    ///   - Posledních 10 dokonèenıch testù (aktivita)
-    ///   - Chystající se testy (aktivní s èekajícími studenty)
-    ///   - Sloupcovı graf prùmìrné úspìšnosti za posledních 7 mìsícù
+    ///   - StatistickÃ© karty (aktivnÃ­ testy, studenti, prÅ¯mÄ›rnÃ¡ ÃºspÄ›Å¡nost, ÄekajÃ­cÃ­)
+    ///   - PoslednÃ­ch 10 dokonÄenÃ½ch testÅ¯ (aktivita)
+    ///   - ChystajÃ­cÃ­ se testy (aktivnÃ­ s ÄekajÃ­cÃ­mi studenty)
+    ///   - SloupcovÃ½ graf prÅ¯mÄ›rnÃ© ÃºspÄ›Å¡nosti za poslednÃ­ch 7 mÄ›sÃ­cÅ¯
     ///
-    /// Data jsou pøedána pøes silnì typovanı HomeViewModel (ne ViewBag).
+    /// Data jsou pÅ™edÃ¡na pÅ™es silnÄ› typovanÃ½ HomeViewModel (ne ViewBag).
     /// </summary>
     [LoginRequired]
     public class HomeController : Controller
@@ -86,7 +86,7 @@ namespace SPSUL.Controllers
 
             var vm = new HomeViewModel
             {
-                TeacherName = teacher != null ? $"{teacher.FirstName} {teacher.LastName}" : "Uèiteli",
+                TeacherName = teacher != null ? $"{teacher.FirstName} {teacher.LastName}" : "UÄiteli",
                 ActiveTests = activeTests,
                 TotalStudents = totalStudents,
                 TotalQuestions = totalQuestions,

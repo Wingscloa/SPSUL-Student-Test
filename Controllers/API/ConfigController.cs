@@ -3,6 +3,7 @@ using SPSUL.Models.Data;
 using SPSUL.Models;
 using Microsoft.EntityFrameworkCore;
 using SPSUL.Models.Display.ConfigModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace SPSUL.Controllers.API
 {
@@ -196,8 +197,12 @@ namespace SPSUL.Controllers.API
 
     public class ProfileUpdateDto
     {
+        [RegularExpression(@"^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF ]+$", ErrorMessage = "Jméno může obsahovat pouze písmena.")]
         public string FirstName { get; set; } = "";
+
+        [RegularExpression(@"^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF ]+$", ErrorMessage = "Příjmení může obsahovat pouze písmena.")]
         public string LastName { get; set; } = "";
+
         public string NickName { get; set; } = "";
         public string? NewPassword { get; set; }
     }

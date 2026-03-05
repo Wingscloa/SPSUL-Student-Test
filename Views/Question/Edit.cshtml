@@ -5,12 +5,12 @@
     Layout = "~/Views/Shared/Layouts/_Main.cshtml";
 }
 
-<link href="~/css/create.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/css/Create.css" rel="stylesheet" asp-append-version="true" />
 <link href="~/css/question.css" rel="stylesheet" asp-append-version="true" />
 <link href="~/css/test.css" rel="stylesheet" asp-append-version="true" />
-<link href="~/css/createtest.css" rel="stylesheet" asp-append-version="true" />
-<script src="~/js/question.js" asp-append-version="true"></script>
-<link href="~/css/normaltables.css" asp-append-version="true" rel="stylesheet" />
+<link href="~/css/createTest.css" rel="stylesheet" asp-append-version="true" />
+<script src="~/js/Question.js" asp-append-version="true"></script>
+<link href="~/css/normalTables.css" asp-append-version="true" rel="stylesheet" />
 
 <div class="container-fluid py-4">
     <div class="row g-4">
@@ -40,7 +40,7 @@
                                 <i class="bi bi-text-paragraph text-orange"></i> Popis/Znění otázky
                             </label>
                             <textarea class="form-control" id="Description" name="Description"
-                                      rows="6" placeholder="Zadej popis/znění otázky" maxlength="512" required>@Model.Question.Description</textarea>
+                                      rows="6" placeholder="Zadej popis/znění otázky" required maxlength="512">@Model.Question.Description</textarea>
                         </div>
 
                         <!-- Typ otázky -->
@@ -88,8 +88,9 @@
                                 <i class="bi bi-list-ol text-orange"></i> Počet možností odpovědí
                             </label>
                             <div class="input-group">
-                                <input type="number" class="form-control" id="optionCount"
-                                       value="@Model.Question.QuestionOptions.Count" min="2" max="10" />
+                                <input type="number" class="form-control no-e" id="optionCount"
+                                       value="@Model.Question.QuestionOptions.Count" min="2" max="10"
+                                       onblur="this.value = Math.min(10, Math.max(2, parseInt(this.value) || 2))" />
                                 <button type="button" class="btn btn-outline-secondary" id="Generate">
                                     <i class="bi bi-arrow-repeat"></i> Generovat
                                 </button>
