@@ -141,7 +141,7 @@ namespace SPSUL
                 }
                 else
                 {
-                    //db.Database.Migrate();
+                    db.Database.Migrate();
                 }
             }
 
