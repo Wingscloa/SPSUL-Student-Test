@@ -4,9 +4,12 @@ set -e
 # ============================================
 # 1. Wait for SQL Server
 # ============================================
+
+
+echo "Container Port: $SQL_DOCKER_PORT"
 echo "==> Waiting for SQL Server..."
 for i in $(seq 1 60); do
-    if timeout 1 bash -c '</dev/tcp/sqlserver/1433' >/dev/null 2>&1; then
+    if timeout 1 bash -c "</dev/tcp/sqlserver/$SQL_DOCKER_PORT" >/dev/null 2>&1; then
         echo "==> SQL Server is ready."
         break
     fi
