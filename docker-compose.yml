@@ -7,7 +7,7 @@ services:
     container_name: spsul-db
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Spsul_Strong!Pass123"
+      MSSQL_SA_PASSWORD: "${DB_PASSWORD}"
       MSSQL_PID: "Developer"
     ports:
       - "1450:1433"
@@ -23,7 +23,7 @@ services:
           cpus: '1'
           memory: 1G
     healthcheck:
-      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "Spsul_Strong!Pass123" -C -Q "SELECT 1" || exit 1
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${DB_PASSWORD}" -C -Q "SELECT 1" || exit 1
       interval: 10s
       timeout: 5s
       retries: 10
@@ -66,13 +66,13 @@ services:
     container_name: spsul-web
     environment:
       ASPNETCORE_ENVIRONMENT: "Production"
-      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTP_PORTS: "${HTTP_PORT}"
       Database__EnsureCreated: "false"
-      ConnectionStrings__Default: "Server=tcp:sqlserver,1433;Database=SpsulTesty;User Id=sa;Password=Spsul_Strong!Pass123;TrustServerCertificate=True;Encrypt=False;"
+      ConnectionStrings__Default: "Server=tcp:sqlserver,1450;Database=SpsulTesty;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True;Encrypt=False;"
       ConnectionStrings__Azurit: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
       Logging__LogLevel__Default: "Warning"
     ports:
-      - "8080:8080"
+      - "${HTTP_PORT}:${HTTP_PORT}"
     volumes:
       - dataprotection-keys:/home/app/.aspnet/DataProtection-Keys
     depends_on:
@@ -82,7 +82,7 @@ services:
         condition: service_started
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test: ["CMD", "curl", "-f", "${WEB_URL}"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -112,10 +112,6 @@ networks:
   spsul-network:
     driver: bridge
 
-# web      - http://localhost:8080
-# SSMS     - localhost,1450 (sa / Spsul_Strong!Pass123)
-# azurite  - http://localhost:10000
-#
 # PRODUCTION NOTES:
 # 1. Replace passwords with secrets from environment or Docker secrets
 # 2. Change database from "Developer" to actual license

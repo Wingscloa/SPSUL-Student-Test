@@ -3,3 +3,4 @@
 .vs/
 appsettings.Development.json
 **/azurite_data/
+.env
