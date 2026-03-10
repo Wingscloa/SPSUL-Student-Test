@@ -66,14 +66,14 @@ services:
     container_name: spsul-web
     environment:
       ASPNETCORE_ENVIRONMENT: "Production"
-      ASPNETCORE_HTTP_PORTS: "${HTTP_PORT}"
+      ASPNETCORE_HTTP_PORTS: "${HTTP_CONTAINER_PORT}"
       Database__EnsureCreated: "false"
       ConnectionStrings__Default: "Server=tcp:sqlserver,${SQL_DOCKER_PORT};Database=SpsulTesty;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True;Encrypt=False;"
       ConnectionStrings__Azurit: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
       Logging__LogLevel__Default: "Warning"
       SQL_DOCKER_PORT: ${SQL_DOCKER_PORT}
     ports:
-      - "${HTTP_PORT}:${HTTP_PORT}"
+      - "${HTTP_HOST_PORT}:${HTTP_CONTAINER_PORT}"
     volumes:
       - dataprotection-keys:/home/app/.aspnet/DataProtection-Keys
     depends_on:
