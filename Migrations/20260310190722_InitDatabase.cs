@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SPSUL.Migrations
 {
     /// <inheritdoc />
-    public partial class IniDatabase : Migration
+    public partial class InitDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -544,13 +544,13 @@ namespace SPSUL.Migrations
                 values: new object[,]
                 {
                     { 1, "Admin", "Admin", "Admin", "$2b$10$jErDDvlTESkhHfdiHuRFte9ojuRZNZST.gskJ4PVgp6h6q0VGmVxS" },
-                    { 2, "Filip", "Eder", "FilipEder", "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS" },
+                    { 2, "Filip", "Eder", "FilipEder", "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y" },
                     { 3, "Petr", "Novak", "PetrNovak", "$2b$10$YqPz7WEHhmjRpRuFqaVPVu505tO1z4KwGVnnj3T3J0S9SEnZMrZSG" },
-                    { 4, "Jana", "Svobodova", "JanaSvobodova", "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS" },
-                    { 5, "Tomas", "Dvorak", "TomasDvorak", "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS" },
-                    { 6, "Marie", "Cerna", "MarieCerna", "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS" },
-                    { 7, "Jan", "Prochazka", "JanProchazka", "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS" },
-                    { 8, "Eva", "Krejci", "EvaKrejci", "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS" }
+                    { 4, "Jana", "Svobodova", "JanaSvobodova", "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y" },
+                    { 5, "Tomas", "Dvorak", "TomasDvorak", "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y" },
+                    { 6, "Marie", "Cerna", "MarieCerna", "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y" },
+                    { 7, "Jan", "Prochazka", "JanProchazka", "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y" },
+                    { 8, "Eva", "Krejci", "EvaKrejci", "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y" }
                 });
 
             migrationBuilder.InsertData(
@@ -891,6 +891,7 @@ namespace SPSUL.Migrations
                     CREATE INDEX [IX_Sessions_ExpiresAtTime] ON [dbo].[Sessions] ([ExpiresAtTime]);
                 END
                 """);
+
         }
 
         /// <inheritdoc />

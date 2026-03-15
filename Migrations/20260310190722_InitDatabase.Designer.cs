@@ -12,8 +12,8 @@ using SPSUL.Models;
 namespace SPSUL.Migrations
 {
     [DbContext(typeof(SpsulContext))]
-    [Migration("20260304093314_IniDatabase")]
-    partial class IniDatabase
+    [Migration("20260310190722_InitDatabase")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1901,7 +1901,7 @@ namespace SPSUL.Migrations
                             IsActive = false,
                             LastName = "Eder",
                             NickName = "FilipEder",
-                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                            PasswordHash = "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y"
                         },
                         new
                         {
@@ -1919,7 +1919,7 @@ namespace SPSUL.Migrations
                             IsActive = false,
                             LastName = "Svobodova",
                             NickName = "JanaSvobodova",
-                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                            PasswordHash = "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y"
                         },
                         new
                         {
@@ -1928,7 +1928,7 @@ namespace SPSUL.Migrations
                             IsActive = false,
                             LastName = "Dvorak",
                             NickName = "TomasDvorak",
-                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                            PasswordHash = "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y"
                         },
                         new
                         {
@@ -1937,7 +1937,7 @@ namespace SPSUL.Migrations
                             IsActive = false,
                             LastName = "Cerna",
                             NickName = "MarieCerna",
-                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                            PasswordHash = "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y"
                         },
                         new
                         {
@@ -1946,7 +1946,7 @@ namespace SPSUL.Migrations
                             IsActive = false,
                             LastName = "Prochazka",
                             NickName = "JanProchazka",
-                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                            PasswordHash = "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y"
                         },
                         new
                         {
@@ -1955,7 +1955,7 @@ namespace SPSUL.Migrations
                             IsActive = false,
                             LastName = "Krejci",
                             NickName = "EvaKrejci",
-                            PasswordHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS"
+                            PasswordHash = "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y"
                         });
                 });
 

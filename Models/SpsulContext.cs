@@ -201,7 +201,7 @@ namespace SPSUL.Models
             // SEED DATA
             // ========================================
             // Hesla: Admin->admin1234, ostatni->heslo1234
-            var hesloHash = "$2b$10$4l/ga1u8GL4dxznTb/t73eiKqRRfMKIsLpi8bCQQxkGtmnEX64NoS";
+            var hesloHash = "$2b$10$PMAUpgwQ3pwpaIMv1CCYA.YzbHYl5.PXqmsRNBaR1Oevp3m7w1v2y";
 
             modelBuilder.Entity<Teacher>().HasData(
                 new Teacher { TeacherId = 1, FirstName = "Admin", LastName = "Admin", NickName = "Admin", PasswordHash = "$2b$10$jErDDvlTESkhHfdiHuRFte9ojuRZNZST.gskJ4PVgp6h6q0VGmVxS" },
